@@ -3,9 +3,91 @@
 <head>
     <meta charset = "UTF-8">
     <title>Baba Is You</title>
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
 </head>
-<body>
-    <canvas id = "id-canvas" width = "1000" height = "1000"></canvas>
+<body id="body">
+    <div id="container">
+        <div id="game">
+          <div id="mainMenu" class="screen">
+            <ul>
+              <h1>Baba Is You</h1>
+              <li>
+                <h4 id="new-game">New Game</h4>
+              </li>
+              <li>
+                <h4 id="customize-controls">Customize Controls</h4>
+              </li>
+              <!-- <li>
+                <h4 id="high-scores">High Scores</h4>
+              </li> -->
+              <li>
+                <h4 id="credits">Credits</h4>
+              </li>
+            </ul>
+          </div>
+          <div id="gamePlayScreen" class="screen">
+            <canvas id="canvas" width="1000" height="1000"></canvas>
+            <!-- add a back button for now -->
+            <h4 id="canvasBack">Back to Main Menu</h4>
+          </div>
+          <div id="customizeControlsScreen" class="screen">
+            <ul>
+              <li>
+                <h4 id="setMoveUpButton" class="default">Move Up:</h4>
+                <h4 id="currentMoveUp"></h4>
+              </li>
+              <li>
+                <h4 id="setMoveLeftButton" class="default">Move Left:</h4>
+                <h4 id="currentMoveLeft"></h4>
+              </li>
+              <li>
+                <h4 id="setMoveDownButton" class="default">Move Down:</h4>
+                <h4 id="currentMoveDown"></h4>
+              </li>
+              <li>
+                <h4 id="setMoveRightButton" class="default">Move Right:</h4>
+                <h4 id="currentMoveRight"></h4>
+              </li>
+              <li>
+                <h4 id="setShootButton" class="default">Shoot:</h4>
+                <h4 id="currentShoot"></h4>
+              </li>
+            </ul>
+            <h4 id="customizeControlsBackButt">Back to Main Menu</h4>
+          </div>
+          <!-- <div id="highScoresScreen" class="screen">
+            <ul>
+              <li>
+                <h4 id="topScore">1700pts</h4>
+              </li>
+              <li>
+                <h4 id="secondScore">1000pts</h4>
+              </li>
+              <li>
+                <h4 id="thirdScore">800pts</h4>
+              </li>
+            </ul>
+            <h4 id="highScoresBackButt">Back to Main Menu</h4>
+          </div> -->
+          <div id="creditsScreen" class="screen">
+            <h2>Credits</h2>
+            <p>Author: Nick Sorenson</p>
+            <p>Director: Nick Sorenson</p>
+            <p>Producer: Nick Sorenson</p>
+            <p>Made for CS 5430</p>
+            <p>Special thanks to Dean Methias for referenced code</p>
+            <h4 id="creditsBackButt">Back to Main Menu</h4>
+          </div>
+          <div id="gameOverScreen" class="screen" >
+            <h2>Game Over</h2>
+            <h3 id="gameScore">Score: </h3>
+            <h4 id="playAgain">Play Again?</h4>
+            <h4 id="gameOverMainMenuButt">Back to Main Menu</h4>
+    
+          </div>
+        </div>
+      </div>
+    <!-- <canvas id = "id-canvas" width = "1000" height = "1000"></canvas> -->
     <script data-main = "/scripts/loader/loader" src = "/scripts/loader/require.js"></script>
 </body>
 </html>
