@@ -2,7 +2,7 @@ MyGame = {
     screens: {},
     systems: {},
     render: {},
-    assets: {}
+    assets: {},
 };
 // console.log("Hello")
 // alert('hello!')
@@ -30,6 +30,11 @@ MyGame.loader = (function() {
             scripts: ['screens/mainMenu', 'screens/credits',
                     'screens/customizeControls', 'screens/gamePlay'],
             message: 'Other screens loaded',
+            onComplete: null
+        }, 
+        {
+            scripts: ['gameModel/gameModel'],
+            message: 'gameModel has loaded',
             onComplete: null
         }, 
         // {
