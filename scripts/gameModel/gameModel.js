@@ -1,4 +1,10 @@
 MyGame.game.gameModel = (function(){
+    'use strict';
+    let GRID_SIZE = 30;
+    let GAME_WIDTH = function(){}
+    ////////////////
+    // Game Board Code
+    ////////////////
     function Cell(spec){
         let contents = []
         function addContents(content){
@@ -28,9 +34,15 @@ MyGame.game.gameModel = (function(){
         }
         return mArray;
     }
-    /// TODO: don't hardcode this
-    let mBoard = Board(30)
+    let mBoard = Board(GRID_SIZE)
     console.log(mBoard)
+
+    ///////////////////
+    // Inititialize baba
+    ///////////////////
+    function initializeBaba(){
+
+    }
     function update(elapsedTime){
         // do nothing for now
     }
