@@ -3,6 +3,7 @@ MyGame = {
     systems: {},
     render: {},
     assets: {},
+    components: {},
 };
 // console.log("Hello")
 // alert('hello!')
@@ -30,6 +31,17 @@ MyGame.loader = (function() {
             scripts: ['screens/mainMenu', 'screens/credits',
                     'screens/customizeControls', 'screens/gamePlay'],
             message: 'Other screens loaded',
+            onComplete: null
+        },
+        {
+            scripts: ['Componenets/KeyboardControlled', 'Componenets/Sprite',
+                    'Componenets/Position','Componenets/Size'],
+            message: 'Components loaded',
+            onComplete: null
+        },
+        {
+            scripts: ['Entities/entityFactory'],
+            message: 'entity factory has loaded',
             onComplete: null
         }, 
         {
