@@ -134,7 +134,7 @@ MyGame.loader = (function() {
             let entry = assets[0];
             loadAsset(entry.source,
                 function(asset) {
-                    // console.log(asset);
+                    console.log(asset);
                     onSuccess(entry, asset);
                     assets.shift();    // Alternatively: assets.splice(0, 1);
                     loadAssets(assets, onSuccess, onError, onComplete);
@@ -176,9 +176,9 @@ MyGame.loader = (function() {
                     }
                     asset.onload = function() {
                         window.URL.revokeObjectURL(asset.src);
+                        if (onSuccess) {onSuccess(asset); }
                     };
                     asset.src = window.URL.createObjectURL(xhr.response);
-                    if (onSuccess) { onSuccess(asset); }
                 } else {
                     if (onError) { onError('Failed to retrieve: ' + source); }
                 }
@@ -212,7 +212,10 @@ MyGame.loader = (function() {
     console.log('Starting to dynamically load project assets');
     loadAssets(assetOrder,
         function(source, asset) {    // Store it on success
+            // console.log(this);
             MyGame.assets[source.key] = asset;
+            console.log(asset);
+            console.log(asset.width)
         },
         function(error) {
             console.log(error);

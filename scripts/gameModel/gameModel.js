@@ -5,6 +5,7 @@ MyGame.gameModel = function(){
     // Setting game width to canvas width
     /////////
     let GAME_WIDTH = MyGame.systems.render.graphics.width;
+    let CELL_SIZE = GAME_WIDTH / GRID_SIZE;
     let entities = {};
     let mBoard;
     ////////////////
@@ -25,16 +26,23 @@ MyGame.gameModel = function(){
             get x(){return spec.x},
             get y(){return spec.y},
             get contents(){return contents},
+            get center(){return spec.center;},
             addContents: addContents,
             removeContent: removeContent
         }
+    }
+    function getCenter(i, j, width, height){
+        let x = i * CELL_SIZE;
+        let y = j * CELL_SIZE;
+        return {x: (x + (width / 2)), y: (y + (height / 2))};
     }
     function Board(numCells){
         let mArray = [];
         for(let i = 0; i < numCells; i++){
             mArray.push([])
             for(let j = 0; j < numCells; j++){
-                mArray[i].push(Cell({x: i, y: j}))
+                let center = getCenter(i, j, CELL_SIZE, CELL_SIZE);
+                mArray[i].push(Cell({x: i, y: j, center: center}))
             }
         }
         return mArray;
