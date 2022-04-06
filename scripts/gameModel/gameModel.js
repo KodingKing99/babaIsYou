@@ -50,12 +50,13 @@ MyGame.gameModel = function(){
     function addThingsToBoard(board, entities){
         for(let key in entities){
             let entity = entities[key];
-            for(let componentKey in entity.components){
-                let component = entity.components[componentKey];
-                if(component.name === 'position'){
-                    board[component.x][component.y].addContents(entity);
-                    console.log(board[component.x][component.y])
-                }
+            if(entity.components['board-position']){
+                let component = entity.components['board-position'];
+                // Set baba's position to be the board cells position;
+                entity.addComponent(MyGame.components.Position(board[component.x][component.y].center));
+                board[component.x][component.y].addContents(entity);
+                console.log(board[component.x][component.y])
+
             }
         }
     }
@@ -65,7 +66,8 @@ MyGame.gameModel = function(){
     function initializeBaba(){
         let baba = MyGame.systems.entityFactory.createEntity();
         baba.addComponent(MyGame.components.Size({x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE}))
-        baba.addComponent(MyGame.components.Position({x: GRID_SIZE - 10, y: GRID_SIZE - 10}))
+        // Set where baba is supposed to go on the board
+        baba.addComponent(MyGame.components.BoardPosition({x: GRID_SIZE - 10, y: GRID_SIZE - 10}))
         baba.addComponent(MyGame.components.Sprite({assetKey: 'bunnyDown', animationTimes: [25, 25, 25, 25, 25, 25]}))
         baba.addComponent(MyGame.components.Rotation({rotation: 0}));
         return baba;

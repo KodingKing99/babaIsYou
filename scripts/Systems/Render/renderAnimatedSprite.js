@@ -53,13 +53,12 @@ MyGame.systems.render.renderAnimatedSprite =  function (graphics, assets) {
                 // console.log(MyGame.assets)
                 // console.log(entity.components.sprite.key)
                 let mImage = MyGame.assets[entity.components.sprite.key];
-                mImage.width = 360;
                 // console.log(mImage)
                 let sx = 0;
                 let sy = 0;
                 let subImageWidth = mImage.width / 15;
-                let subImageHeight = 24;
-                graphics.drawSubTexture(mImage, sx, sy, subImageWidth, subImageHeight, {x: 500, y: 500}, entity.components.rotation.rotation, entity.components.size)
+                let subImageHeight = mImage.height;
+                graphics.drawSubTexture(mImage, sx, sy, subImageWidth, subImageHeight, entity.components.position, entity.components.rotation.rotation, entity.components.size)
             }
         }
     }

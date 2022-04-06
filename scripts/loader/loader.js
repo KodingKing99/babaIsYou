@@ -36,7 +36,8 @@ MyGame.loader = (function() {
         },
         {
             scripts: ['Componenets/KeyboardControlled', 'Componenets/Sprite',
-                    'Componenets/Position','Componenets/Size', 'Componenets/Rotation'],
+                    'Componenets/Position','Componenets/Size', 'Componenets/Rotation', 
+                    'Componenets/BoardPosition'],
             message: 'Components loaded',
             onComplete: null
         },
@@ -134,7 +135,6 @@ MyGame.loader = (function() {
             let entry = assets[0];
             loadAsset(entry.source,
                 function(asset) {
-                    console.log(asset);
                     onSuccess(entry, asset);
                     assets.shift();    // Alternatively: assets.splice(0, 1);
                     loadAssets(assets, onSuccess, onError, onComplete);
@@ -214,8 +214,6 @@ MyGame.loader = (function() {
         function(source, asset) {    // Store it on success
             // console.log(this);
             MyGame.assets[source.key] = asset;
-            console.log(asset);
-            console.log(asset.width)
         },
         function(error) {
             console.log(error);
