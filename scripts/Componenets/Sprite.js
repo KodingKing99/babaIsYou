@@ -5,9 +5,11 @@
 //      }
 /////////////////////
 MyGame.components.Sprite = function(spec){
+    let subImageIndex = 0;
     return {
         get key(){return spec.assetKey},
         get name(){return 'sprite'},
         get animationTimes(){ return spec.animationTimes; },
+        get subImageIndex(){ return subImageIndex; }
     }
 }

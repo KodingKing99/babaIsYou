@@ -1,4 +1,4 @@
-MyGame.game.gameModel = (function(entityFactory){
+MyGame.gameModel = function(){
     'use strict';
     let GRID_SIZE = 30;
     ///////// 
@@ -55,10 +55,11 @@ MyGame.game.gameModel = (function(entityFactory){
     // Inititialize baba
     ///////////////////
     function initializeBaba(){
-        let baba = entityFactory.createEntity();
+        let baba = MyGame.systems.entityFactory.createEntity();
         baba.addComponent(MyGame.components.Size({x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE}))
         baba.addComponent(MyGame.components.Position({x: GRID_SIZE - 10, y: GRID_SIZE - 10}))
-        baba.addComponent(MyGame.components.Sprite('bunnyDown', [25, 25, 25, 25, 25, 25]))
+        baba.addComponent(MyGame.components.Sprite({assetKey: 'bunnyDown', animationTimes: [25, 25, 25, 25, 25, 25]}))
+        baba.addComponent(MyGame.components.Rotation({rotation: 0}));
         return baba;
     }
     function initialize(){
@@ -71,10 +72,10 @@ MyGame.game.gameModel = (function(entityFactory){
 
     }
     function update(elapsedTime){
-        // do nothing for now
+        MyGame.systems.render.renderAnimatedSprite.update(elapsedTime, entities);
     }
     initialize();
     return {
         update: update
     }
-}(MyGame.systems.entityFactory))
+}

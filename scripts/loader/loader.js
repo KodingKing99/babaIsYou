@@ -36,7 +36,7 @@ MyGame.loader = (function() {
         },
         {
             scripts: ['Componenets/KeyboardControlled', 'Componenets/Sprite',
-                    'Componenets/Position','Componenets/Size'],
+                    'Componenets/Position','Componenets/Size', 'Componenets/Rotation'],
             message: 'Components loaded',
             onComplete: null
         },
@@ -48,6 +48,11 @@ MyGame.loader = (function() {
         {
             scripts: ['Systems/Render/graphics'],
             message: 'Rendering graphics api loaded',
+            onComplete: null
+        }, 
+        {
+            scripts: ['Systems/Render/renderAnimatedSprite'],
+            message: 'Animated sprite renderer loaded',
             onComplete: null
         }, 
         {
@@ -129,6 +134,7 @@ MyGame.loader = (function() {
             let entry = assets[0];
             loadAsset(entry.source,
                 function(asset) {
+                    // console.log(asset);
                     onSuccess(entry, asset);
                     assets.shift();    // Alternatively: assets.splice(0, 1);
                     loadAssets(assets, onSuccess, onError, onComplete);
