@@ -24,8 +24,12 @@ MyGame.components.Sprite = function(spec){
         get spriteCount(){return spec.spriteCount; },
         get animationTime(){ return spec.animationTime; },
         get subImageIndex(){ return subImageIndex; },
-        subAnimationTime: subAnimationTime,
+        set animationTime(ammount){spec.animationTime = ammount;},
+        // subAnimationTime: subAnimationTime,
         resetAnimationTime: resetAnimationTime,
-        incrementSubImageIndex: incrementSubImageIndex,
+        set subImageIndex(mInt){
+            subImageIndex = mInt;
+        }
+        // incrementSubImageIndex: incrementSubImageIndex,
     }
 }

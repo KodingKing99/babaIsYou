@@ -3,8 +3,16 @@
 // Renders an animated object
 //
 // --------------------------------------------------------------
-MyGame.systems.render.renderAnimatedSprite =  function (graphics, assets) {
+
+MyGame.systems.render.renderAnimatedSprite =  function (graphics) {
     'use strict';
+    function subAnimationTime(howMuch, componenet){
+        componenet.animationTime -= howMuch;
+    }
+    function incrementSubImageIndex(componenet){
+        componenet.subImageIndex += 1;
+        componenet.subImageIndex = componenet.subImageIndex % componenet.spriteCount;
+    }
     //------------------------------------------------------------------
     //
     // Update the state of the animation
@@ -18,9 +26,9 @@ MyGame.systems.render.renderAnimatedSprite =  function (graphics, assets) {
             let entity = entities[key];
             if(entity.components.sprite){
                 let component = entity.components.sprite;
-                component.subAnimationTime(elapsedTime);
+                subAnimationTime(elapsedTime, component);
                 if(component.animationTime <= 0){
-                    component.incrementSubImageIndex();
+                    incrementSubImageIndex(component);
                     component.resetAnimationTime();
                 }
             }
@@ -56,4 +64,4 @@ MyGame.systems.render.renderAnimatedSprite =  function (graphics, assets) {
     };
 
     return api;
-}(MyGame.systems.render.graphics, MyGame.assets);
+}(MyGame.systems.render.graphics);
