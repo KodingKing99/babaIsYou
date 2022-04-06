@@ -14,34 +14,24 @@ MyGame.systems.render.renderAnimatedSprite =  function (graphics, assets) {
     //------------------------------------------------------------------
     function update(elapsedTime, entities) {
         render(entities)
+        for(let key in entities){
+            let entity = entities[key];
+            if(entity.components.sprite){
+                let component = entity.components.sprite;
+                component.subAnimationTime(elapsedTime);
+                if(component.animationTime <= 0){
+                    component.incrementSubImageIndex();
+                    component.resetAnimationTime();
+                }
+            }
+        }
     }
 
-    function getSubImageWidth(spriteComponenet, asset){
-
-    }
     //------------------------------------------------------------------
     //
     // Render the specific sub-texture animation frame
     //
     //------------------------------------------------------------------
-    // function render(spriteComponenet, positionComponent, sizeComponent, rotationComonenet, assetId) {
-    //     if (isReady) {
-    //         let sxOffset = Math.floor(subImageWidth * offsetSpriteCount.x) // how many pixels to go before your sprite
-    //         let subSpriteWidth = subImageWidth;
-    //         if (spec.halfSize) {
-    //             subSpriteWidth = subImageWidth / 2 // divide the sprite by 2 if it's half size
-    //             // subImageIndex = subImageIndex / 2
-    //         }
-    //         let sx = (subSpriteWidth * subImageIndex) + sxOffset// where to start clippin
-    //         let sy = subImageHeight * spec.offsetSpriteCount.y// # of pixels before your image
-    //         if (spec.log) {
-    //             console.log(`sx is: ${sx} sy is: ${sy}, offset is ${sxOffset}, sprite width is ${subSpriteWidth}, spriteHeight is ${subImageHeight}`)
-    //             spec.log = false;
-    //         }
-    //         graphics.drawSubTexture(image, sx, sy, subSpriteWidth - spec.extraOffset.x, subImageHeight - spec.extraOffset.y, model.center, model.rotation, model.size);
-    //     }
-    //     let subImageWidth = getSubImageWidth()
-    // }
     /////////
     // Currently trying to draw one image, the first bunny.
     ////////
@@ -50,14 +40,11 @@ MyGame.systems.render.renderAnimatedSprite =  function (graphics, assets) {
         for(let key in entities){
             let entity = entities[key];
             if(entity.components.position && entity.components.sprite && entity.components.size && entity.components.rotation){
-                // console.log(MyGame.assets)
-                // console.log(entity.components.sprite.key)
                 let mImage = MyGame.assets[entity.components.sprite.key];
-                // console.log(mImage)
-                let sx = 0;
-                let sy = 0;
-                let subImageWidth = mImage.width / 15;
+                let subImageWidth = mImage.width / entity.components.sprite.spriteCount;
                 let subImageHeight = mImage.height;
+                let sx = subImageWidth * entity.components.sprite.subImageIndex;
+                let sy = 0;
                 graphics.drawSubTexture(mImage, sx, sy, subImageWidth, subImageHeight, entity.components.position, entity.components.rotation.rotation, entity.components.size)
             }
         }
