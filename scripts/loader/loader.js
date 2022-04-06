@@ -4,6 +4,7 @@ MyGame = {
     render: {},
     assets: {},
     components: {},
+    systems: {},
 };
 // console.log("Hello")
 // alert('hello!')
@@ -40,8 +41,13 @@ MyGame.loader = (function() {
             onComplete: null
         },
         {
-            scripts: ['Entities/entityFactory'],
+            scripts: ['Systems/Entity/entityFactory'],
             message: 'entity factory has loaded',
+            onComplete: null
+        }, 
+        {
+            scripts: ['Systems/Render/graphics'],
+            message: 'Rendering graphics api loaded',
             onComplete: null
         }, 
         {
@@ -50,10 +56,6 @@ MyGame.loader = (function() {
             onComplete: null
         }, 
         // {
-        //     scripts: ['Render/core'],
-        //     message: 'Rendering core loaded',
-        //     onComplete: null
-        // }, {
         //     scripts: ['Render/particle-system'],
         //     message: 'Particle system renderer loaded',
         //     onComplete: null
@@ -69,10 +71,10 @@ MyGame.loader = (function() {
             key: 'backgroundImage',
             source: '../assets/babaIsYouBackground.png'
         }, 
-        // {
-        //     key: 'smoke',
-        //     source: '/assets/smoke.png'
-        // }
+        {
+            key: 'bunnyDown',
+            source: '/assets/bunnyDown.png'
+        }
     ];
 
     //------------------------------------------------------------------

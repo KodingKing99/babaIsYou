@@ -1,7 +1,12 @@
-MyGame.game.gameModel = (function(){
+MyGame.game.gameModel = (function(entityFactory){
     'use strict';
     let GRID_SIZE = 30;
-    let GAME_WIDTH = function(){}
+    ///////// 
+    // Setting game width to canvas width
+    /////////
+    let GAME_WIDTH = MyGame.systems.render.graphics.width;
+    let entities = {};
+    let mBoard;
     ////////////////
     // Game Board Code
     ////////////////
@@ -34,19 +39,42 @@ MyGame.game.gameModel = (function(){
         }
         return mArray;
     }
-    let mBoard = Board(GRID_SIZE)
-    console.log(mBoard)
-
+    function addThingsToBoard(board, entities){
+        for(let key in entities){
+            let entity = entities[key];
+            for(let componentKey in entity.components){
+                let component = entity.components[componentKey];
+                if(component.name === 'position'){
+                    board[component.x][component.y].addContents(entity);
+                    console.log(board[component.x][component.y])
+                }
+            }
+        }
+    }
     ///////////////////
     // Inititialize baba
     ///////////////////
     function initializeBaba(){
+        let baba = entityFactory.createEntity();
+        baba.addComponent(MyGame.components.Size({x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE}))
+        baba.addComponent(MyGame.components.Position({x: GRID_SIZE - 10, y: GRID_SIZE - 10}))
+        baba.addComponent(MyGame.components.Sprite('bunnyDown', [25, 25, 25, 25, 25, 25]))
+        return baba;
+    }
+    function initialize(){
+        let baba = initializeBaba();
+        entities[baba.id] = baba;
+        mBoard = Board(GRID_SIZE);
+        // mBoard[baba.components[]]
+        addThingsToBoard(mBoard, entities);
+        console.log(mBoard)
 
     }
     function update(elapsedTime){
         // do nothing for now
     }
+    initialize();
     return {
         update: update
     }
-}())
+}(MyGame.systems.entityFactory))

@@ -4,7 +4,7 @@
 // a collection of components.
 //
 // --------------------------------------------------------------
-let Entity = (function() {
+MyGame.systems['entityFactory'] = (function() {
     'use strict';
     let nextId = 1;
 
