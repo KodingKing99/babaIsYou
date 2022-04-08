@@ -11,7 +11,7 @@ MyGame.systems.render.renderAnimatedSprite =  function (graphics) {
     }
     function incrementSubImageIndex(componenet){
         componenet.subImageIndex += 1;
-        componenet.subImageIndex = componenet.subImageIndex % componenet.spriteCount;
+        componenet.subImageIndex = componenet.subImageIndex % componenet.spritesToAnimate;
     }
     //------------------------------------------------------------------
     //

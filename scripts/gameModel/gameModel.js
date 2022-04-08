@@ -68,7 +68,7 @@ MyGame.gameModel = function(){
         baba.addComponent(MyGame.components.Size({x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE}))
         // Set where baba is supposed to go on the board
         baba.addComponent(MyGame.components.BoardPosition({x: GRID_SIZE - 10, y: GRID_SIZE - 10}))
-        baba.addComponent(MyGame.components.Sprite({assetKey: 'bunnyDown', animationTime: 50, spriteCount: 15}))
+        baba.addComponent(MyGame.components.Sprite({assetKey: 'bunnyDown', animationTime: 150, spriteCount: 15, spritesToAnimate: 3}))
         baba.addComponent(MyGame.components.Rotation({rotation: 0}));
         return baba;
     }
