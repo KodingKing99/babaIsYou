@@ -1,14 +1,11 @@
-MyGame = {
+let MyGame = {
     screens: {},
     systems: {},
     render: {},
     assets: {},
     components: {},
     constants: {},
-    systems: {},
 };
-// console.log("Hello")
-// alert('hello!')
 requirejs.config({
     baseUrl: 'scripts',
 });
@@ -22,7 +19,6 @@ requirejs.config({
 //------------------------------------------------------------------
 MyGame.loader = (function() {
     'use strict';
-    console.log("hey")
     let scriptOrder = [
         {
             scripts: ['screens/game'],
@@ -60,6 +56,11 @@ MyGame.loader = (function() {
         {
             scripts: ['Systems/Input/keyboardInput'],
             message: 'input system loaded',
+            onComplete: null
+        },
+        {
+            scripts: ['Systems/Movement/movement'],
+            message: 'movement system loaded',
             onComplete: null
         },
         {

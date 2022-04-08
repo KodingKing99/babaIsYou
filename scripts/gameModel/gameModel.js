@@ -13,7 +13,7 @@ MyGame.gameModel = function () {
     ////////////////
     function Cell(spec) {
         let contents = []
-        function addContents(content) {
+        function addContent(content) {
             contents.push(content)
         }
         function removeContent(content) {
@@ -27,7 +27,7 @@ MyGame.gameModel = function () {
             get y() { return spec.y },
             get contents() { return contents },
             get center() { return spec.center; },
-            addContents: addContents,
+            addContent: addContent,
             removeContent: removeContent
         }
     }
@@ -54,7 +54,7 @@ MyGame.gameModel = function () {
                 let component = entity.components['board-position'];
                 // Set baba's position to be the board cells position;
                 entity.addComponent(MyGame.components.Position(board[component.x][component.y].center));
-                board[component.x][component.y].addContents(entity);
+                board[component.x][component.y].addContent(entity);
                 console.log(board[component.x][component.y])
 
             }
@@ -106,6 +106,7 @@ MyGame.gameModel = function () {
     function update(elapsedTime) {
         MyGame.systems.render.renderAnimatedSprite.update(elapsedTime, entities);
         MyGame.systems.keyboardInput.update(elapsedTime, entities);
+        MyGame.systems.movement.update(elapsedTime, entities, mBoard);
     }
     initialize();
     return {
