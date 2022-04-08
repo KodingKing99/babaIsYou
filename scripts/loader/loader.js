@@ -4,6 +4,7 @@ MyGame = {
     render: {},
     assets: {},
     components: {},
+    constants: {},
     systems: {},
 };
 // console.log("Hello")
@@ -35,9 +36,9 @@ MyGame.loader = (function() {
             onComplete: null
         },
         {
-            scripts: ['Componenets/KeyboardControlled', 'Componenets/Sprite',
-                    'Componenets/Position','Componenets/Size', 'Componenets/Rotation', 
-                    'Componenets/BoardPosition'],
+            scripts: ['Components/KeyboardControlled', 'Components/Sprite',
+                    'Components/Position','Components/Size', 'Components/Rotation', 
+                    'Components/BoardPosition', 'Components/Movable'],
             message: 'Components loaded',
             onComplete: null
         },
@@ -50,12 +51,22 @@ MyGame.loader = (function() {
             scripts: ['Systems/Render/graphics'],
             message: 'Rendering graphics api loaded',
             onComplete: null
-        }, 
+        },
         {
             scripts: ['Systems/Render/renderAnimatedSprite'],
             message: 'Animated sprite renderer loaded',
             onComplete: null
-        }, 
+        },
+        {
+            scripts: ['Systems/Input/keyboardInput'],
+            message: 'input system loaded',
+            onComplete: null
+        },
+        {
+            scripts: ['gameModel/DirectionConstants'],
+            message: 'constants loaded',
+            onComplete: null
+        },
         {
             scripts: ['gameModel/gameModel'],
             message: 'gameModel has loaded',
