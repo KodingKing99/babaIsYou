@@ -52,6 +52,7 @@ MyGame.systems['movement'] = (function () {
                 switch (direction) {
                     case MyGame.constants.direction.UP:
                         entity.components.sprite.key = 'bunnyUp';
+                        entity.components.sprite.spritesToAnimate = 15;
                         // if (entity.components.movable.facing != MyGame.constants.direction.UP) {
                         //     entity.components.movable.facing = MyGame.constants.direction.UP;
                         // }
