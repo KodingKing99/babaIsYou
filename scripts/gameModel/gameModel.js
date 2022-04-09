@@ -37,6 +37,7 @@ MyGame.gameModel = function () {
         return { x: (x + (width / 2)), y: (y + (height / 2)) };
     }
     function Board(numCells) {
+        // let that = {};
         let mArray = [];
         for (let i = 0; i < numCells; i++) {
             mArray.push([])
@@ -45,7 +46,12 @@ MyGame.gameModel = function () {
                 mArray[i].push(Cell({ x: i, y: j, center: center }))
             }
         }
-        return mArray;
+        return {
+            get cells(){return mArray},
+            get height(){return numCells},
+            get width(){return numCells},
+        }
+        
     }
     function addThingsToBoard(board, entities) {
         for (let key in entities) {
@@ -53,9 +59,9 @@ MyGame.gameModel = function () {
             if (entity.components['board-position']) {
                 let component = entity.components['board-position'];
                 // Set baba's position to be the board cells position;
-                entity.addComponent(MyGame.components.Position(board[component.x][component.y].center));
-                board[component.x][component.y].addContent(entity);
-                console.log(board[component.x][component.y])
+                entity.addComponent(MyGame.components.Position(board.cells[component.x][component.y].center));
+                board.cells[component.x][component.y].addContent(entity);
+                // console.log(board[component.x][component.y])
 
             }
         }

@@ -20,6 +20,7 @@ MyGame.components.Sprite = function(spec){
     }
     return {
         get key(){return spec.assetKey},
+        set key(newKey){spec.assetKey = newKey},
         get name(){return 'sprite'},
         get spriteCount(){return spec.spriteCount; },
         get animationTime(){ return spec.animationTime; },

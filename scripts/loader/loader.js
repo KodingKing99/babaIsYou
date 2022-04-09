@@ -92,7 +92,19 @@ MyGame.loader = (function() {
         {
             key: 'bunnyDown',
             source: '/assets/bunnyDown.png'
-        }
+        },
+        {
+            key: 'bunnyUp',
+            source: '/assets/bunnyUp.png'
+        },
+        {
+            key: 'bunnyLeft',
+            source: '/assets/bunnyLeft.png'
+        },
+        {
+            key: 'bunnyRight',
+            source: '/assets/bunnyRight.png'
+        },
     ];
 
     //------------------------------------------------------------------
