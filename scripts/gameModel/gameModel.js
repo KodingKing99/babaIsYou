@@ -14,7 +14,7 @@ MyGame.gameModel = function () {
     function Cell(spec) {
         let contents = []
         function addContent(content) {
-            contents.push(content)
+            contents.push(content);
         }
         function removeContent(content) {
             let index = contents.indexOf(content);
@@ -42,7 +42,7 @@ MyGame.gameModel = function () {
             mArray.push([])
             for (let j = 0; j < numCells; j++) {
                 let center = getCenter(i, j, CELL_SIZE, CELL_SIZE);
-                mArray[i].push(Cell({ x: i, y: j, center: center }))
+                mArray[i].push(Cell({ x: i, y: j, center: center }));
             }
         }
         return mArray;

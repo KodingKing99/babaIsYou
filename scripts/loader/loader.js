@@ -92,6 +92,10 @@ MyGame.loader = (function() {
         {
             key: 'bunnyDown',
             source: '/assets/bunnyDown.png'
+        },
+        {
+            key: 'levels-all',
+            source: '/assets/levels-all.txt'
         }
     ];
 
@@ -174,7 +178,7 @@ MyGame.loader = (function() {
 
         if (fileExtension) {
             xhr.open('GET', source, true);
-            xhr.responseType = 'blob';
+            xhr.responseType = (fileExtension === 'txt') ? 'text' : 'blob';
 
             xhr.onload = function() {
                 let asset = null;
@@ -183,28 +187,33 @@ MyGame.loader = (function() {
                         asset = new Image();
                     } else if (fileExtension === 'mp3') {
                         asset = new Audio();
-                    } else {
+                    } else if (fileExtension === 'txt') {
+                        if (onSuccess) { onSuccess(xhr.responseText); }
+                    }
+                    else {
                         if (onError) { onError('Unknown file extension: ' + fileExtension); }
                     }
-                    asset.onload = function() {
-                        window.URL.revokeObjectURL(asset.src);
-                        if (onSuccess) {onSuccess(asset); }
-                    };
-                    asset.src = window.URL.createObjectURL(xhr.response);
+                    if (xhr.responseType === 'blob') {
+                        asset.onload = function() {
+                            window.URL.revokeObjectURL(asset.src);
+                            if (onSuccess) { onSuccess(asset); }
+                        };
+                        asset.src = window.URL.createObjectURL(xhr.response);
+                    }
                 } else {
                     if (onError) { onError('Failed to retrieve: ' + source); }
                 }
             };
+            xhr.send();
         } else {
             if (onError) { onError('Unknown file extension: ' + fileExtension); }
         }
-
-        xhr.send();
     }
+
     function setBackgroundImage(){
         // console.log("setting background image")
         // let mString = `url('${MyGame.assets['backgroundImage'].src}')`
-        document.body.style.backgroundImage = "url(../assets/babaIsYouBackground.png)"
+        document.body.style.backgroundImage = "url(../assets/babaIsYouBackground.png)";
         // console.log(MyGame.assets['backgroundImage'])
 
     }
