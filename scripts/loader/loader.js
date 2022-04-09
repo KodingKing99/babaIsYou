@@ -92,6 +92,10 @@ MyGame.loader = (function() {
         {
             key: 'bunnyDown',
             source: '/assets/bunnyDown.png'
+        },
+        {
+            key: 'levels-all',
+            source: '/assets/levels-all.txt'
         }
     ];
 
@@ -209,7 +213,7 @@ MyGame.loader = (function() {
     function setBackgroundImage(){
         // console.log("setting background image")
         // let mString = `url('${MyGame.assets['backgroundImage'].src}')`
-        document.body.style.backgroundImage = "url(../assets/babaIsYouBackground.png)"
+        document.body.style.backgroundImage = "url(../assets/babaIsYouBackground.png)";
         // console.log(MyGame.assets['backgroundImage'])
 
     }
