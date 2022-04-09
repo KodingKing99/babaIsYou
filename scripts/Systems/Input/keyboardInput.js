@@ -10,6 +10,7 @@ MyGame.systems.keyboardInput = (function () {
     let keysDown = {};
 
     function keyPress(e) {
+        e.preventDefault();
         keysDown[e.key] = e.timeStamp;
     }
     

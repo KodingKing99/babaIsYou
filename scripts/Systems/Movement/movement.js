@@ -6,7 +6,9 @@ MyGame.systems['movement'] = (function () {
         let entityPosition = entity.components['board-position'];
         board.cells[entityPosition.x][entityPosition.y].addContent(entity);
         let boardCenterY = board.cells[entityPosition.x][entityPosition.y].center.y;
+        let boardCenterX = board.cells[entityPosition.x][entityPosition.y].center.x;
         entity.components.position.y = boardCenterY;
+        entity.components.position.x = boardCenterX;
     }
     function moveUp(entity, board) {
         let entityPosition = entity.components['board-position'];
@@ -20,8 +22,25 @@ MyGame.systems['movement'] = (function () {
     function moveDown(entity, board) {
         let entityPosition = entity.components['board-position'];
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
-        if (entityPosition.y < board.height) {
+        if (entityPosition.y < board.height - 1) {
             entityPosition.y = entityPosition.y + 1;
+            addEntityToBoard(entity, board);
+        }
+    }
+    function moveLeft(entity, board) {
+        let entityPosition = entity.components['board-position'];
+        console.log(`Moving left. position is x:  ${entityPosition.x}`)
+        board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
+        if (entityPosition.x > 0) {
+            entityPosition.x = entityPosition.x - 1;
+            addEntityToBoard(entity, board);
+        }
+    }
+    function moveRight(entity, board) {
+        let entityPosition = entity.components['board-position'];
+        board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
+        if (entityPosition.x < board.width - 1) {
+            entityPosition.x = entityPosition.x + 1;
             addEntityToBoard(entity, board);
         }
     }
@@ -30,42 +49,51 @@ MyGame.systems['movement'] = (function () {
         if (entity.components.sprite) {
             if (entity.components.sprite.key.match(/bunny/)) {
                 entity.components.sprite.key = 'bunnyUp';
-                // switch (direction) {
-                //     case MyGame.constants.direction.UP:
-                //         entity.components.sprite.key = 'bunnyUp';
+                switch (direction) {
+                    case MyGame.constants.direction.UP:
+                        entity.components.sprite.key = 'bunnyUp';
                         // if (entity.components.movable.facing != MyGame.constants.direction.UP) {
                         //     entity.components.movable.facing = MyGame.constants.direction.UP;
                         // }
+                        break;
+                    case MyGame.constants.direction.DOWN:
+                        entity.components.sprite.key = 'bunnyDown';
+                        break;
+                    case MyGame.constants.direction.RIGHT:
+                        entity.components.sprite.key = 'bunnyRight';
+                        break;
+                    case MyGame.constants.direction.LEFT:
+                        entity.components.sprite.key = 'bunnyLeft';
+                        break;
 
-                // }
+                }
 
             }
         }
     }
-    // let moveFunctions = {
-    //     up: moveUp,
-    // };
     function moveEntityOnBoard(entity, board) {
-        // let entityPosition = entity.components.boardPostion;
         let movable = entity.components.movable;
         switch (movable.moveDirection) {
             case MyGame.constants.direction.UP:
                 movable.moveDirection = MyGame.constants.direction.STOPPED;
                 moveUp(entity, board);
                 setFacing(entity, MyGame.constants.direction.UP);
-            // case MyGame.constants.direction.DOWN:
-            //     movable.moveDirection = MyGame.constants.direction.STOPPED;
-            //     moveDown(entity, board);
-            //     setFacing(entity, MyGame.constants.direction.DOWN);
-            // case 'up': 
-            //         movable.moveDirection = MyGame.constants.direction.STOPPED;
-            //         moveUp(entity, board);
-            //         setSprite(entity, 'up');
-            // case 'up': 
-            //         movable.moveDirection = MyGame.constants.direction.STOPPED;
-            //         moveUp(entity, board);
-            //         setSprite(entity, 'up');
-
+                break;
+            case MyGame.constants.direction.DOWN:
+                movable.moveDirection = MyGame.constants.direction.STOPPED;
+                moveDown(entity, board);
+                setFacing(entity, MyGame.constants.direction.DOWN);
+                break;
+            case MyGame.constants.direction.RIGHT:
+                movable.moveDirection = MyGame.constants.direction.STOPPED;
+                moveRight(entity, board);
+                setFacing(entity, MyGame.constants.direction.RIGHT);
+                break;
+            case MyGame.constants.direction.LEFT:
+                movable.moveDirection = MyGame.constants.direction.STOPPED;
+                moveLeft(entity, board);
+                setFacing(entity, MyGame.constants.direction.LEFT);
+                break;
         }
 
     }
