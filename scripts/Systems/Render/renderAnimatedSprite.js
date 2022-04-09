@@ -4,14 +4,34 @@
 //
 // --------------------------------------------------------------
 
-MyGame.systems.render.renderAnimatedSprite =  function (graphics) {
+MyGame.systems.render.renderAnimatedSprite = function (graphics) {
     'use strict';
-    function subAnimationTime(howMuch, componenet){
+    // let extraAnimationDuration;
+    function subAnimationTime(howMuch, componenet) {
         componenet.animationTime -= howMuch;
     }
-    function incrementSubImageIndex(componenet){
+    function subExtraDuration(howMuch, component) {
+        component.extraAnimationDuration -= howMuch;
+    }
+    function incrementSubImageIndex(componenet) {
         componenet.subImageIndex += 1;
         componenet.subImageIndex = componenet.subImageIndex % componenet.spritesToAnimate;
+    }
+    function animateExtra(entity, howMany, newAnimationTime) {
+        let sprite = entity.components.sprite;
+        // spriteCountBefore = sprite.spritesToAnimate;
+        // let animationTimeBefore = sprite.animationTime;
+        if (newAnimationTime) {
+            sprite.animationTime = newAnimationTime;
+        }
+        // let duration = howMany * sprite.animationTime;
+        sprite.spritesToAnimate = howMany;
+        sprite.animateExtra = false;
+        sprite.animationTime = newAnimationTime;
+        sprite.animationTimeCopy = newAnimationTime;
+        // set the sprite to animate that extra animation for the full duration needed
+        sprite.extraAnimationDuration = sprite.animationTime * sprite.spritesToAnimate;
+
     }
     //------------------------------------------------------------------
     //
@@ -22,15 +42,28 @@ MyGame.systems.render.renderAnimatedSprite =  function (graphics) {
     //------------------------------------------------------------------
     function update(elapsedTime, entities) {
         render(entities)
-        for(let key in entities){
+        for (let key in entities) {
             let entity = entities[key];
-            if(entity.components.sprite){
+            if (entity.components.sprite) {
                 let component = entity.components.sprite;
                 subAnimationTime(elapsedTime, component);
-                if(component.animationTime <= 0){
+                if (component.animationTime <= 0) {
                     incrementSubImageIndex(component);
-                    component.resetAnimationTime();
+                    component.resetAnimationFrame();
                 }
+                if (component.animateExtra) {
+                    console.log("queing walking animation")
+                    animateExtra(entity, 15, 50);
+
+                }
+                if (component.extraAnimationDuration || component.extraAnimationDuration != null) {
+                    subExtraDuration(elapsedTime, component)
+                    if (component.extraAnimationDuration <= 0) {
+                        component.resetAnimationToOriginal();
+                        component.extraAnimationDuration = null;
+                    }
+                }
+
             }
         }
     }
@@ -45,9 +78,9 @@ MyGame.systems.render.renderAnimatedSprite =  function (graphics) {
     ////////
     function render(entities) {
         graphics.clear();
-        for(let key in entities){
+        for (let key in entities) {
             let entity = entities[key];
-            if(entity.components.position && entity.components.sprite && entity.components.size && entity.components.rotation){
+            if (entity.components.position && entity.components.sprite && entity.components.size && entity.components.rotation) {
                 let mImage = MyGame.assets[entity.components.sprite.key];
                 let subImageWidth = mImage.width / entity.components.sprite.spriteCount;
                 let subImageHeight = mImage.height;
