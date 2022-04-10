@@ -37,7 +37,7 @@ MyGame.systems['movement'] = (function () {
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         if (entityPosition.y < board.height - 1) {
             entityPosition.y = entityPosition.y + 1;
-            pushUp({...entityPosition}, board, moveDown)
+            pushUp({ ...entityPosition }, board, moveDown)
             addEntityToBoard(entity, board);
         }
     }
@@ -56,7 +56,7 @@ MyGame.systems['movement'] = (function () {
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         if (entityPosition.x < board.width - 1) {
             entityPosition.x = entityPosition.x + 1;
-            pushUp({...entityPosition}, board, moveRight)
+            pushUp({ ...entityPosition }, board, moveRight)
             addEntityToBoard(entity, board);
         }
     }
@@ -96,25 +96,59 @@ MyGame.systems['movement'] = (function () {
         let movable = entity.components.movable;
         switch (movable.moveDirection) {
             case MyGame.constants.direction.UP:
-                movable.moveDirection = MyGame.constants.direction.STOPPED;
-                moveUp(entity, board);
-                setFacing(entity, MyGame.constants.direction.UP);
-                break;
+                if (canMove) {
+                    movable.moveDirection = MyGame.constants.direction.STOPPED;
+                    moveUp(entity, board);
+                    setFacing(entity, MyGame.constants.direction.UP);
+                    canMove = false;
+                    break;
+                }
+                else {
+                    canMove = true;
+                    break;
+                }
+
             case MyGame.constants.direction.DOWN:
-                movable.moveDirection = MyGame.constants.direction.STOPPED;
-                moveDown(entity, board);
-                setFacing(entity, MyGame.constants.direction.DOWN);
-                break;
+                if (canMove) {
+                    movable.moveDirection = MyGame.constants.direction.STOPPED;
+                    moveDown(entity, board);
+                    setFacing(entity, MyGame.constants.direction.DOWN);
+                    canMove = false;
+                    break;
+                }
+                else {
+                    canMove = true;
+                    break;
+                }
+
+
             case MyGame.constants.direction.RIGHT:
-                movable.moveDirection = MyGame.constants.direction.STOPPED;
-                moveRight(entity, board);
-                setFacing(entity, MyGame.constants.direction.RIGHT);
-                break;
+                if (canMove) {
+                    movable.moveDirection = MyGame.constants.direction.STOPPED;
+                    moveRight(entity, board);
+                    setFacing(entity, MyGame.constants.direction.RIGHT);
+                    canMove = false;
+                    break;
+                }
+                else {
+                    canMove = true;
+                    break;
+                }
+
             case MyGame.constants.direction.LEFT:
-                movable.moveDirection = MyGame.constants.direction.STOPPED;
-                moveLeft(entity, board);
-                setFacing(entity, MyGame.constants.direction.LEFT);
-                break;
+                if (canMove) {
+                    movable.moveDirection = MyGame.constants.direction.STOPPED;
+                    moveLeft(entity, board);
+                    setFacing(entity, MyGame.constants.direction.LEFT);
+                    canMove = false;
+                    break;
+                }
+                else {
+                   canMove = true;
+                   break; 
+                }
+
+
         }
 
     }

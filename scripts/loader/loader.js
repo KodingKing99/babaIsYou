@@ -34,7 +34,8 @@ MyGame.loader = (function() {
         {
             scripts: ['Components/KeyboardControlled', 'Components/Sprite',
                     'Components/Position','Components/Size', 'Components/Rotation', 
-                    'Components/BoardPosition', 'Components/Movable', 'Components/Noun', 'Components/Properties'],
+                    'Components/BoardPosition', 'Components/Movable', 'Components/Noun', 'Components/Properties',
+                    'Components/Text'],
             message: 'Components loaded',
             onComplete: null
         },
@@ -121,7 +122,10 @@ MyGame.loader = (function() {
             key: 'hedge',
             source: '/assets/hedge_green1.png'
         },
-
+        {
+            key: 'word-wall',
+            source: '/assets/word-wall.png'
+        },
     ];
 
     //------------------------------------------------------------------

@@ -44,6 +44,11 @@ MyGame.gameModel = function () {
                             case 'h':
                                 addHedge(j, levelCount % 20, entities);
                                 break;
+                            case 'W':
+                                console.log("adding word -wall");
+                                addWord_Wall(j, levelCount % 20, entities);
+                                // console.log("adding word -wall");
+                                break;
                         }
                     }
                 }
@@ -125,12 +130,8 @@ MyGame.gameModel = function () {
         wall.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
         wall.addComponent(MyGame.components.Sprite({ assetKey: 'wall', animationTime: 200, spriteCount: 3, spritesToAnimate: 3 }))
         wall.addComponent(MyGame.components.Rotation({ rotation: 0 }));
-        console.log('adding wall as noun')
         wall.addComponent(MyGame.components.Noun({ key: 'WALL' }))
-        // console.log(wall.components.noun.valueType)
         // wall.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
-        // // console.log(wall.components.properties.toString())
-        // console.log(wall.components.properties.toString());
         return wall;
     }
 
@@ -196,9 +197,27 @@ MyGame.gameModel = function () {
         mEntity.addComponent(MyGame.components.Sprite({ assetKey: 'hedge', animationTime: 200, spriteCount: 3, spritesToAnimate: 3 }))
         mEntity.addComponent(MyGame.components.Rotation({ rotation: 0 }));
         mEntity.addComponent(MyGame.components.Noun({ key: 'HEDGE' }))
-        console.log(`hedge at ${x}, ${y}`)
         // console.log(wall.components.noun.valueType)
         // mEntity.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
+        return mEntity;
+    }
+    function initializeEntityAtXY(x, y){
+        let mEntity = MyGame.systems.entityFactory.createEntity();
+        mEntity.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
+        mEntity.addComponent(MyGame.components.Rotation({ rotation: 0 }));
+        // Set where mEntity is supposed to go on the board
+        mEntity.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
+        return mEntity;
+    }
+    ///////////////////////////
+    // Inititialize Text  
+    ///////////////////////////
+    function initializeText(x, y, wordType, assetKey) {
+        let mEntity = initializeEntityAtXY(x, y);
+        mEntity.addComponent(MyGame.components.Sprite({ assetKey: assetKey, animationTime: 200, spriteCount: 3, spritesToAnimate: 3 }))
+        mEntity.addComponent(MyGame.components.Text({ key: wordType }))
+        // mEntity.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
+        console.log(mEntity);
         return mEntity;
     }
     //------------------------------------------------------------------
@@ -220,6 +239,14 @@ MyGame.gameModel = function () {
         let mEntity = initializeHedge(x, y);
         entities[mEntity.id] = mEntity;
     }
+    function addWord_Wall(x, y, entities) {
+        let mEntity = initializeText(x, y, 'WALL', 'word-wall');
+        entities[mEntity.id] = mEntity;
+    }
+    function addWord_Stop(x, y, entities) {
+        let mEntity = initializeText(x, y, 'STOP', 'word-stop');
+        entities[mEntity.id] = mEntity;
+    }
     function initialize() {
         parseLevelsFile(entities);
         mBoard = Board(GRID_SIZE);
@@ -228,9 +255,10 @@ MyGame.gameModel = function () {
 
     }
     function update(elapsedTime) {
-        MyGame.systems.render.renderAnimatedSprite.update(elapsedTime, entities);
+        // MyGame.systems.render.renderAnimatedSprite.update(elapsedTime, entities);
         MyGame.systems.keyboardInput.update(elapsedTime, entities);
         MyGame.systems.movement.update(elapsedTime, entities, mBoard);
+        MyGame.systems.render.renderAnimatedSprite.update(elapsedTime, entities);
     }
     initialize();
     return {

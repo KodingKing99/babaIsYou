@@ -52,7 +52,11 @@ MyGame.systems.render.renderAnimatedSprite = function (graphics) {
                     component.resetAnimationFrame();
                 }
                 if (component.animateExtra) {
-                    animateExtra(entity, 15, 50);
+                    if(entity.components.noun){
+                        if(entity.components.noun.valueType === 'Baba'){
+                            animateExtra(entity, 15, 60);
+                        }
+                    }
 
                 }
                 if (component.extraAnimationDuration || component.extraAnimationDuration != null) {
