@@ -4,6 +4,41 @@ MyGame.gameModel = function () {
     ///////// 
     // Setting game width to canvas width
     /////////
+    function parseLevelsFile(entities) {
+        let levelsTxt = MyGame.assets['levels-all'];
+        console.log(levelsTxt);
+        let s = ""
+        s.split()
+        levelsTxt = levelsTxt.split(/Level-\d/)
+        console.log("level1 text after split")
+        console.log(levelsTxt[MyGame.level]);
+        levelsTxt = levelsTxt[MyGame.level].split('\n')
+        console.log(levelsTxt);
+        let levelCount;
+        for (let i = 0; i < levelsTxt.length; i++) {
+            if (levelsTxt[i].match(/\d\d x \d\d/)) {
+                console.log(`Grid is ${levelsTxt[i]}`)
+                GRID_SIZE = levelsTxt[i].split('x')[0];
+                levelCount = 0;
+            }
+            if (levelsTxt[i] === '\r' || levelsTxt === "") {
+                continue;
+            }
+            else {
+                for (let j = 0; j < levelsTxt[i].length; j++) {
+                    console.log(levelCount);
+                    if (levelCount >= 0) {
+                        if (levelsTxt[i][j] === 'b') {
+                            console.log(`I found baba at ${levelCount}, ${j}`)
+                            addBaba(levelCount % 20, j, entities);
+                        }
+                    }
+                }
+                levelCount++;
+            }
+        }
+    }
+
     let GAME_WIDTH = MyGame.systems.render.graphics.width;
     let CELL_SIZE = GAME_WIDTH / GRID_SIZE;
     let entities = {};
@@ -37,6 +72,7 @@ MyGame.gameModel = function () {
         return { x: (x + (width / 2)), y: (y + (height / 2)) };
     }
     function Board(numCells) {
+        // let that = {};
         let mArray = [];
         for (let i = 0; i < numCells; i++) {
             mArray.push([])
@@ -45,7 +81,12 @@ MyGame.gameModel = function () {
                 mArray[i].push(Cell({ x: i, y: j, center: center }));
             }
         }
-        return mArray;
+        return {
+            get cells() { return mArray },
+            get height() { return numCells },
+            get width() { return numCells },
+        }
+
     }
     function addThingsToBoard(board, entities) {
         for (let key in entities) {
@@ -53,9 +94,9 @@ MyGame.gameModel = function () {
             if (entity.components['board-position']) {
                 let component = entity.components['board-position'];
                 // Set baba's position to be the board cells position;
-                entity.addComponent(MyGame.components.Position(board[component.x][component.y].center));
-                board[component.x][component.y].addContent(entity);
-                console.log(board[component.x][component.y])
+                entity.addComponent(MyGame.components.Position(board.cells[component.x][component.y].center));
+                board.cells[component.x][component.y].addContent(entity);
+                // console.log(board[component.x][component.y])
 
             }
         }
@@ -63,12 +104,12 @@ MyGame.gameModel = function () {
     ///////////////////
     // Inititialize baba
     ///////////////////
-    function initializeBaba() {
+    function initializeBaba(x, y) {
         let baba = MyGame.systems.entityFactory.createEntity();
         baba.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
         // Set where baba is supposed to go on the board
-        baba.addComponent(MyGame.components.BoardPosition({ x: GRID_SIZE - 10, y: GRID_SIZE - 10 }))
-        baba.addComponent(MyGame.components.Sprite({ assetKey: 'bunnyDown', animationTime: 150, spriteCount: 15, spritesToAnimate: 3 }))
+        baba.addComponent(MyGame.components.BoardPosition({ x: x, y: y}))
+        baba.addComponent(MyGame.components.Sprite({ assetKey: 'bunnyRight', animationTime: 150, spriteCount: 15, spritesToAnimate: 3 }))
         baba.addComponent(MyGame.components.Rotation({ rotation: 0 }));
         //-------------------------------------------------------------
         // Initialize the input
@@ -89,7 +130,7 @@ MyGame.gameModel = function () {
         baba.addComponent(MyGame.components.Movable(
             {
                 moveDirection: MyGame.constants.direction.STOPPED,
-                facing: MyGame.constants.direction.DOWN,
+                facing: MyGame.constants.direction.RIGHT,
             }
         ))
         return baba;
@@ -119,13 +160,18 @@ MyGame.gameModel = function () {
         return rock;
     }
 
-    function initialize() {
-        let baba = initializeBaba();
+    function addBaba(x, y, entities){
+        let baba = initializeBaba(x, y);
         entities[baba.id] = baba;
+    }
+
+    function initialize() {
+        parseLevelsFile(entities);
+        mBoard = Board(GRID_SIZE);
+
         let rock = initializeRock();
         entities[rock.id] = rock;
-
-        mBoard = Board(GRID_SIZE);
+        
         // mBoard[baba.components[]]
         addThingsToBoard(mBoard, entities);
         console.log(mBoard)

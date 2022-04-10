@@ -10,11 +10,15 @@ MyGame.systems.keyboardInput = (function () {
     let keysDown = {};
 
     function keyPress(e) {
+        e.preventDefault();
         keysDown[e.key] = e.timeStamp;
     }
     
     function keyRelease(e) {
         delete keysDown[e.key];
+    }
+    function keyRelease2(key) {
+        delete keysDown[key];
     }
 
     // --------------------------------------------------------------
@@ -31,7 +35,7 @@ MyGame.systems.keyboardInput = (function () {
                     if (keysDown[key]) {
                         entity.components.movable.facing = input.keys[key];
                         entity.components.movable.moveDirection = input.keys[key];
-                        console.log(`Setting baba to face ${input.keys[key]} and move ${input.keys[key]}`)
+                        keyRelease2(key);
                     }
                 }
             }
@@ -39,7 +43,7 @@ MyGame.systems.keyboardInput = (function () {
     }
 
     window.addEventListener('keydown', keyPress);
-    window.addEventListener('keyup', keyRelease);
+    // window.addEventListener('keyup', keyRelease);
 
     let api = {
         update: update
