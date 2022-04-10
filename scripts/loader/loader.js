@@ -113,6 +113,30 @@ MyGame.loader = (function() {
             key: 'rock',
             source: '/assets/rock.png'
         },
+        {
+            key: 'flag',
+            source: '/assets/flag.png'
+        },
+        {
+            key: 'wall',
+            source: '/assets/wall.png'
+        },
+        {
+            key: 'floor',
+            source: '/assets/floor.png'
+        },
+        {
+            key: 'word-you',
+            source: '/assets/word-you.png'
+        },
+        {
+            key: 'word-baba',
+            source: '/assets/word-baba.png'
+        },
+        {
+            key: 'word-is',
+            source: '/assets/word-is.png'
+        },
     ];
 
     //------------------------------------------------------------------
