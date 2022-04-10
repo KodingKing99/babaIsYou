@@ -35,6 +35,7 @@ MyGame.game = (function (screens) {
     //------------------------------------------------------------------
     function initialize() {
         let screen = null;
+        MyGame.level = 1;
         //
         // Go through each of the screens and tell them to initialize
         for (screen in screens) {

@@ -94,6 +94,18 @@ MyGame.loader = (function() {
             source: '/assets/bunnyDown.png'
         },
         {
+            key: 'bunnyUp',
+            source: '/assets/bunnyUp.png'
+        },
+        {
+            key: 'bunnyLeft',
+            source: '/assets/bunnyLeft.png'
+        },
+        {
+            key: 'bunnyRight',
+            source: '/assets/bunnyRight.png'
+        },
+        {
             key: 'levels-all',
             source: '/assets/levels-all.txt'
         },
