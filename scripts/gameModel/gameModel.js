@@ -10,8 +10,8 @@ MyGame.gameModel = function () {
         let s = ""
         s.split()
         levelsTxt = levelsTxt.split(/Level-\d/)
-        console.log("level1 text after split")
-        console.log(levelsTxt[MyGame.level]);
+        // console.log("level1 text after split")
+        // console.log(levelsTxt[MyGame.level]);
         levelsTxt = levelsTxt[MyGame.level].split('\n')
         console.log(levelsTxt);
         let levelCount;
@@ -76,7 +76,7 @@ MyGame.gameModel = function () {
             get x() { return spec.x },
             get y() { return spec.y },
             get contents() { return contents },
-            get center() { return spec.center; },
+            get center() { return {...spec.center}; },
             addContent: addContent,
             removeContent: removeContent
         }
@@ -111,7 +111,6 @@ MyGame.gameModel = function () {
                 // Set baba's position to be the board cells position;
                 entity.addComponent(MyGame.components.Position(board.cells[component.x][component.y].center));
                 board.cells[component.x][component.y].addContent(entity);
-                console.log(board.cells[component.x][component.y])
 
             }
         }
