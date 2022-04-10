@@ -4,18 +4,34 @@ MyGame.systems['movement'] = (function () {
     let moveTime = 750;
     function addEntityToBoard(entity, board) {
         let entityPosition = entity.components['board-position'];
+        // console.log(board);
+        console.log(`board center was`)
+        console.log(board.cells[entityPosition.x][entityPosition.y].center)
         board.cells[entityPosition.x][entityPosition.y].addContent(entity);
         let boardCenterY = board.cells[entityPosition.x][entityPosition.y].center.y;
         let boardCenterX = board.cells[entityPosition.x][entityPosition.y].center.x;
+        console.log(`rendering position: ${boardCenterX}, ${boardCenterY}`)
+        console.log(`board center is`)
+        console.log(board.cells[entityPosition.x][entityPosition.y].center)
         entity.components.position.y = boardCenterY;
         entity.components.position.x = boardCenterX;
+        console.log('entity is');
+        console.log(entity);
+        console.log('board contents after adding entity to board')
+        console.log(board.cells[entityPosition.x][entityPosition.y].contents)
+        console.log('board x and y');
+        console.log(`${board.cells[entityPosition.x][entityPosition.y].x}, ${board.cells[entityPosition.x][entityPosition.y].y}`)
     }
     function pushUp(entityPosition, board, callback) {
+        console.log(`cell contents at ${board.cells[entityPosition.x][entityPosition.y].x}, ${board.cells[entityPosition.x][entityPosition.y].y}`)
+        console.log(board.cells[entityPosition.x][entityPosition.y].contents)
         for (let index in board.cells[entityPosition.x][entityPosition.y].contents) {
             let mEntity = board.cells[entityPosition.x][entityPosition.y].contents[index];
             if (mEntity.components.properties) {
                 if (mEntity.components.properties.is('PUSH')) {
+                    // debugger;
                     callback(mEntity, board);
+                    // console.log(mEntity);
                 }
             }
             // console.log(mEntity);
@@ -24,12 +40,13 @@ MyGame.systems['movement'] = (function () {
     function moveUp(entity, board) {
         let entityPosition = entity.components['board-position'];
         // console.log(`in move up. entity position is ${entityPosition}`)
+        board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         if (entityPosition.y > 0) {
             entityPosition.y = entityPosition.y - 1;
-            pushUp(entityPosition, board, moveUp)
+            // pushUp(entityPosition, board, moveUp)
+            
             addEntityToBoard(entity, board);
         }
-        board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
     }
     function moveDown(entity, board) {
         let entityPosition = entity.components['board-position'];
@@ -51,6 +68,7 @@ MyGame.systems['movement'] = (function () {
     }
     function moveRight(entity, board) {
         let entityPosition = entity.components['board-position'];
+        console.log(entityPosition);
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         if (entityPosition.x < board.width - 1) {
             entityPosition.x = entityPosition.x + 1;
@@ -62,7 +80,7 @@ MyGame.systems['movement'] = (function () {
     function setFacing(entity, direction) {
         if (entity.components.sprite) {
             // if we are rendering the bunny
-            console.log(entity.components)
+            // console.log(entity.components)
             if (entity.components.noun) {
                 if (entity.components.noun.valueType === 'Baba') {
                     switch (direction) {

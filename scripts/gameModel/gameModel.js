@@ -67,6 +67,7 @@ MyGame.gameModel = function () {
         function removeContent(content) {
             let index = contents.indexOf(content);
             if (index != -1) {
+                // console.log(contents[index]);
                 // console.log(`removing entity at index ${index}`)
                 contents.splice(index, 1);
             }
@@ -110,7 +111,7 @@ MyGame.gameModel = function () {
                 // Set baba's position to be the board cells position;
                 entity.addComponent(MyGame.components.Position(board.cells[component.x][component.y].center));
                 board.cells[component.x][component.y].addContent(entity);
-                // console.log(board[component.x][component.y])
+                console.log(board.cells[component.x][component.y])
 
             }
         }
