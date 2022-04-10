@@ -94,9 +94,37 @@ MyGame.gameModel = function () {
         ))
         return baba;
     }
+
+    ///////////////////////////
+    // Inititialize rock
+    ///////////////////////////
+    function initializeRock() {
+        let rock = MyGame.systems.entityFactory.createEntity();
+        rock.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
+        // Set where rock is supposed to go on the board
+        rock.addComponent(MyGame.components.BoardPosition({ x: 0, y: 0 }))
+        rock.addComponent(MyGame.components.Sprite({ assetKey: 'rock', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
+        rock.addComponent(MyGame.components.Rotation({ rotation: 0 }));
+
+        //-------------------------------------------------------------
+        // Initialize movable componenet 
+        // Initially set to be stopped and facing down
+        //-------------------------------------------------------------
+        rock.addComponent(MyGame.components.Movable(
+            {
+                moveDirection: MyGame.constants.direction.STOPPED,
+                facing: MyGame.constants.direction.DOWN,
+            }
+        ))
+        return rock;
+    }
+
     function initialize() {
         let baba = initializeBaba();
         entities[baba.id] = baba;
+        let rock = initializeRock();
+        entities[rock.id] = rock;
+
         mBoard = Board(GRID_SIZE);
         // mBoard[baba.components[]]
         addThingsToBoard(mBoard, entities);

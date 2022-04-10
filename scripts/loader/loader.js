@@ -96,7 +96,11 @@ MyGame.loader = (function() {
         {
             key: 'levels-all',
             source: '/assets/levels-all.txt'
-        }
+        },
+        {
+            key: 'rock',
+            source: '/assets/rock.png'
+        },
     ];
 
     //------------------------------------------------------------------
