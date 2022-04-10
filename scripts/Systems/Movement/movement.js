@@ -47,27 +47,31 @@ MyGame.systems['movement'] = (function () {
     function setFacing(entity, direction) {
         if (entity.components.sprite) {
             // if we are rendering the bunny
-            if (entity.components.sprite.key.match(/bunny/)) {
-                // entity.components.sprite.key = 'bunnyUp';
-                switch (direction) {
-                    case MyGame.constants.direction.UP:
-                        entity.components.sprite.key = 'bunnyUp';
-                        entity.components.sprite.animateExtra = true;
-                        break;
-                    case MyGame.constants.direction.DOWN:
-                        entity.components.sprite.key = 'bunnyDown';
-                        entity.components.sprite.animateExtra = true;
-                        break;
-                    case MyGame.constants.direction.RIGHT:
-                        entity.components.sprite.key = 'bunnyRight';
-                        entity.components.sprite.animateExtra = true;
-                        break;
-                    case MyGame.constants.direction.LEFT:
-                        entity.components.sprite.key = 'bunnyLeft';
-                        entity.components.sprite.animateExtra = true;
-                        break;
+            console.log(entity.components)
+            if (entity.components.noun) {
+                if (entity.components.noun.valueType === 'Baba') {
+                    switch (direction) {
+                        case MyGame.constants.direction.UP:
+                            entity.components.sprite.key = 'bunnyUp';
+                            entity.components.sprite.animateExtra = true;
+                            break;
+                        case MyGame.constants.direction.DOWN:
+                            entity.components.sprite.key = 'bunnyDown';
+                            entity.components.sprite.animateExtra = true;
+                            break;
+                        case MyGame.constants.direction.RIGHT:
+                            entity.components.sprite.key = 'bunnyRight';
+                            entity.components.sprite.animateExtra = true;
+                            break;
+                        case MyGame.constants.direction.LEFT:
+                            entity.components.sprite.key = 'bunnyLeft';
+                            entity.components.sprite.animateExtra = true;
+                            break;
 
+                    }
                 }
+                // entity.components.sprite.key = 'bunnyUp';
+
 
             }
         }

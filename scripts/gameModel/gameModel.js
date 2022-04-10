@@ -28,9 +28,16 @@ MyGame.gameModel = function () {
                 for (let j = 0; j < levelsTxt[i].length; j++) {
                     console.log(levelCount);
                     if (levelCount >= 0) {
-                        if (levelsTxt[i][j] === 'b') {
-                            console.log(`I found baba at ${levelCount}, ${j}`)
-                            addBaba(levelCount % 20, j, entities);
+                        switch (levelsTxt[i][j]) {
+                            case 'b':
+                                // console.log(`I found baba at ${j}, ${levelCount}`)
+                                addBaba(j, levelCount % 20, entities);
+                                break;
+                            case 'w':
+                                // console.log(`I found wall at ${levelCount}, ${j}`)
+                                addWall(j, levelCount % 20, entities)
+                                break;
+
                         }
                     }
                 }
@@ -102,15 +109,35 @@ MyGame.gameModel = function () {
         }
     }
     ///////////////////
+    // Inititialize wall 
+    ///////////////////
+    function initializeWall(x, y) {
+        let wall = MyGame.systems.entityFactory.createEntity();
+        wall.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
+        // Set where wall is supposed to go on the board
+        wall.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
+        wall.addComponent(MyGame.components.Sprite({ assetKey: 'wall', animationTime: 200, spriteCount: 3, spritesToAnimate: 3 }))
+        wall.addComponent(MyGame.components.Rotation({ rotation: 0 }));
+        console.log('adding wall as noun')
+        wall.addComponent(MyGame.components.Noun({ key: 'WALL' }))
+        console.log(wall.components.noun.valueType)
+        wall.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
+        // console.log(wall.components.properties.toString())
+        console.log(wall.components.properties.toString());
+        return wall;
+    }
+
+    ///////////////////
     // Inititialize baba
     ///////////////////
     function initializeBaba(x, y) {
         let baba = MyGame.systems.entityFactory.createEntity();
         baba.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
         // Set where baba is supposed to go on the board
-        baba.addComponent(MyGame.components.BoardPosition({ x: x, y: y}))
+        baba.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
         baba.addComponent(MyGame.components.Sprite({ assetKey: 'bunnyRight', animationTime: 150, spriteCount: 15, spritesToAnimate: 3 }))
         baba.addComponent(MyGame.components.Rotation({ rotation: 0 }));
+        baba.addComponent(MyGame.components.Noun({ key: 'BABA' }))
         //-------------------------------------------------------------
         // Initialize the input
         // TODO: parse the keys from local storage for customizing the controls.
@@ -135,7 +162,6 @@ MyGame.gameModel = function () {
         ))
         return baba;
     }
-
     ///////////////////////////
     // Inititialize rock
     ///////////////////////////
@@ -161,6 +187,14 @@ MyGame.gameModel = function () {
     }
 
     function addBaba(x, y, entities){
+    //------------------------------------------------------------------
+    //  for calling the correct initialize function
+    //------------------------------------------------------------------
+    function addWall(x, y, entities) {
+        let wall = initializeWall(x, y);
+        entities[wall.id] = wall;
+    }
+    function addBaba(x, y, entities) {
         let baba = initializeBaba(x, y);
         entities[baba.id] = baba;
     }
