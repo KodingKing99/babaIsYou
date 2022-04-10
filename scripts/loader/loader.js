@@ -34,7 +34,7 @@ MyGame.loader = (function() {
         {
             scripts: ['Components/KeyboardControlled', 'Components/Sprite',
                     'Components/Position','Components/Size', 'Components/Rotation', 
-                    'Components/BoardPosition', 'Components/Movable'],
+                    'Components/BoardPosition', 'Components/Movable', 'Components/Noun', 'Components/Properties'],
             message: 'Components loaded',
             onComplete: null
         },
@@ -104,6 +104,10 @@ MyGame.loader = (function() {
         {
             key: 'bunnyRight',
             source: '/assets/bunnyRight.png'
+        },
+        {
+            key: 'wall',
+            source: '/assets/wall_brown1.png'
         },
         {
             key: 'levels-all',
