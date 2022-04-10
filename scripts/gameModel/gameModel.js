@@ -45,10 +45,18 @@ MyGame.gameModel = function () {
                                 addHedge(j, levelCount % 20, entities);
                                 break;
                             case 'W':
-                                console.log("adding word -wall");
                                 addWord_Wall(j, levelCount % 20, entities);
-                                // console.log("adding word -wall");
                                 break;
+                            case 'S':
+                                addWord_Stop(j, levelCount % 20, entities);
+                                break;
+                            case 'I':
+                                addWord_Is(j, levelCount % 20, entities)
+                                break;
+                            case 'P':
+                                addWord_Push(j, levelCount % 20, entities)
+                                break;
+
                         }
                     }
                 }
@@ -216,7 +224,7 @@ MyGame.gameModel = function () {
         let mEntity = initializeEntityAtXY(x, y);
         mEntity.addComponent(MyGame.components.Sprite({ assetKey: assetKey, animationTime: 200, spriteCount: 3, spritesToAnimate: 3 }))
         mEntity.addComponent(MyGame.components.Text({ key: wordType }))
-        // mEntity.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
+        mEntity.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
         console.log(mEntity);
         return mEntity;
     }
@@ -245,6 +253,14 @@ MyGame.gameModel = function () {
     }
     function addWord_Stop(x, y, entities) {
         let mEntity = initializeText(x, y, 'STOP', 'word-stop');
+        entities[mEntity.id] = mEntity;
+    }
+    function addWord_Is(x, y, entities) {
+        let mEntity = initializeText(x, y, 'IS', 'word-is');
+        entities[mEntity.id] = mEntity;
+    }
+    function addWord_Push(x, y, entities) {
+        let mEntity = initializeText(x, y, 'PUSH', 'word-push');
         entities[mEntity.id] = mEntity;
     }
     function initialize() {

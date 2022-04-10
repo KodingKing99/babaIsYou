@@ -4,6 +4,7 @@ MyGame.components.Text = function(spec){
         WALL: 'Wall',
         STOP: 'Stop',
         PUSH: 'Push',
+        IS: 'Is',
     }
     return {
         get name(){return 'text';},

@@ -126,6 +126,22 @@ MyGame.loader = (function() {
             key: 'word-wall',
             source: '/assets/word-wall.png'
         },
+        {
+            key: 'word-stop',
+            source: '/assets/word-stop_red1.png'
+        },
+        {
+            key: 'word-is',
+            source: '/assets/word-is_cyan1.png'
+        },
+        {
+            key: 'word-push',
+            source: '/assets/word-push_orange1.png'
+        },
+        {
+            key: 'word-wall',
+            source: '/assets/word-wall_green1.png'
+        },
     ];
 
     //------------------------------------------------------------------
