@@ -143,7 +143,7 @@ MyGame.gameModel = function () {
         let rock = MyGame.systems.entityFactory.createEntity();
         rock.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
         // Set where rock is supposed to go on the board
-        rock.addComponent(MyGame.components.BoardPosition({ x: 0, y: 0 }))
+        rock.addComponent(MyGame.components.BoardPosition({ x: 1, y: 1 }))
         rock.addComponent(MyGame.components.Sprite({ assetKey: 'rock', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
         rock.addComponent(MyGame.components.Rotation({ rotation: 0 }));
 
