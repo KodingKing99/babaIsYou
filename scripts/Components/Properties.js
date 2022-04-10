@@ -3,14 +3,17 @@ MyGame.components.Properties = function (spec) {
         YOU: 1,
         PUSH: 2
     }
-    // function is(){
-    //     for(let i = 0; i < spec.keys.length; i++){
-    //         for(let key in spec.keys[i]){
-    //             if(valueTypes[key])
-    //             console.log(`this is ${key}`)
-    //         }
-    //     }
-    // }
+    function is(type){
+        for(let i = 0; i < spec.keys.length; i++){
+            let key = spec.keys[i];
+            if(valueTypes[key]){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+    }
     console.log(spec.keys)
     function toString() {
         let mString = "this is "
@@ -34,7 +37,7 @@ MyGame.components.Properties = function (spec) {
     }
     return {
         get name() { return 'properties' },
-        // get is() { return },
+        is: is,
         get valueTypes() { return valueTypes },
         get keys() { return spec.keys; },
         toString: toString,

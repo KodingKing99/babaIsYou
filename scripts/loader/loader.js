@@ -115,8 +115,13 @@ MyGame.loader = (function() {
         },
         {
             key: 'rock',
-            source: '/assets/rock.png'
+            source: '/assets/rock_tan1.png'
         },
+        {
+            key: 'hedge',
+            source: '/assets/hedge_green1.png'
+        },
+
     ];
 
     //------------------------------------------------------------------

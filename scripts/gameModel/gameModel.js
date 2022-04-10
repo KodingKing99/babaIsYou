@@ -19,9 +19,10 @@ MyGame.gameModel = function () {
             if (levelsTxt[i].match(/\d\d x \d\d/)) {
                 console.log(`Grid is ${levelsTxt[i]}`)
                 GRID_SIZE = levelsTxt[i].split('x')[0];
+                CELL_SIZE = GAME_WIDTH / GRID_SIZE;
                 levelCount = 0;
             }
-            if (levelsTxt[i] === '\r' || levelsTxt === "") {
+            else if (levelsTxt[i] === '\r' || levelsTxt === "") {
                 continue;
             }
             else {
@@ -35,9 +36,14 @@ MyGame.gameModel = function () {
                                 break;
                             case 'w':
                                 // console.log(`I found wall at ${levelCount}, ${j}`)
-                                addWall(j, levelCount % 20, entities)
+                                addWall(j, levelCount % 20, entities);
                                 break;
-
+                            case 'r':
+                                addRock(j, levelCount % 20, entities);
+                                break;
+                            case 'h':
+                                addHedge(j, levelCount % 20, entities);
+                                break;
                         }
                     }
                 }
@@ -47,7 +53,7 @@ MyGame.gameModel = function () {
     }
 
     let GAME_WIDTH = MyGame.systems.render.graphics.width;
-    let CELL_SIZE = GAME_WIDTH / GRID_SIZE;
+    let CELL_SIZE;
     let entities = {};
     let mBoard;
     ////////////////
@@ -61,6 +67,7 @@ MyGame.gameModel = function () {
         function removeContent(content) {
             let index = contents.indexOf(content);
             if (index != -1) {
+                // console.log(`removing entity at index ${index}`)
                 contents.splice(index, 1);
             }
         }
@@ -120,10 +127,10 @@ MyGame.gameModel = function () {
         wall.addComponent(MyGame.components.Rotation({ rotation: 0 }));
         console.log('adding wall as noun')
         wall.addComponent(MyGame.components.Noun({ key: 'WALL' }))
-        console.log(wall.components.noun.valueType)
-        wall.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
-        // console.log(wall.components.properties.toString())
-        console.log(wall.components.properties.toString());
+        // console.log(wall.components.noun.valueType)
+        // wall.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
+        // // console.log(wall.components.properties.toString())
+        // console.log(wall.components.properties.toString());
         return wall;
     }
 
@@ -165,28 +172,35 @@ MyGame.gameModel = function () {
     ///////////////////////////
     // Inititialize rock
     ///////////////////////////
-    function initializeRock() {
+    function initializeRock(x, y) {
         let rock = MyGame.systems.entityFactory.createEntity();
         rock.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
         // Set where rock is supposed to go on the board
-        rock.addComponent(MyGame.components.BoardPosition({ x: 1, y: 1 }))
-        rock.addComponent(MyGame.components.Sprite({ assetKey: 'rock', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
+        rock.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
+        rock.addComponent(MyGame.components.Sprite({ assetKey: 'rock', animationTime: 200, spriteCount: 3, spritesToAnimate: 3 }))
         rock.addComponent(MyGame.components.Rotation({ rotation: 0 }));
-
-        //-------------------------------------------------------------
-        // Initialize movable componenet 
-        // Initially set to be stopped and facing down
-        //-------------------------------------------------------------
-        rock.addComponent(MyGame.components.Movable(
-            {
-                moveDirection: MyGame.constants.direction.STOPPED,
-                facing: MyGame.constants.direction.DOWN,
-            }
-        ))
+        rock.addComponent(MyGame.components.Noun({ key: 'ROCK' }))
+        // console.log(wall.components.noun.valueType)
+        rock.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
         return rock;
     }
 
-    function addBaba(x, y, entities){
+    ///////////////////////////
+    // Inititialize Hedge 
+    ///////////////////////////
+    function initializeHedge(x, y) {
+        let mEntity = MyGame.systems.entityFactory.createEntity();
+        mEntity.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
+        // Set where mEntity is supposed to go on the board
+        mEntity.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
+        mEntity.addComponent(MyGame.components.Sprite({ assetKey: 'hedge', animationTime: 200, spriteCount: 3, spritesToAnimate: 3 }))
+        mEntity.addComponent(MyGame.components.Rotation({ rotation: 0 }));
+        mEntity.addComponent(MyGame.components.Noun({ key: 'HEDGE' }))
+        console.log(`hedge at ${x}, ${y}`)
+        // console.log(wall.components.noun.valueType)
+        // mEntity.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
+        return mEntity;
+    }
     //------------------------------------------------------------------
     //  for calling the correct initialize function
     //------------------------------------------------------------------
@@ -194,19 +208,21 @@ MyGame.gameModel = function () {
         let wall = initializeWall(x, y);
         entities[wall.id] = wall;
     }
+    function addRock(x, y, entities) {
+        let rock = initializeRock(x, y);
+        entities[rock.id] = rock;
+    }
     function addBaba(x, y, entities) {
         let baba = initializeBaba(x, y);
         entities[baba.id] = baba;
     }
-
+    function addHedge(x, y, entities) {
+        let mEntity = initializeHedge(x, y);
+        entities[mEntity.id] = mEntity;
+    }
     function initialize() {
         parseLevelsFile(entities);
         mBoard = Board(GRID_SIZE);
-
-        let rock = initializeRock();
-        entities[rock.id] = rock;
-        
-        // mBoard[baba.components[]]
         addThingsToBoard(mBoard, entities);
         console.log(mBoard)
 
