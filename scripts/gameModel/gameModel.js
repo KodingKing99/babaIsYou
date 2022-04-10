@@ -162,6 +162,31 @@ MyGame.gameModel = function () {
         ))
         return baba;
     }
+    ///////////////////////////
+    // Inititialize rock
+    ///////////////////////////
+    function initializeRock() {
+        let rock = MyGame.systems.entityFactory.createEntity();
+        rock.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
+        // Set where rock is supposed to go on the board
+        rock.addComponent(MyGame.components.BoardPosition({ x: 1, y: 1 }))
+        rock.addComponent(MyGame.components.Sprite({ assetKey: 'rock', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
+        rock.addComponent(MyGame.components.Rotation({ rotation: 0 }));
+
+        //-------------------------------------------------------------
+        // Initialize movable componenet 
+        // Initially set to be stopped and facing down
+        //-------------------------------------------------------------
+        rock.addComponent(MyGame.components.Movable(
+            {
+                moveDirection: MyGame.constants.direction.STOPPED,
+                facing: MyGame.constants.direction.DOWN,
+            }
+        ))
+        return rock;
+    }
+
+    function addBaba(x, y, entities){
     //------------------------------------------------------------------
     //  for calling the correct initialize function
     //------------------------------------------------------------------
@@ -173,9 +198,14 @@ MyGame.gameModel = function () {
         let baba = initializeBaba(x, y);
         entities[baba.id] = baba;
     }
+
     function initialize() {
         parseLevelsFile(entities);
         mBoard = Board(GRID_SIZE);
+
+        let rock = initializeRock();
+        entities[rock.id] = rock;
+        
         // mBoard[baba.components[]]
         addThingsToBoard(mBoard, entities);
         console.log(mBoard)
