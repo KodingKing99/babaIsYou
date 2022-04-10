@@ -29,7 +29,6 @@ MyGame.systems['movement'] = (function () {
     }
     function moveLeft(entity, board) {
         let entityPosition = entity.components['board-position'];
-        console.log(`Moving left. position is x:  ${entityPosition.x}`)
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         if (entityPosition.x > 0) {
             entityPosition.x = entityPosition.x - 1;

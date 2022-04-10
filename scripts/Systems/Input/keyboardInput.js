@@ -35,7 +35,6 @@ MyGame.systems.keyboardInput = (function () {
                     if (keysDown[key]) {
                         entity.components.movable.facing = input.keys[key];
                         entity.components.movable.moveDirection = input.keys[key];
-                        console.log(`Setting baba to face ${input.keys[key]} and move ${input.keys[key]}`)
                         keyRelease2(key);
                     }
                 }

@@ -52,7 +52,6 @@ MyGame.systems.render.renderAnimatedSprite = function (graphics) {
                     component.resetAnimationFrame();
                 }
                 if (component.animateExtra) {
-                    console.log("queing walking animation")
                     animateExtra(entity, 15, 50);
 
                 }
