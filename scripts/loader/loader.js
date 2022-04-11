@@ -65,6 +65,11 @@ MyGame.loader = (function() {
             onComplete: null
         },
         {
+            scripts: ['Systems/Rules/rules'],
+            message: 'rule system loaded',
+            onComplete: null
+        },
+        {
             scripts: ['gameModel/DirectionConstants'],
             message: 'constants loaded',
             onComplete: null

@@ -14,7 +14,7 @@ MyGame.components.Properties = function (spec) {
             }
         }
     }
-    console.log(spec.keys)
+    // console.log(spec.keys)
     function toString() {
         let mString = "this is "
         for (let i = 0; i < spec.keys.length; i++) {

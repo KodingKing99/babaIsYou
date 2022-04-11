@@ -13,11 +13,11 @@ MyGame.gameModel = function () {
         // console.log("level1 text after split")
         // console.log(levelsTxt[MyGame.level]);
         levelsTxt = levelsTxt[MyGame.level].split('\n')
-        console.log(levelsTxt);
+        // console.log(levelsTxt);
         let levelCount;
         for (let i = 0; i < levelsTxt.length; i++) {
             if (levelsTxt[i].match(/\d\d x \d\d/)) {
-                console.log(`Grid is ${levelsTxt[i]}`)
+                // console.log(`Grid is ${levelsTxt[i]}`)
                 GRID_SIZE = levelsTxt[i].split('x')[0];
                 CELL_SIZE = GAME_WIDTH / GRID_SIZE;
                 levelCount = 0;
@@ -27,7 +27,7 @@ MyGame.gameModel = function () {
             }
             else {
                 for (let j = 0; j < levelsTxt[i].length; j++) {
-                    console.log(levelCount);
+                    // console.log(levelCount);
                     if (levelCount >= 0) {
                         switch (levelsTxt[i][j]) {
                             case 'b':
@@ -225,7 +225,7 @@ MyGame.gameModel = function () {
         mEntity.addComponent(MyGame.components.Sprite({ assetKey: assetKey, animationTime: 200, spriteCount: 3, spritesToAnimate: 3 }))
         mEntity.addComponent(MyGame.components.Text({ key: wordType }))
         mEntity.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
-        console.log(mEntity);
+        // console.log(mEntity);
         return mEntity;
     }
     //------------------------------------------------------------------
@@ -271,7 +271,7 @@ MyGame.gameModel = function () {
 
     }
     function update(elapsedTime) {
-        // MyGame.systems.render.renderAnimatedSprite.update(elapsedTime, entities);
+        MyGame.systems.rules.update(elapsedTime, entities, mBoard);
         MyGame.systems.keyboardInput.update(elapsedTime, entities);
         MyGame.systems.movement.update(elapsedTime, entities, mBoard);
         MyGame.systems.render.renderAnimatedSprite.update(elapsedTime, entities);
