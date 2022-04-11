@@ -115,7 +115,7 @@ MyGame.loader = (function() {
         },
         {
             key: 'rock',
-            source: '/assets/rock.png'
+            source: '/assets/rock_tan1.png'
         },
         {
             key: 'flag',
@@ -164,6 +164,10 @@ MyGame.loader = (function() {
         {
             key: 'word-push',
             source: '/assets/word-push.png'
+        },
+        {
+            key: 'hedge',
+            source: '/assets/hedge_green1.png'
         },
 
     ];

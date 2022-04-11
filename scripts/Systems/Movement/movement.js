@@ -10,20 +10,33 @@ MyGame.systems['movement'] = (function () {
         entity.components.position.y = boardCenterY;
         entity.components.position.x = boardCenterX;
     }
+    function pushUp(entityPosition, board, callback) {
+        for (let index in board.cells[entityPosition.x][entityPosition.y].contents) {
+            let mEntity = board.cells[entityPosition.x][entityPosition.y].contents[index];
+            if (mEntity.components.properties) {
+                if (mEntity.components.properties.is('PUSH')) {
+                    callback(mEntity, board);
+                }
+            }
+            // console.log(mEntity);
+        }
+    }
     function moveUp(entity, board) {
         let entityPosition = entity.components['board-position'];
         // console.log(`in move up. entity position is ${entityPosition}`)
-        board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         if (entityPosition.y > 0) {
             entityPosition.y = entityPosition.y - 1;
+            pushUp(entityPosition, board, moveUp)
             addEntityToBoard(entity, board);
         }
+        board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
     }
     function moveDown(entity, board) {
         let entityPosition = entity.components['board-position'];
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         if (entityPosition.y < board.height - 1) {
             entityPosition.y = entityPosition.y + 1;
+            pushUp(entityPosition, board, moveDown)
             addEntityToBoard(entity, board);
         }
     }
@@ -32,6 +45,7 @@ MyGame.systems['movement'] = (function () {
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         if (entityPosition.x > 0) {
             entityPosition.x = entityPosition.x - 1;
+            pushUp(entityPosition, board, moveLeft)
             addEntityToBoard(entity, board);
         }
     }
@@ -40,6 +54,7 @@ MyGame.systems['movement'] = (function () {
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         if (entityPosition.x < board.width - 1) {
             entityPosition.x = entityPosition.x + 1;
+            pushUp(entityPosition, board, moveRight)
             addEntityToBoard(entity, board);
         }
     }

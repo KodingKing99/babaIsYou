@@ -2,6 +2,8 @@ MyGame.components.Noun = function(spec){
     const valueTypes = {
         BABA: 'Baba',
         WALL: 'Wall',
+        ROCK: 'Rock',
+        HEDGE: 'Hedge'
     }
     return {
         get name(){return 'noun'},
