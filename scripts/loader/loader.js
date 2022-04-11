@@ -141,6 +141,31 @@ MyGame.loader = (function() {
             key: 'word-is',
             source: '/assets/word-is.png'
         },
+        {
+            key: 'word-wall',
+            source: '/assets/word-wall.png'
+        },
+        {
+            key: 'word-stop',
+            source: '/assets/word-stop.png'
+        },
+        {
+            key: 'word-flag',
+            source: '/assets/word-flag.png'
+        },
+        {
+            key: 'word-win',
+            source: '/assets/word-win.png'
+        },
+        {
+            key: 'word-rock',
+            source: '/assets/word-rock.png'
+        },
+        {
+            key: 'word-push',
+            source: '/assets/word-push.png'
+        },
+
     ];
 
     //------------------------------------------------------------------

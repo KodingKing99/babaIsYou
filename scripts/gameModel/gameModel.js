@@ -61,6 +61,30 @@ MyGame.gameModel = function () {
                                 let wordYou = initializeWordYou(j, levelCount % 20);
                                 entities[wordYou.id] = wordYou;
                                 break;
+                            case 'F':
+                                let wordFlag = initializeWordFlag(j, levelCount % 20);
+                                entities[wordFlag.id] = wordFlag;
+                                break;
+                            case 'X':
+                                let wordWin = initializeWordWin(j, levelCount % 20);
+                                entities[wordWin.id] = wordWin;
+                                break;
+                            case 'R':
+                                let wordRock = initializeWordRock(j, levelCount % 20);
+                                entities[wordRock.id] = wordRock;
+                                break;
+                            case 'P':
+                                let wordPush = initializeWordPush(j, levelCount % 20);
+                                entities[wordPush.id] = wordPush;
+                                break;
+                            case 'W':
+                                let wordWall = initializeWordWall(j, levelCount % 20);
+                                entities[wordWall.id] = wordWall;
+                                break;
+                            case 'S':
+                                let wordStop = initializeWordStop(j, levelCount % 20);
+                                entities[wordStop.id] = wordStop;
+                                break;
                         }
                     }
                 }
@@ -136,7 +160,7 @@ MyGame.gameModel = function () {
     ///////////////////
     function initializeWall(x, y) {
         let wall = MyGame.systems.entityFactory.createEntity();
-        wall.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
+        wall.addComponent(MyGame.components.Size({ x: (GAME_WIDTH / GRID_SIZE) - 15, y: (GAME_WIDTH / GRID_SIZE) - 15 }))
         // Set where wall is supposed to go on the board
         wall.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
         wall.addComponent(MyGame.components.Sprite({ assetKey: 'wall', animationTime: 200, spriteCount: 3, spritesToAnimate: 3 }))
@@ -190,21 +214,14 @@ MyGame.gameModel = function () {
     ///////////////////////////
     function initializeRock(x, y) {
         let rock = MyGame.systems.entityFactory.createEntity();
-        rock.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
+        rock.addComponent(MyGame.components.Size({ x: (GAME_WIDTH / GRID_SIZE) - 15, y: (GAME_WIDTH / GRID_SIZE) - 15 }))
+        console.log("game width: ", GAME_WIDTH, "grid size: ", GRID_SIZE, "x: ", GAME_WIDTH / GRID_SIZE);
         // Set where rock is supposed to go on the board
         rock.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
         rock.addComponent(MyGame.components.Sprite({ assetKey: 'rock', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
         rock.addComponent(MyGame.components.Rotation({ rotation: 0 }));
-
-        //-------------------------------------------------------------
-        // Initialize movable componenet 
-        // Initially set to be stopped and facing down
-        //-------------------------------------------------------------
-        rock.addComponent(MyGame.components.Movable(
-            {
-                moveDirection: MyGame.constants.direction.STOPPED,
-            }
-        ))
+        rock.addComponent(MyGame.components.Noun({ key: 'ROCK' }))
+        rock.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
         return rock;
     }
 
@@ -213,67 +230,26 @@ MyGame.gameModel = function () {
     ///////////////////////////
     function initializeFlag(x, y) {
         let flag = MyGame.systems.entityFactory.createEntity();
-        flag.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
+        flag.addComponent(MyGame.components.Size({ x: (GAME_WIDTH / GRID_SIZE) - 15, y: (GAME_WIDTH / GRID_SIZE) - 15 }))
         // Set where flag is supposed to go on the board
         flag.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
         flag.addComponent(MyGame.components.Sprite({ assetKey: 'flag', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
         flag.addComponent(MyGame.components.Rotation({ rotation: 0 }));
-
-        //-------------------------------------------------------------
-        // Initialize movable componenet 
-        // Initially set to be stopped and facing down
-        //-------------------------------------------------------------
-        flag.addComponent(MyGame.components.Movable(
-            {
-                moveDirection: MyGame.constants.direction.STOPPED,
-            }
-        ))
+        flag.addComponent(MyGame.components.Noun({ key: 'FLAG' }))
         return flag;
     }
 
-    ///////////////////////////
-    // Inititialize wall
-    ///////////////////////////
-    // function initializeWall(x, y) {
-    //     let wall = MyGame.systems.entityFactory.createEntity();
-    //     wall.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
-    //     // Set where wall is supposed to go on the board
-    //     wall.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
-    //     wall.addComponent(MyGame.components.Sprite({ assetKey: 'wall', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
-    //     wall.addComponent(MyGame.components.Rotation({ rotation: 0 }));
-
-    //     //-------------------------------------------------------------
-    //     // Initialize movable componenet 
-    //     // Initially set to be stopped and facing down
-    //     //-------------------------------------------------------------
-    //     wall.addComponent(MyGame.components.Movable(
-    //         {
-    //             moveDirection: MyGame.constants.direction.STOPPED,
-    //         }
-    //     ))
-    //     return wall;
-    // }
 
     ///////////////////////////
     // Inititialize floor
     ///////////////////////////
     function initializeFloor(x, y) {
         let floor = MyGame.systems.entityFactory.createEntity();
-        floor.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
+        floor.addComponent(MyGame.components.Size({ x: (GAME_WIDTH / GRID_SIZE) - 15, y: (GAME_WIDTH / GRID_SIZE) - 15 }))
         // Set where floor is supposed to go on the board
         floor.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
         floor.addComponent(MyGame.components.Sprite({ assetKey: 'floor', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
         floor.addComponent(MyGame.components.Rotation({ rotation: 0 }));
-
-        //-------------------------------------------------------------
-        // Initialize movable componenet 
-        // Initially set to be stopped and facing down
-        //-------------------------------------------------------------
-        floor.addComponent(MyGame.components.Movable(
-            {
-                moveDirection: MyGame.constants.direction.STOPPED,
-            }
-        ))
         return floor;
     }
 
@@ -282,21 +258,11 @@ MyGame.gameModel = function () {
     ///////////////////////////
     function initializeWordBaba(x, y) {
         let wordBaba = MyGame.systems.entityFactory.createEntity();
-        wordBaba.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
+        wordBaba.addComponent(MyGame.components.Size({ x: (GAME_WIDTH / GRID_SIZE) - 15, y: (GAME_WIDTH / GRID_SIZE) - 15 }))
         // Set where wordBaba is supposed to go on the board
         wordBaba.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
         wordBaba.addComponent(MyGame.components.Sprite({ assetKey: 'word-baba', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
         wordBaba.addComponent(MyGame.components.Rotation({ rotation: 0 }));
-
-        //-------------------------------------------------------------
-        // Initialize movable componenet 
-        // Initially set to be stopped and facing down
-        //-------------------------------------------------------------
-        wordBaba.addComponent(MyGame.components.Movable(
-            {
-                moveDirection: MyGame.constants.direction.STOPPED,
-            }
-        ))
         return wordBaba;
     }
 
@@ -305,21 +271,11 @@ MyGame.gameModel = function () {
     ///////////////////////////
     function initializeWordIs(x, y) {
         let wordIs = MyGame.systems.entityFactory.createEntity();
-        wordIs.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
+        wordIs.addComponent(MyGame.components.Size({ x: (GAME_WIDTH / GRID_SIZE) - 15, y: (GAME_WIDTH / GRID_SIZE) - 15 }))
         // Set where wordIs is supposed to go on the board
         wordIs.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
         wordIs.addComponent(MyGame.components.Sprite({ assetKey: 'word-is', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
         wordIs.addComponent(MyGame.components.Rotation({ rotation: 0 }));
-
-        //-------------------------------------------------------------
-        // Initialize movable componenet 
-        // Initially set to be stopped and facing down
-        //-------------------------------------------------------------
-        wordIs.addComponent(MyGame.components.Movable(
-            {
-                moveDirection: MyGame.constants.direction.STOPPED,
-            }
-        ))
         return wordIs;
     }
 
@@ -328,22 +284,90 @@ MyGame.gameModel = function () {
     ///////////////////////////
     function initializeWordYou(x, y) {
         let wordYou = MyGame.systems.entityFactory.createEntity();
-        wordYou.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
+        wordYou.addComponent(MyGame.components.Size({ x: (GAME_WIDTH / GRID_SIZE) - 15, y: (GAME_WIDTH / GRID_SIZE) - 15 }))
         // Set where wordYou is supposed to go on the board
         wordYou.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
         wordYou.addComponent(MyGame.components.Sprite({ assetKey: 'word-you', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
         wordYou.addComponent(MyGame.components.Rotation({ rotation: 0 }));
-
-        //-------------------------------------------------------------
-        // Initialize movable componenet 
-        // Initially set to be stopped and facing down
-        //-------------------------------------------------------------
-        wordYou.addComponent(MyGame.components.Movable(
-            {
-                moveDirection: MyGame.constants.direction.STOPPED,
-            }
-        ))
         return wordYou;
+    }
+
+    ///////////////////////////
+    // Inititialize wordRock
+    ///////////////////////////
+    function initializeWordRock(x, y) {
+        let wordRock = MyGame.systems.entityFactory.createEntity();
+        wordRock.addComponent(MyGame.components.Size({ x: (GAME_WIDTH / GRID_SIZE) - 15, y: (GAME_WIDTH / GRID_SIZE) - 15 }))
+        // Set where wordRock is supposed to go on the board
+        wordRock.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
+        wordRock.addComponent(MyGame.components.Sprite({ assetKey: 'word-rock', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
+        wordRock.addComponent(MyGame.components.Rotation({ rotation: 0 }));
+        return wordRock;
+    }
+
+    ///////////////////////////
+    // Inititialize wordPush
+    ///////////////////////////
+    function initializeWordPush(x, y) {
+        let wordPush = MyGame.systems.entityFactory.createEntity();
+        wordPush.addComponent(MyGame.components.Size({ x: (GAME_WIDTH / GRID_SIZE) - 15, y: (GAME_WIDTH / GRID_SIZE) - 15 }))
+        // Set where wordPush is supposed to go on the board
+        wordPush.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
+        wordPush.addComponent(MyGame.components.Sprite({ assetKey: 'word-push', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
+        wordPush.addComponent(MyGame.components.Rotation({ rotation: 0 }));
+        return wordPush;
+    }
+
+    ///////////////////////////
+    // Inititialize wordFlag
+    ///////////////////////////
+    function initializeWordFlag(x, y) {
+        let wordFlag = MyGame.systems.entityFactory.createEntity();
+        wordFlag.addComponent(MyGame.components.Size({ x: (GAME_WIDTH / GRID_SIZE) - 15, y: (GAME_WIDTH / GRID_SIZE) - 15 }))
+        // Set where wordFlag is supposed to go on the board
+        wordFlag.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
+        wordFlag.addComponent(MyGame.components.Sprite({ assetKey: 'word-flag', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
+        wordFlag.addComponent(MyGame.components.Rotation({ rotation: 0 }));
+        return wordFlag;
+    }
+
+    ///////////////////////////
+    // Inititialize wordWin
+    ///////////////////////////
+    function initializeWordWin(x, y) {
+        let wordWin = MyGame.systems.entityFactory.createEntity();
+        wordWin.addComponent(MyGame.components.Size({ x: (GAME_WIDTH / GRID_SIZE) - 15, y: (GAME_WIDTH / GRID_SIZE) - 15 }))
+        // Set where wordWin is supposed to go on the board
+        wordWin.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
+        wordWin.addComponent(MyGame.components.Sprite({ assetKey: 'word-win', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
+        wordWin.addComponent(MyGame.components.Rotation({ rotation: 0 }));
+        return wordWin;
+    }
+
+    ///////////////////////////
+    // Inititialize wordWall
+    ///////////////////////////
+    function initializeWordWall(x, y) {
+        let wordWall = MyGame.systems.entityFactory.createEntity();
+        wordWall.addComponent(MyGame.components.Size({ x: (GAME_WIDTH / GRID_SIZE) - 15, y: (GAME_WIDTH / GRID_SIZE) - 15 }))
+        // Set where wordWall is supposed to go on the board
+        wordWall.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
+        wordWall.addComponent(MyGame.components.Sprite({ assetKey: 'word-wall', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
+        wordWall.addComponent(MyGame.components.Rotation({ rotation: 0 }));
+        return wordWall;
+    }
+
+    ///////////////////////////
+    // Inititialize wordStop
+    ///////////////////////////
+    function initializeWordStop(x, y) {
+        let wordStop = MyGame.systems.entityFactory.createEntity();
+        wordStop.addComponent(MyGame.components.Size({ x: (GAME_WIDTH / GRID_SIZE) - 15, y: (GAME_WIDTH / GRID_SIZE) - 15 }))
+        // Set where wordStop is supposed to go on the board
+        wordStop.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
+        wordStop.addComponent(MyGame.components.Sprite({ assetKey: 'word-stop', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
+        wordStop.addComponent(MyGame.components.Rotation({ rotation: 0 }));
+        return wordStop;
     }
 
     //------------------------------------------------------------------
