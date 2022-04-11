@@ -18,8 +18,6 @@ MyGame.systems.rules = (function () {
                 {
                     let upX = position.x;
                     let upY = position.y;
-                    console.log(upX);
-                    console.log(upY)
                     if (upY > 0) {
                         upY = upY - 1;
                     }
@@ -39,8 +37,8 @@ MyGame.systems.rules = (function () {
                 {
                     let leftX = position.x;
                     let leftY = position.y;
-                    if (leftY > 0) {
-                        leftY = leftY - 1;
+                    if (leftX > 0) {
+                        leftX = leftX - 1;
                     }
                     return [leftX, leftY]
                 }
@@ -48,8 +46,8 @@ MyGame.systems.rules = (function () {
                 {
                     let rightX = position.x;
                     let rightY = position.y;
-                    if (rightY < width - 1) {
-                        rightY = rightY + 1;
+                    if (rightX < width - 1) {
+                        rightX = rightX + 1;
                     }
                     return [rightX, rightY]
                 }
@@ -126,11 +124,15 @@ MyGame.systems.rules = (function () {
         }
 
     }
+    // function getIndexesHelper(entity, board, direction){
+        
+    // }
     function checkTextRulesHelper(entity, board) {
         let dirCounts = {
             vertCount: 0,
             horCount: 0,
         }
+        let dirIndexes = {}
         // et count = 0;
         dirCounts.vertCount += checkEntities('up', entity, board, dirCounts.vertCount);
         dirCounts.vertCount += checkEntities('down', entity, board, dirCounts.vertCount);
@@ -141,8 +143,7 @@ MyGame.systems.rules = (function () {
             console.log("vertical count of 3 or more");
         }
         if(dirCounts.horCount >= 3){
-            console.log("horizontal count of 3 or more");
-            console.log(dirCounts.horCount)
+            // dirIndexes['horizontal'] = getIndexesHelper(entity, board,'horizontal');
         }
         // console.log("count is");
         // console.log(count);
