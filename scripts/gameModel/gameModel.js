@@ -56,6 +56,27 @@ MyGame.gameModel = function () {
                             case 'P':
                                 addWord_Push(j, levelCount % 20, entities)
                                 break;
+                            case 'f':
+                                addFlag(j, levelCount % 20, entities)
+                                break;
+                            case 'l':
+                                addFloor(j, levelCount % 20, entities)
+                                break;
+                            case 'B':
+                                addWord_Baba(j, levelCount % 20, entities);
+                                break;
+                            case 'Y':
+                                addWord_You(j, levelCount % 20, entities);
+                                break;
+                            case 'F':
+                                addWord_Flag(j, levelCount % 20, entities);
+                                break;
+                            case 'X':
+                                addWord_Win(j, levelCount % 20, entities);
+                                break;
+                            case 'R':
+                                addWord_Rock(j, levelCount % 20, entities);
+                                break;
 
                         }
                     }
@@ -89,7 +110,7 @@ MyGame.gameModel = function () {
             get x() { return spec.x },
             get y() { return spec.y },
             get contents() { return contents },
-            get center() { return {...spec.center}; },
+            get center() { return { ...spec.center }; },
             addContent: addContent,
             removeContent: removeContent
         }
@@ -133,7 +154,7 @@ MyGame.gameModel = function () {
     ///////////////////
     function initializeWall(x, y) {
         let wall = MyGame.systems.entityFactory.createEntity();
-        wall.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
+        wall.addComponent(MyGame.components.Size({ x: (GAME_WIDTH / GRID_SIZE), y: (GAME_WIDTH / GRID_SIZE) }))
         // Set where wall is supposed to go on the board
         wall.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
         wall.addComponent(MyGame.components.Sprite({ assetKey: 'wall', animationTime: 200, spriteCount: 3, spritesToAnimate: 3 }))
@@ -183,7 +204,8 @@ MyGame.gameModel = function () {
     ///////////////////////////
     function initializeRock(x, y) {
         let rock = MyGame.systems.entityFactory.createEntity();
-        rock.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
+        rock.addComponent(MyGame.components.Size({ x: (GAME_WIDTH / GRID_SIZE), y: (GAME_WIDTH / GRID_SIZE) }))
+        console.log("game width: ", GAME_WIDTH, "grid size: ", GRID_SIZE, "x: ", GAME_WIDTH / GRID_SIZE);
         // Set where rock is supposed to go on the board
         rock.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
         rock.addComponent(MyGame.components.Sprite({ assetKey: 'rock', animationTime: 200, spriteCount: 3, spritesToAnimate: 3 }))
@@ -192,6 +214,26 @@ MyGame.gameModel = function () {
         // console.log(wall.components.noun.valueType)
         rock.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
         return rock;
+    }
+
+    ///////////////////////////
+    // Inititialize flag
+    ///////////////////////////
+    function initializeFlag(x, y) {
+        let flag = initializeEntityAtXY(x, y);
+        flag.addComponent(MyGame.components.Sprite({ assetKey: 'flag', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
+        flag.addComponent(MyGame.components.Noun({ key: 'FLAG' }))
+        return flag;
+    }
+
+
+    ///////////////////////////
+    // Inititialize floor
+    ///////////////////////////
+    function initializeFloor(x, y) {
+        let floor = initializeEntityAtXY(x, y);
+        floor.addComponent(MyGame.components.Sprite({ assetKey: 'floor', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
+        return floor;
     }
 
     ///////////////////////////
@@ -209,7 +251,7 @@ MyGame.gameModel = function () {
         // mEntity.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
         return mEntity;
     }
-    function initializeEntityAtXY(x, y){
+    function initializeEntityAtXY(x, y) {
         let mEntity = MyGame.systems.entityFactory.createEntity();
         mEntity.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
         mEntity.addComponent(MyGame.components.Rotation({ rotation: 0 }));
@@ -261,6 +303,34 @@ MyGame.gameModel = function () {
     }
     function addWord_Push(x, y, entities) {
         let mEntity = initializeText(x, y, 'PUSH', 'word-push');
+        entities[mEntity.id] = mEntity;
+    }
+    function addWord_Flag(x, y, entities) {
+        let mEntity = initializeText(x, y, 'FLAG', 'word-flag');
+        entities[mEntity.id] = mEntity;
+    }
+    function addWord_Baba(x, y, entities){
+        let mEntity = initializeText(x, y, 'FLAG', 'word-flag');
+        entities[mEntity.id] = mEntity;
+    }
+    function addWord_You(x, y, entities){
+        let mEntity = initializeText(x, y, 'YOU', 'word-you');
+        entities[mEntity.id] = mEntity;
+    }
+    function addWord_Win(x, y, entities){
+        let mEntity = initializeText(x, y, 'WIN', 'word-win');
+        entities[mEntity.id] = mEntity;
+    }
+    function addWord_Rock(x, y, entities){
+        let mEntity = initializeText(x, y, 'ROCK', 'word-rock');
+        entities[mEntity.id] = mEntity;
+    }
+    function addFlag(x, y, entities){
+        let mEntity = initializeFlag(x, y);
+        entities[mEntity.id] = mEntity;
+    }
+    function addFloor(x, y, entities){
+        let mEntity = initializeFloor(x, y);
         entities[mEntity.id] = mEntity;
     }
     function initialize() {

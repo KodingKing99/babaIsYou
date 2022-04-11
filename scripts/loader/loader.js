@@ -124,6 +124,54 @@ MyGame.loader = (function() {
             source: '/assets/rock_tan1.png'
         },
         {
+            key: 'flag',
+            source: '/assets/flag.png'
+        },
+        {
+            key: 'wall',
+            source: '/assets/wall.png'
+        },
+        {
+            key: 'floor',
+            source: '/assets/floor.png'
+        },
+        {
+            key: 'word-you',
+            source: '/assets/word-you.png'
+        },
+        {
+            key: 'word-baba',
+            source: '/assets/word-baba.png'
+        },
+        {
+            key: 'word-is',
+            source: '/assets/word-is.png'
+        },
+        {
+            key: 'word-wall',
+            source: '/assets/word-wall.png'
+        },
+        {
+            key: 'word-stop',
+            source: '/assets/word-stop.png'
+        },
+        {
+            key: 'word-flag',
+            source: '/assets/word-flag.png'
+        },
+        {
+            key: 'word-win',
+            source: '/assets/word-win.png'
+        },
+        {
+            key: 'word-rock',
+            source: '/assets/word-rock.png'
+        },
+        {
+            key: 'word-push',
+            source: '/assets/word-push.png'
+        },
+        {
             key: 'hedge',
             source: '/assets/hedge_green1.png'
         },

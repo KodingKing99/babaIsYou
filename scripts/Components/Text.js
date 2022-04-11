@@ -5,6 +5,11 @@ MyGame.components.Text = function(spec){
         STOP: 'Stop',
         PUSH: 'Push',
         IS: 'Is',
+        ROCK: 'Rock',
+        BABA: 'Baba',
+        FLAG: 'Flag',
+        YOU: 'You',
+        WIN: 'Win'
     }
     return {
         get name(){return 'text';},
