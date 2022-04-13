@@ -179,24 +179,6 @@ MyGame.gameModel = function () {
         // Initialize the input
         // TODO: parse the keys from local storage for customizing the controls.
         //-------------------------------------------------------------
-        baba.addComponent(MyGame.components.KeyboardControlled({
-            keys: {
-                'ArrowUp': MyGame.constants.direction.UP,
-                'ArrowDown': MyGame.constants.direction.DOWN,
-                'ArrowLeft': MyGame.constants.direction.LEFT,
-                'ArrowRight': MyGame.constants.direction.RIGHT,
-            },
-        }))
-        //-------------------------------------------------------------
-        // Initialize movable componenet 
-        // Initially set to be stopped and facing down
-        //-------------------------------------------------------------
-        baba.addComponent(MyGame.components.Movable(
-            {
-                moveDirection: MyGame.constants.direction.STOPPED,
-                facing: MyGame.constants.direction.RIGHT,
-            }
-        ))
         return baba;
     }
     ///////////////////////////
@@ -310,7 +292,7 @@ MyGame.gameModel = function () {
         entities[mEntity.id] = mEntity;
     }
     function addWord_Baba(x, y, entities){
-        let mEntity = initializeText(x, y, 'FLAG', 'word-flag');
+        let mEntity = initializeText(x, y, 'BABA', 'word-baba');
         entities[mEntity.id] = mEntity;
     }
     function addWord_You(x, y, entities){

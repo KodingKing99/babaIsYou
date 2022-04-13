@@ -6,13 +6,11 @@ MyGame.components.Properties = function (spec) {
     function is(type){
         for(let i = 0; i < spec.keys.length; i++){
             let key = spec.keys[i];
-            if(valueTypes[key]){
+            if(key === type){
                 return true;
             }
-            else{
-                return false;
-            }
         }
+        return false;
     }
     // console.log(spec.keys)
     function toString() {

@@ -12,6 +12,7 @@ MyGame.systems.rules = (function () {
         }
         return -1;
     }
+
     function getNeighborXY(direction, position, height, width) {
         switch (direction) {
             case 'up':
@@ -154,17 +155,8 @@ MyGame.systems.rules = (function () {
         }
         return isInMiddle;
     }
-    // function getEntity(id, type, entities) {
-    //     for(let key in entities){
-    //         let entity = entities[key];
-    //         if(entity.components[type]){
-    //             if(entity.components[type] === component){
-    //                 return entity;
-    //             }
-    //         }
-    //     }
-    // }
     function getAllNouns(valueType, entities){
+        // console.log(`getting all ${valueType}s` )
         let rDict = {}
         for(let key in entities){
             let entity = entities[key];
@@ -187,11 +179,11 @@ MyGame.systems.rules = (function () {
             let noun = nouns[key];
             noun.addComponent(MyGame.components.Properties({keys: [sentance[ent3].components.text.key]}))
         }
-        console.log(nouns);
+        // console.log(nouns);
     }
     function applyRules(sentance, startIndex, keys, entities) {
-        console.log(startIndex);
-        console.log(keys.length);
+        // console.log(startIndex);
+        // console.log(keys.length);
 
         if (startIndex < keys.length - 2) {
             let ent1 = keys[startIndex];
@@ -200,7 +192,7 @@ MyGame.systems.rules = (function () {
             if (sentance[ent1].components.text.wordType === 'NOUN') {
                 if (sentance[ent2].components.text.wordType === 'VERB') {
                     if (sentance[ent3].components.text.wordType === 'ADJECTIVE') {
-                        console.log("Sentanace is valid, calling apply rule");
+                        // console.log("Sentanace is valid, calling apply rule");
                         applyRule(sentance, startIndex, keys, entities)
                         // applyRules(sentance, startIndex + 1, keys)
                     }
@@ -217,20 +209,18 @@ MyGame.systems.rules = (function () {
     }
     function applyRulesHelper(sentance, entities) {
         let mKeys = Object.keys(sentance);
-        // console.log(mKeys);
-        // let word = mKeys[0];
         applyRules(sentance, 0, mKeys, entities);
-
-
     }
     function checkForRules(sentances, entities) {
         if (Object.keys(sentances.down).length >= 3) {
             if (hasIsInMiddle(sentances.down)) {
                 applyRulesHelper(sentances.down, entities);
             }
-            // if(hasIsInMiddle(sentances.down)){
-            //     // applyRules(sentances.down);
-            // }
+        }
+        if(Object.keys(sentances.right).length >= 3){
+            if (hasIsInMiddle(sentances.right)){
+                applyRulesHelper(sentances.right, entities);
+            }
         }
     }
     function resetDefaults(entities){
@@ -254,6 +244,7 @@ MyGame.systems.rules = (function () {
             if (entity.components.text) {
                 let sentances = getPossibleSentancesHelper(entity, board);
                 checkForRules(sentances, entities);
+                // addComponentsForProperites
             }
         }
     }

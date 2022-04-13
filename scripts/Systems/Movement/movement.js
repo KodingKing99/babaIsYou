@@ -11,8 +11,8 @@ MyGame.systems['movement'] = (function () {
         entity.components.position.x = boardCenterX;
     }
     function pushUp(entityPosition, board, callback) {
-        console.log(`cell contents at ${board.cells[entityPosition.x][entityPosition.y].x}, ${board.cells[entityPosition.x][entityPosition.y].y}`)
-        console.log(board.cells[entityPosition.x][entityPosition.y].contents)
+        // console.log(`cell contents at ${board.cells[entityPosition.x][entityPosition.y].x}, ${board.cells[entityPosition.x][entityPosition.y].y}`)
+        // console.log(board.cells[entityPosition.x][entityPosition.y].contents)
         for (let index in board.cells[entityPosition.x][entityPosition.y].contents) {
             let mEntity = board.cells[entityPosition.x][entityPosition.y].contents[index];
             if (mEntity.components.properties) {
@@ -52,7 +52,7 @@ MyGame.systems['movement'] = (function () {
     }
     function moveRight(entity, board) {
         let entityPosition = entity.components['board-position'];
-        console.log(entityPosition);
+        // console.log(entityPosition);
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         if (entityPosition.x < board.width - 1) {
             entityPosition.x = entityPosition.x + 1;
@@ -96,57 +96,57 @@ MyGame.systems['movement'] = (function () {
         let movable = entity.components.movable;
         switch (movable.moveDirection) {
             case MyGame.constants.direction.UP:
-                if (canMove) {
+                // if (canMove) {
                     movable.moveDirection = MyGame.constants.direction.STOPPED;
                     moveUp(entity, board);
                     setFacing(entity, MyGame.constants.direction.UP);
-                    canMove = false;
+                    // canMove = false;
                     break;
-                }
-                else {
-                    canMove = true;
-                    break;
-                }
+                // }
+                // else {
+                //     canMove = true;
+                //     break;
+                // }
 
             case MyGame.constants.direction.DOWN:
-                if (canMove) {
+                // if (canMove) {
                     movable.moveDirection = MyGame.constants.direction.STOPPED;
                     moveDown(entity, board);
                     setFacing(entity, MyGame.constants.direction.DOWN);
-                    canMove = false;
+                    // canMove = false;
                     break;
-                }
-                else {
-                    canMove = true;
-                    break;
-                }
+                // }
+                // else {
+                //     canMove = true;
+                //     break;
+                // }
 
 
             case MyGame.constants.direction.RIGHT:
-                if (canMove) {
+                // if (canMove) {
                     movable.moveDirection = MyGame.constants.direction.STOPPED;
                     moveRight(entity, board);
                     setFacing(entity, MyGame.constants.direction.RIGHT);
-                    canMove = false;
+                    // canMove = false;
                     break;
-                }
-                else {
-                    canMove = true;
-                    break;
-                }
+                // }
+                // else {
+                //     canMove = true;
+                //     break;
+                // }
 
             case MyGame.constants.direction.LEFT:
-                if (canMove) {
+                // if (canMove) {
                     movable.moveDirection = MyGame.constants.direction.STOPPED;
                     moveLeft(entity, board);
                     setFacing(entity, MyGame.constants.direction.LEFT);
-                    canMove = false;
+                    // canMove = false;
                     break;
-                }
-                else {
-                   canMove = true;
-                   break; 
-                }
+                // }
+                // else {
+                //    canMove = true;
+                //    break; 
+                // }
 
 
         }
