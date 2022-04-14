@@ -155,20 +155,20 @@ MyGame.systems.rules = (function () {
         }
         return isInMiddle;
     }
-    function getAllNouns(valueType, entities){
+    function getAllNouns(valueType, entities) {
         // console.log(`getting all ${valueType}s` )
         let rDict = {}
-        for(let key in entities){
+        for (let key in entities) {
             let entity = entities[key];
-            if(entity.components.noun){
-                if(entity.components.noun.valueType === valueType){
+            if (entity.components.noun) {
+                if (entity.components.noun.valueType === valueType) {
                     rDict[entity.id] = entity;
                 }
             }
         }
         return rDict;
     }
-    function applyRule(sentance, startIndex, keys, entities) {
+    function applyRule(sentance, startIndex, keys, entities, updateList) {
         let ent1 = keys[startIndex];
         let ent2 = keys[startIndex + 1];
         let ent3 = keys[startIndex + 2];
@@ -177,13 +177,23 @@ MyGame.systems.rules = (function () {
         // let noun = entities[sentance[ent1].id]
         let nouns = getAllNouns(sentance[ent1].components.text.valueType, entities);
 
-        for(let key in nouns){
+        for (let key in nouns) {
             let noun = nouns[key];
-            if(sentance[ent1].components.text.valueType === 'Flag'){
+
+            // noun.addComponent(MyGame.components.Properties({ keys: [sentance[ent3].components.text.key] }))
+            if (updateList[noun.id]) {
+
+                updateList[noun.id].change.push(sentance[ent3].components.text.key)
+            }
+            else {
+                updateList[noun.id] = { entity: noun, change: [sentance[ent3].components.text.key] }
+            }
+            if (sentance[ent1].components.text.valueType === 'Flag') {
+                console.log(ent3);
                 console.log(sentance[ent3].components.text.key)
                 console.log(noun);
+                console.log(updateList[noun.id])
             }
-            noun.addComponent(MyGame.components.Properties({keys: [sentance[ent3].components.text.key]}))
             // if(sentance[ent1].components.text.valueType === 'Flag'){
             //     console.log(sentance[ent3].components.text.key)
             //     console.log(noun);
@@ -192,7 +202,7 @@ MyGame.systems.rules = (function () {
 
         // console.log(nouns);
     }
-    function applyRules(sentance, startIndex, keys, entities) {
+    function applyRules(sentance, startIndex, keys, entities, updateList) {
         // console.log(startIndex);
         // console.log(keys.length);
 
@@ -203,14 +213,20 @@ MyGame.systems.rules = (function () {
             if (sentance[ent1].components.text.wordType === 'NOUN') {
                 if (sentance[ent2].components.text.wordType === 'VERB') {
                     if (sentance[ent3].components.text.wordType === 'ADJECTIVE') {
+                        if (sentance[ent1].components.text.valueType === 'Flag') {
+                            console.log(sentance[ent1].components.text.valueType)
+                            console.log(sentance[ent2].components.text.valueType)
+                            console.log(sentance[ent3].components.text.valueType)
+                        }
+
                         // console.log("Sentanace is valid, calling apply rule");
-                        applyRule(sentance, startIndex, keys, entities)
+                        applyRule(sentance, startIndex, keys, entities, updateList)
                         // applyRules(sentance, startIndex + 1, keys)
                     }
                 }
             }
             else {
-                applyRules(sentance, startIndex + 1, keys, entities);
+                applyRules(sentance, startIndex + 1, keys, entities, updateList);
             }
         }
         else {
@@ -218,46 +234,155 @@ MyGame.systems.rules = (function () {
         }
 
     }
-    function applyRulesHelper(sentance, entities) {
+    function applyRulesHelper(sentance, entities, updateList) {
         let mKeys = Object.keys(sentance);
-        applyRules(sentance, 0, mKeys, entities);
+        let copy = [...mKeys];
+        // console.log(mKeys);
+        // for(let key in sentance){
+        //     console.log(sentance[key].components['board-position']);
+        // }
+        copy.sort((a, b) => sentance[a].components['board-position'].x - sentance[b].components['board-position'].x)
+        copy.sort((a, b) => sentance[a].components['board-position'].y - sentance[b].components['board-position'].y)
+        applyRules(sentance, 0, copy, entities, updateList);
     }
-    function checkForRules(sentances, entities) {
+    function checkForRules(sentances, entities, updateList) {
         if (Object.keys(sentances.down).length >= 3) {
-            if (hasIsInMiddle(sentances.down)) {
-                applyRulesHelper(sentances.down, entities);
-            }
+            // for(let i in sentances.down){
+            //     if(entities[i].components.text.valueType === 'Flag'){
+            //         // let i = [];
+            //         // let m = [...sentances.down];
+            //         // console.log(m);
+            //         console.log(sentances.down);
+            //         let mArr = [];
+            //         for(let id in sentances.down){
+            //             mArr.push([id, sentances.down[id].components['board-position']]);
+            //         }
+            //         mArr.sort((a, b) => a[1].x - b[1].x);
+            //         mArr.sort((a, b) => a[1].y - b[1].y);
+            //         console.log(mArr);
+            //         let dict = {};
+            //         // console.log(sentances.down);
+            //         for(let i = 0; i < mArr.length; i++){
+            //             let id = mArr[i][0];
+            //             dict[id] = {...entities[id]};
+            //         }
+            //         // sentances.down = dict;
+            //         // console.log(sentances.down);
+            //         console.log(dict);
+            //     }
+            // }
+            // if (hasIsInMiddle(sentances.down)) {
+            // }
+
+            applyRulesHelper(sentances.down, entities, updateList);
         }
-        if(Object.keys(sentances.right).length >= 3){
-            if (hasIsInMiddle(sentances.right)){
-                applyRulesHelper(sentances.right, entities);
+        if (Object.keys(sentances.right).length >= 3) {
+            if (hasIsInMiddle(sentances.right)) {
+                applyRulesHelper(sentances.right, entities, updateList);
             }
+            applyRulesHelper(sentances.right, entities, updateList);
         }
     }
-    function resetDefaults(entities){
-        for(let key in entities){
+    function addInputComponent(entity) {
+        entity.addComponent(MyGame.components.KeyboardControlled({
+            keys: {
+                'ArrowUp': MyGame.constants.direction.UP,
+                'ArrowDown': MyGame.constants.direction.DOWN,
+                'ArrowLeft': MyGame.constants.direction.LEFT,
+                'ArrowRight': MyGame.constants.direction.RIGHT,
+            },
+        }))
+    }
+    function addMovableComponent(entity) {
+        //-------------------------------------------------------------
+        // Initialize movable componenet 
+        // Initially set to be stopped and facing down
+        //-------------------------------------------------------------
+        entity.addComponent(MyGame.components.Movable(
+            {
+                moveDirection: MyGame.constants.direction.STOPPED,
+                facing: MyGame.constants.direction.RIGHT,
+            }
+        ))
+    }
+
+    function resetDefaults(entities) {
+        for (let key in entities) {
             let entity = entities[key];
-            if(entity.components.properties){
+            if (entity.components.properties) {
                 entity.removeComponent(entity.components.properties);
                 // console.log(entity);
-                if(entity.components.text){
-                    entity.addComponent(MyGame.components.Properties({keys: ['PUSH']}))
+                if (entity.components.text) {
+                    entity.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
+                }
+            }
+        }
+    }
+    function updateEntities(entities, updateList) {
+        for (let id in updateList) {
+            // let changedEntity = updateList[id];
+            let entity = entities[id];
+
+            if (!entity.components.properties) {
+                entity.addComponent(MyGame.components.Properties({ keys: updateList[id].change }));
+            }
+            else {
+                entity.components.properties.add(updateList[id].change);
+            }
+            // console.log(entity.components.properties.keys);
+        }
+    }
+    function addComponents(entities) {
+        for (let id in entities) {
+            let entity = entities[id];
+            if (entity.components.properties) {
+                if (entity.components.properties.is('YOU')) {
+                    if (!entity.components['keyboard-controlled']) {
+
+                        // console.log("adding keyboard component")
+                        addInputComponent(entity);
+                        // console.log(entity)
+                    }
+                    if (!entity.components.movable) {
+                        // console.log("adding keyboard component")
+                        addMovableComponent(entity);
+                    }
+                    // console.log("in rules 301, entity is")
+                    // console.log(entity)
+                }
+
+                // console.log(entity);
+            }
+            else {
+                if (entity.components['keyboard-controlled']) {
+                    console.log("removing keyabord component")
+                    entity.removeComponent(entity.components['keyboard-controlled'])
+                    console.log(entity);
+                }
+                if (entity.components.movable) {
+                    console.log("removing keyabord component")
+                    entity.removeComponent(entity.components.movable)
                 }
             }
         }
     }
     function update(elapsedTime, entities, board) {
         resetDefaults(entities);
+        let updateList = {};
         for (let key in entities) {
             // console.log(key)
             let entity = entities[key];
 
             if (entity.components.text) {
                 let sentances = getPossibleSentancesHelper(entity, board);
-                checkForRules(sentances, entities);
+                checkForRules(sentances, entities, updateList);
                 // addComponentsForProperites
             }
         }
+
+        // console.log(updateList);
+        updateEntities(entities, updateList);
+        addComponents(entities);
     }
     return {
         update: update

@@ -1,7 +1,9 @@
 MyGame.components.Properties = function (spec) {
+    'use strict';
     const valueTypes = {
         YOU: 1,
-        PUSH: 2
+        PUSH: 2,
+        WIN: 4,
     }
     function is(type){
         for(let i = 0; i < spec.keys.length; i++){
@@ -33,12 +35,16 @@ MyGame.components.Properties = function (spec) {
             return mString;
         }
     }
+    function add(change){
+        spec.keys = spec.keys.concat(change);
+    }
     return {
         get name() { return 'properties' },
         is: is,
         get valueTypes() { return valueTypes },
         get keys() { return spec.keys; },
         toString: toString,
+        add: add,
         // get valueType
     }
 }

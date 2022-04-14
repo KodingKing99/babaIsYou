@@ -22,26 +22,7 @@ MyGame.systems.keyboardInput = (function () {
         delete keysDown[key];
     }
 
-    function addInputComponent(entity) {
-        entity.addComponent(MyGame.components.KeyboardControlled({
-            keys: {
-                'ArrowUp': MyGame.constants.direction.UP,
-                'ArrowDown': MyGame.constants.direction.DOWN,
-                'ArrowLeft': MyGame.constants.direction.LEFT,
-                'ArrowRight': MyGame.constants.direction.RIGHT,
-            },
-        }))
-        //-------------------------------------------------------------
-        // Initialize movable componenet 
-        // Initially set to be stopped and facing down
-        //-------------------------------------------------------------
-        entity.addComponent(MyGame.components.Movable(
-            {
-                moveDirection: MyGame.constants.direction.STOPPED,
-                facing: MyGame.constants.direction.RIGHT,
-            }
-        ))
-    }
+    
     // function
     function moveAll(entities, key, input){
         for(let id in entities){
@@ -66,34 +47,34 @@ MyGame.systems.keyboardInput = (function () {
             }
         }
     }
-    function checkIsYou(entities){
-        for (let id in entities) {
-            let entity = entities[id];
-            if (entity.components.properties) {
-                if (entity.components.properties.is('YOU')) {
-                    // console.log(`Entity is you: ${entity.components.noun.valueType}`)
-                    addInputComponent(entity);
-                    // console.log(entity);
-                }
-                else {
-                    // console.log("hello");
-                    // if (entity.components['keyboard-controlled']) {
-                    //     console.log(`Removing keyboard input from entity:`)
-                    //     entity.removeComponent(entity.components['keyboard-controlled']);
-                    //     console.log(entity);
-                    // }
-                    // console.log('hello')
-                    // console.log(entity.components.movable);
-                }
-            }
-            else{
-                if(entity.components.movable) {
-                    console.log("removing moving component")
-                    entity.removeComponent(entity.components.movable);
-                }
-            }
-        }   
-    }
+    // function checkIsYou(entities){
+    //     for (let id in entities) {
+    //         let entity = entities[id];
+    //         if (entity.components.properties) {
+    //             if (entity.components.properties.is('YOU')) {
+    //                 // console.log(`Entity is you: ${entity.components.noun.valueType}`)
+    //                 addInputComponent(entity);
+    //                 // console.log(entity);
+    //             }
+    //             else {
+    //                 // console.log("hello");
+    //                 // if (entity.components['keyboard-controlled']) {
+    //                 //     console.log(`Removing keyboard input from entity:`)
+    //                 //     entity.removeComponent(entity.components['keyboard-controlled']);
+    //                 //     console.log(entity);
+    //                 // }
+    //                 // console.log('hello')
+    //                 // console.log(entity.components.movable);
+    //             }
+    //         }
+    //         else{
+    //             if(entity.components.movable) {
+    //                 console.log("removing moving component")
+    //                 entity.removeComponent(entity.components.movable);
+    //             }
+    //         }
+    //     }   
+    // }
     // --------------------------------------------------------------
     //
     // Public interface used to update entities based on keyboard input.
@@ -104,7 +85,7 @@ MyGame.systems.keyboardInput = (function () {
         //     let entity = entities[id];
         //     checkIsYou(entity);
         // }
-        checkIsYou(entities);
+        // checkIsYou(entities);
         doMove(entities);
         // for(let id in entities) {
         //     let entity = entities[id];
