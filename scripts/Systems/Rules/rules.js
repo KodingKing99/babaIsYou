@@ -172,13 +172,24 @@ MyGame.systems.rules = (function () {
         let ent1 = keys[startIndex];
         let ent2 = keys[startIndex + 1];
         let ent3 = keys[startIndex + 2];
+        // console
         // let noun = getEntity(sentance[ent1].components.noun, 'noun', entities)
         // let noun = entities[sentance[ent1].id]
         let nouns = getAllNouns(sentance[ent1].components.text.valueType, entities);
+
         for(let key in nouns){
             let noun = nouns[key];
+            if(sentance[ent1].components.text.valueType === 'Flag'){
+                console.log(sentance[ent3].components.text.key)
+                console.log(noun);
+            }
             noun.addComponent(MyGame.components.Properties({keys: [sentance[ent3].components.text.key]}))
+            // if(sentance[ent1].components.text.valueType === 'Flag'){
+            //     console.log(sentance[ent3].components.text.key)
+            //     console.log(noun);
+            // }
         }
+
         // console.log(nouns);
     }
     function applyRules(sentance, startIndex, keys, entities) {

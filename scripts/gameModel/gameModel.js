@@ -194,7 +194,7 @@ MyGame.gameModel = function () {
         rock.addComponent(MyGame.components.Rotation({ rotation: 0 }));
         rock.addComponent(MyGame.components.Noun({ key: 'ROCK' }))
         // console.log(wall.components.noun.valueType)
-        rock.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
+        // rock.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
         return rock;
     }
 
@@ -205,6 +205,7 @@ MyGame.gameModel = function () {
         let flag = initializeEntityAtXY(x, y);
         flag.addComponent(MyGame.components.Sprite({ assetKey: 'flag', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
         flag.addComponent(MyGame.components.Noun({ key: 'FLAG' }))
+        // console.log(flag.components.noun)
         return flag;
     }
 

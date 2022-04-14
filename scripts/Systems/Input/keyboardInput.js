@@ -73,6 +73,7 @@ MyGame.systems.keyboardInput = (function () {
                 if (entity.components.properties.is('YOU')) {
                     // console.log(`Entity is you: ${entity.components.noun.valueType}`)
                     addInputComponent(entity);
+                    // console.log(entity);
                 }
                 else {
                     // console.log("hello");
