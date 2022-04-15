@@ -70,6 +70,7 @@ MyGame.systems.render.graphics = (function() {
     //
     //------------------------------------------------------------------
     that.drawSquare = function(corner, size, fill, stroke) {
+        // console.log("Drawing square");
         context.fillStyle = fill;
         context.fillRect(corner.x, corner.y, size, size);
 

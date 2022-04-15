@@ -138,7 +138,8 @@ MyGame.systems.render.particles = (function (Random) {
         // console.log(particle);
         for (let i in particles) {
             let particle = particles[i];
-            MyGame.systems.render.graphics.drawTexture(particle.image, particle.center, particle.rotation, particle.size);
+            // MyGame.systems.render.graphics.drawTexture(particle.image, particle.center, particle.rotation, particle.size);
+            MyGame.systems.render.graphics.drawSquare(particle.center, particle.size.x, "green", "black");
         }
 
 
@@ -183,9 +184,9 @@ MyGame.systems.render.particles = (function (Random) {
         for (let i = 0; i < ammount; i++) {
             let spec = {
                 center: { x: x, y: y },
-                size: { mean: 50, stdev: 4 },
+                size: { mean: 5, stdev: 1 },
                 speed: { mean: 10, stdev: 4 },
-                lifetime: { mean: 100, stdev: 1 },
+                lifetime: { mean: 5, stdev: 1 },
                 image: YOUPARTICLE,
             }
             let p = create(spec);
@@ -208,7 +209,7 @@ MyGame.systems.render.particles = (function (Random) {
             isYouEffectTime += 1000;
             // console.log("In object is you")
             // console.log(entity);
-            spawnYouParticles(1000, entity.components.position.x, entity.components.position.y);
+            spawnYouParticles(100, entity.components.position.x, entity.components.position.y);
         }
     }
 
