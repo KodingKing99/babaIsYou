@@ -35,7 +35,7 @@ MyGame.loader = (function() {
             scripts: ['Components/KeyboardControlled', 'Components/Sprite',
                     'Components/Position','Components/Size', 'Components/Rotation', 
                     'Components/BoardPosition', 'Components/Movable', 'Components/Noun', 'Components/Properties',
-                    'Components/Text'],
+                    'Components/Text', 'Components/ParticleEffect'],
             message: 'Components loaded',
             onComplete: null
         },
@@ -55,7 +55,7 @@ MyGame.loader = (function() {
             onComplete: null
         },
         {
-            scripts: ['Systems/Particles/random'],
+            scripts: ['Systems/Random/random'],
             message: 'Random number generator loaded',
             onComplete: null
         },

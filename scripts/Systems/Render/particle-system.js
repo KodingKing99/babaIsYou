@@ -4,57 +4,63 @@
 //
 // --------------------------------------------------------------
 
-MyGame.systems.render.particles = (function() {
+MyGame.systems.render.particles = (function (Random) {
     'use strict';
+    let YOUPARTICLE = MyGame.assets['smoke'];
     let nextName = 1;       // Unique identifier for the next particle
-    // let particles = {};
-    let spec = {
-        center: { x: 10, y: 10 },
-        size: { mean: 10, stdev: 4 },
-        speed: { mean: 50, stdev: 25 },
-        lifetime: { mean: 4, stdev: 1 },
-    }
+    let particles = {};
+
 
     //------------------------------------------------------------------
     //
     // This creates one new particle
     //
     //------------------------------------------------------------------
-    function create() {
+    function create(spec) {
         let size = Random.nextGaussian(spec.size.mean, spec.size.stdev);
         let p = {
-                center: { x: spec.center.x, y: spec.center.y },
-                size: { x: size, y: size},  // Making square particles
-                direction: Random.nextCircleVector(),
-                speed: Random.nextGaussian(spec.speed.mean, spec.speed.stdev), // pixels per second
-                rotation: 0,
-                lifetime: Random.nextGaussian(spec.lifetime.mean, spec.lifetime.stdev),    // How long the particle should live, in seconds
-                alive: 0    // How long the particle has been alive, in seconds
-            };
-
+            center: { x: spec.center.x, y: spec.center.y },
+            size: { x: size, y: size },  // Making square particles
+            direction: Random.nextCircleVector(),
+            speed: Random.nextGaussian(spec.speed.mean, spec.speed.stdev), // pixels per second
+            rotation: 0,
+            lifetime: Random.nextGaussian(spec.lifetime.mean, spec.lifetime.stdev),    // How long the particle should live, in seconds
+            alive: 0,    // How long the particle has been alive, in seconds,
+            image: spec.image,
+            name: nextName++,
+        };
         return p;
     }
+    function makeCall(call, elapsedTime) {
+        // console.log(call);
+        switch (call.components['particle-effect'].valueType) {
+            case 'NewIsYou':
+                objectIsYou(call, elapsedTime)
+        }
+    }
+    function checkForNewCalls(entities, elapsedTime, deleteList) {
+        let calls = [];
+        for (let id in entities) {
+            let entity = entities[id];
+            if (entity.components['particle-effect']) {
+                calls.push({ ...entity });
+            }
+        }
+        // console.log(calls);
+        for (let i = 0; i < calls.length; i++) {
+            makeCall(calls[i], elapsedTime)
+            deleteList[calls[i].id] = true;
+        }
 
-    //------------------------------------------------------------------
-    //
-    // Update the state of all particles.  
-    // This includes removing any that have exceeded their lifetime.
-    //
-    //------------------------------------------------------------------
-    function update(entities, elapsedTime) {
-        // TODO: get particles from entities
-        // if no particles:
-        let particles = {};
-        
-        // render(particles);
-
+    }
+    function updateParticles(elapsedTime) {
         let removeMe = [];
 
         //
         // We work with time in seconds, elapsedTime comes in as milliseconds
         elapsedTime = elapsedTime / 1000;
-        
-        Object.getOwnPropertyNames(particles).forEach(function(value, index, array) {
+
+        Object.getOwnPropertyNames(particles).forEach(function (value, index, array) {
             let particle = particles[value];
             //
             // Update how long it has been alive
@@ -85,11 +91,38 @@ MyGame.systems.render.particles = (function() {
 
         //
         // Generate some new particles
-        for (let particle = 0; particle < 1; particle++) {
-            //
-            // Assign a unique name to each particle
-            particles[nextName++] = create();
+        // for (let particle = 0; particle < 1; particle++) {
+        //     //
+        //     // Assign a unique name to each particle
+        //     particles[nextName++] = create();
+        // }
+    }
+
+    //------------------------------------------------------------------
+    //
+    // Update the state of all particles.  
+    // This includes removing any that have exceeded their lifetime.
+    //
+    //------------------------------------------------------------------
+    function update(entities, elapsedTime) {
+        // TODO: get particles from entities
+        // if no particles:
+        // let particles = {};
+
+        // render(particles);
+        let deleteList = {};
+        checkForNewCalls(entities, elapsedTime, deleteList);
+        for (let i in deleteList) {
+            delete entities[i];
         }
+        updateParticles(elapsedTime);
+        // for(let value in particles){
+        //     let p = particles[value]
+        //     // console.logp)
+        //     render(p);
+        // }
+        render(particles)
+
     }
 
     //------------------------------------------------------------------
@@ -97,11 +130,18 @@ MyGame.systems.render.particles = (function() {
     // Render all particles
     //
     //------------------------------------------------------------------
-    function render(particles, image) {
-        Object.getOwnPropertyNames(particles).forEach( function(value) {
-            let particle = particles[value];
-            MyGame.systems.render.graphics.drawTexture(image, particle.center, particle.rotation, particle.size);
-        });
+    function render(particles) {
+        // Object.getOwnPropertyNames(particles).forEach( function(value) {
+        //     let particle = particles[value];
+        //     MyGame.systems.render.graphics.drawTexture(image, particle.center, particle.rotation, particle.size);
+        // });
+        // console.log(particle);
+        for (let i in particles) {
+            let particle = particles[i];
+            MyGame.systems.render.graphics.drawTexture(particle.image, particle.center, particle.rotation, particle.size);
+        }
+
+
     }
 
     //------------------------------------------------------------------
@@ -139,14 +179,37 @@ MyGame.systems.render.particles = (function() {
     function gameWon() {
 
     }
-
+    function spawnYouParticles(ammount, x, y) {
+        for (let i = 0; i < ammount; i++) {
+            let spec = {
+                center: { x: x, y: y },
+                size: { mean: 50, stdev: 4 },
+                speed: { mean: 10, stdev: 4 },
+                lifetime: { mean: 100, stdev: 1 },
+                image: YOUPARTICLE,
+            }
+            let p = create(spec);
+            particles[p.name] = p;
+        }
+        // console.log(particles);
+    }
     //------------------------------------------------------------------
     //
     // creates the particle effect when the verb for IS YOU changes
     //
     //------------------------------------------------------------------
-    function objectIsYou() {
-
+    let isYouEffectTime = 0;
+    function objectIsYou(entity, elapsedTime) {
+        isYouEffectTime -= elapsedTime;
+        // console.log("In object is you")
+        // console.log(elapsedTime)
+        // console.log(isYouEffectTime)
+        if (isYouEffectTime <= 0) {
+            isYouEffectTime += 1000;
+            // console.log("In object is you")
+            // console.log(entity);
+            spawnYouParticles(1000, entity.components.position.x, entity.components.position.y);
+        }
     }
 
     let api = {
@@ -157,4 +220,4 @@ MyGame.systems.render.particles = (function() {
     };
 
     return api;
-}());
+}(MyGame.systems.Random));

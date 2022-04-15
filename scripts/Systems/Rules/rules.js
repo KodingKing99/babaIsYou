@@ -56,76 +56,36 @@ MyGame.systems.rules = (function () {
     }
     function getPossibleSentances(direction, entity, board, dict) {
         // let rArray;
-        switch (direction) {
-            // case 'up':
-            //     // checkUp(entity, board, count)
-            //     {
-
-            //         let entityUpPosition = entity.components['board-position'];
-            //         let mXY = getNeighborXY('up', entityUpPosition, board.height, board.width);
-            //         let x = mXY[0];
-            //         let y = mXY[1];
-            //         let textIndex = containsText(board.cells[x][y].contents);
-            //         if (textIndex != -1) {
-            //             entity = board.cells[x][y].contents[textIndex];
-            //             dict[entity.id] = entity;
-            //             return getPossibleSentances('up', entity, board, dict);
-            //         }
-            //         else {
-            //             return dict;
-            //         }
-            //     }
-
-            case 'down':
-                {
-                    let entityUpPosition = entity.components['board-position'];
-                    let mXY = getNeighborXY('down', entityUpPosition, board.height, board.width);
-                    let x = mXY[0];
-                    let y = mXY[1];
-                    let textIndex = containsText(board.cells[x][y].contents);
-                    if (textIndex != -1) {
-                        entity = board.cells[x][y].contents[textIndex];
-                        dict[entity.id] = entity;
-                        return getPossibleSentances('down', entity, board, dict);
-                    }
-                    else {
-                        return dict;
-                    }
-                }
-            // case 'left':
-            //     {
-            //         let entityUpPosition = entity.components['board-position'];
-            //         let mXY = getNeighborXY('left', entityUpPosition, board.height, board.width);
-            //         let x = mXY[0];
-            //         let y = mXY[1];
-            //         let textIndex = containsText(board.cells[x][y].contents);
-            //         if (textIndex != -1) {
-            //             count += 1;
-            //             entity = board.cells[x][y].contents[textIndex];
-            //             return checkEntities('left', entity, board, count);
-            //         }
-            //         else {
-            //             return count;
-            //         }
-            //     }
-            case 'right':
-                {
-                    let entityUpPosition = entity.components['board-position'];
-                    let mXY = getNeighborXY('right', entityUpPosition, board.height, board.width);
-                    let x = mXY[0];
-                    let y = mXY[1];
-                    let textIndex = containsText(board.cells[x][y].contents);
-                    if (textIndex != -1) {
-                        entity = board.cells[x][y].contents[textIndex];
-                        dict[entity.id] = entity;
-                        return getPossibleSentances('right', entity, board, dict);
-                    }
-                    else {
-                        return dict;
-                    }
-                }
+        if (direction === 'down') {
+            let entityUpPosition = entity.components['board-position'];
+            let mXY = getNeighborXY('down', entityUpPosition, board.height, board.width);
+            let x = mXY[0];
+            let y = mXY[1];
+            let textIndex = containsText(board.cells[x][y].contents);
+            if (textIndex != -1) {
+                entity = board.cells[x][y].contents[textIndex];
+                dict[entity.id] = entity;
+                return getPossibleSentances('down', entity, board, dict);
+            }
+            else {
+                return dict;
+            }
         }
-
+        else if (direction === 'right') {
+            let entityUpPosition = entity.components['board-position'];
+            let mXY = getNeighborXY('right', entityUpPosition, board.height, board.width);
+            let x = mXY[0];
+            let y = mXY[1];
+            let textIndex = containsText(board.cells[x][y].contents);
+            if (textIndex != -1) {
+                entity = board.cells[x][y].contents[textIndex];
+                dict[entity.id] = entity;
+                return getPossibleSentances('right', entity, board, dict);
+            }
+            else {
+                return dict;
+            }
+        }
     }
     function getPossibleSentancesHelper(entity, board) {
         let sentances = {}
@@ -172,40 +132,19 @@ MyGame.systems.rules = (function () {
         let ent1 = keys[startIndex];
         let ent2 = keys[startIndex + 1];
         let ent3 = keys[startIndex + 2];
-        // console
-        // let noun = getEntity(sentance[ent1].components.noun, 'noun', entities)
-        // let noun = entities[sentance[ent1].id]
         let nouns = getAllNouns(sentance[ent1].components.text.valueType, entities);
-
         for (let key in nouns) {
             let noun = nouns[key];
-
-            // noun.addComponent(MyGame.components.Properties({ keys: [sentance[ent3].components.text.key] }))
             if (updateList[noun.id]) {
-
                 updateList[noun.id].change.push(sentance[ent3].components.text.key)
             }
             else {
                 updateList[noun.id] = { entity: noun, change: [sentance[ent3].components.text.key] }
             }
-            if (sentance[ent1].components.text.valueType === 'Flag') {
-                console.log(ent3);
-                console.log(sentance[ent3].components.text.key)
-                console.log(noun);
-                console.log(updateList[noun.id])
-            }
-            // if(sentance[ent1].components.text.valueType === 'Flag'){
-            //     console.log(sentance[ent3].components.text.key)
-            //     console.log(noun);
-            // }
         }
 
-        // console.log(nouns);
     }
     function applyRules(sentance, startIndex, keys, entities, updateList) {
-        // console.log(startIndex);
-        // console.log(keys.length);
-
         if (startIndex < keys.length - 2) {
             let ent1 = keys[startIndex];
             let ent2 = keys[startIndex + 1];
@@ -213,15 +152,7 @@ MyGame.systems.rules = (function () {
             if (sentance[ent1].components.text.wordType === 'NOUN') {
                 if (sentance[ent2].components.text.wordType === 'VERB') {
                     if (sentance[ent3].components.text.wordType === 'ADJECTIVE') {
-                        if (sentance[ent1].components.text.valueType === 'Flag') {
-                            console.log(sentance[ent1].components.text.valueType)
-                            console.log(sentance[ent2].components.text.valueType)
-                            console.log(sentance[ent3].components.text.valueType)
-                        }
-
-                        // console.log("Sentanace is valid, calling apply rule");
                         applyRule(sentance, startIndex, keys, entities, updateList)
-                        // applyRules(sentance, startIndex + 1, keys)
                     }
                 }
             }
@@ -301,11 +232,14 @@ MyGame.systems.rules = (function () {
             // console.log(entity.components.properties.keys);
         }
     }
+    let isNewYou = false;
+    let wasYou;
     function addComponents(entities) {
         for (let id in entities) {
             let entity = entities[id];
             if (entity.components.properties) {
                 if (entity.components.properties.is('YOU')) {
+                    /// if it's not initialized
                     if (!entity.components['keyboard-controlled']) {
                         addInputComponent(entity);
                     }
@@ -313,7 +247,6 @@ MyGame.systems.rules = (function () {
                         addMovableComponent(entity);
                     }
                 }
-
             }
             else {
                 if (entity.components['keyboard-controlled']) {
@@ -328,7 +261,7 @@ MyGame.systems.rules = (function () {
             }
         }
     }
-    function update(elapsedTime, entities, board) {
+    function update(elapsedTime, entities, board, particleCalls) {
         resetDefaults(entities);
         let updateList = {};
         for (let key in entities) {
@@ -341,7 +274,7 @@ MyGame.systems.rules = (function () {
         }
 
         updateEntities(entities, updateList);
-        addComponents(entities);
+        addComponents(entities, particleCalls);
     }
     return {
         update: update

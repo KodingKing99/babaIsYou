@@ -106,11 +106,16 @@ MyGame.gameModel = function () {
                 contents.splice(index, 1);
             }
         }
+        function has(entity){
+            let index = contents.indexOf(entity);
+            return index === -1 ? false : true
+        }
         return {
             get x() { return spec.x },
             get y() { return spec.y },
             get contents() { return contents },
             get center() { return { ...spec.center }; },
+            has: has,
             addContent: addContent,
             removeContent: removeContent
         }
@@ -144,8 +149,9 @@ MyGame.gameModel = function () {
                 let component = entity.components['board-position'];
                 // Set baba's position to be the board cells position;
                 entity.addComponent(MyGame.components.Position(board.cells[component.x][component.y].center));
-                board.cells[component.x][component.y].addContent(entity);
-
+                if(!board.cells[component.x][component.y].has(entity)){
+                    board.cells[component.x][component.y].addContent(entity);
+                }
             }
         }
     }
@@ -256,13 +262,22 @@ MyGame.gameModel = function () {
     //////////////////////////////
     // Initialize particle
     //////////////////////////////
-    function initializeParticle(x, y, assetKey) {
+    // function initializeParticle(x, y, assetKey) {
+    //     let particle = MyGame.systems.entityFactory.createEntity();
+    //     particle.addComponent(MyGame.components.Size({ x: 30, y: 30 }));
+    //     // Set where particle is supposed to go on the board
+    //     particle.addComponent(MyGame.components.BoardPosition({ x: x, y: y }));
+    //     particle.addComponent(MyGame.components.Sprite({ assetKey: assetKey, animationTime: 200, spriteCount: 1, spritesToAnimate: 1 }));
+    //     particle.addComponent(MyGame.components.Properties({ keys: ['PARTICLE'] }));
+    //     return particle;
+    // }
+    function initializeParticleCall(x, y, type) {
+
+        // console.log("adding new particle");
         let particle = MyGame.systems.entityFactory.createEntity();
-        particle.addComponent(MyGame.components.Size({ x: 30, y: 30 }));
-        // Set where particle is supposed to go on the board
         particle.addComponent(MyGame.components.BoardPosition({ x: x, y: y }));
-        particle.addComponent(MyGame.components.Sprite({ assetKey: assetKey, animationTime: 200, spriteCount: 1, spritesToAnimate: 1 }));
-        particle.addComponent(MyGame.components.Properties({ keys: ['PARTICLE'] }));
+        particle.addComponent(MyGame.components.ParticleEffect({key: type}))
+        // console.log(particle);
         return particle;
     }
 
@@ -317,8 +332,8 @@ MyGame.gameModel = function () {
         let mEntity = initializeText(x, y, 'WIN', 'word-win');
         entities[mEntity.id] = mEntity;
         // if the win condition changed:
-        let particle = initializeParticle(x, y, 'smoke');
-        entities[particle.id] = particle;
+        // let particle = initializeParticle(x, y, 'smoke');
+        // entities[particle.id] = particle;
     }
     function addWord_Rock(x, y, entities){
         let mEntity = initializeText(x, y, 'ROCK', 'word-rock');
@@ -332,19 +347,41 @@ MyGame.gameModel = function () {
         let mEntity = initializeFloor(x, y);
         entities[mEntity.id] = mEntity;
     }
+    function addParticleCall(x, y, entities, type){
+        // console.log("adding particle")
+        let mEntity = initializeParticleCall(x, y, type);
+        entities[mEntity.id] = mEntity;
+    }
     function initialize() {
         parseLevelsFile(entities);
         mBoard = Board(GRID_SIZE);
         addThingsToBoard(mBoard, entities);
-        console.log(mBoard)
+        // console.log(mBoard)
 
     }
+    function makeParticleCalls(calls, entities){
+        let particleCalls = [{effectCall: 'newYou', position: {x: 10, y: 10}}]
+        // console.log(particleCalls);
+        for(let i = 0; i < particleCalls.length; i++){
+            let call = particleCalls[i];
+            switch(call.effectCall){
+                case 'newYou':
+                    // console.log("adding new you particle")
+                    let x = call.position.x;
+                    let y = call.position.y;
+                    addParticleCall(x, y, entities, 'NEWISYOU');
+            }
+        }
+        addThingsToBoard(mBoard, entities);
+    }
     function update(elapsedTime) {
-        MyGame.systems.render.particles.update(entities, elapsedTime);
-        MyGame.systems.rules.update(elapsedTime, entities, mBoard);
+        let particleCalls = [];
+        MyGame.systems.rules.update(elapsedTime, entities, mBoard, particleCalls);
         MyGame.systems.keyboardInput.update(elapsedTime, entities);
         MyGame.systems.movement.update(elapsedTime, entities, mBoard);
         MyGame.systems.render.renderAnimatedSprite.update(elapsedTime, entities);
+        makeParticleCalls(particleCalls, entities);
+        MyGame.systems.render.particles.update(entities, elapsedTime);
     }
     initialize();
     return {

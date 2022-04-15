@@ -5,7 +5,7 @@
 // Singleton so that there is only one of these throughout the program.
 //
 // ------------------------------------------------------------------
-let Random = (function() {
+MyGame.systems.Random = (function() {
     'use strict';
 
     function nextDouble() {
