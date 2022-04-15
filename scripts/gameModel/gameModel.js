@@ -205,7 +205,6 @@ MyGame.gameModel = function () {
     function initializeRock(x, y) {
         let rock = MyGame.systems.entityFactory.createEntity();
         rock.addComponent(MyGame.components.Size({ x: (GAME_WIDTH / GRID_SIZE), y: (GAME_WIDTH / GRID_SIZE) }))
-        console.log("game width: ", GAME_WIDTH, "grid size: ", GRID_SIZE, "x: ", GAME_WIDTH / GRID_SIZE);
         // Set where rock is supposed to go on the board
         rock.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
         rock.addComponent(MyGame.components.Sprite({ assetKey: 'rock', animationTime: 200, spriteCount: 3, spritesToAnimate: 3 }))
@@ -270,6 +269,20 @@ MyGame.gameModel = function () {
         // console.log(mEntity);
         return mEntity;
     }
+
+    //////////////////////////////
+    // Initialize particle
+    //////////////////////////////
+    function initializeParticle(x, y, assetKey) {
+        let particle = MyGame.systems.entityFactory.createEntity();
+        particle.addComponent(MyGame.components.Size({ x: 30, y: 30 }));
+        // Set where particle is supposed to go on the board
+        particle.addComponent(MyGame.components.BoardPosition({ x: x, y: y }));
+        particle.addComponent(MyGame.components.Sprite({ assetKey: assetKey, animationTime: 200, spriteCount: 1, spritesToAnimate: 1 }));
+        particle.addComponent(MyGame.components.Properties({ keys: ['PARTICLE'] }));
+        return particle;
+    }
+
     //------------------------------------------------------------------
     //  for calling the correct initialize function
     //------------------------------------------------------------------
@@ -320,6 +333,9 @@ MyGame.gameModel = function () {
     function addWord_Win(x, y, entities){
         let mEntity = initializeText(x, y, 'WIN', 'word-win');
         entities[mEntity.id] = mEntity;
+        // if the win condition changed:
+        let particle = initializeParticle(x, y, 'smoke');
+        entities[particle.id] = particle;
     }
     function addWord_Rock(x, y, entities){
         let mEntity = initializeText(x, y, 'ROCK', 'word-rock');
@@ -341,6 +357,7 @@ MyGame.gameModel = function () {
 
     }
     function update(elapsedTime) {
+        MyGame.systems.render.particles.update(entities, elapsedTime);
         MyGame.systems.rules.update(elapsedTime, entities, mBoard);
         MyGame.systems.keyboardInput.update(elapsedTime, entities);
         MyGame.systems.movement.update(elapsedTime, entities, mBoard);
