@@ -55,6 +55,16 @@ MyGame.loader = (function() {
             onComplete: null
         },
         {
+            scripts: ['Systems/Particles/random'],
+            message: 'Random number generator loaded',
+            onComplete: null
+        },
+        {
+            scripts: ['Systems/Render/particle-system'],
+            message: 'Particle system renderer loaded',
+            onComplete: null
+        },
+        {
             scripts: ['Systems/Input/keyboardInput'],
             message: 'input system loaded',
             onComplete: null
@@ -69,6 +79,7 @@ MyGame.loader = (function() {
             message: 'rule system loaded',
             onComplete: null
         },
+        
         {
             scripts: ['gameModel/DirectionConstants'],
             message: 'constants loaded',
@@ -195,6 +206,10 @@ MyGame.loader = (function() {
             key: 'word-wall',
             source: '/assets/word-wall_green1.png'
         },
+        {
+            key: 'smoke',
+            source: '/assets/smoke.png'
+        }
     ];
 
     //------------------------------------------------------------------
