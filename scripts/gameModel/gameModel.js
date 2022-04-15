@@ -106,7 +106,7 @@ MyGame.gameModel = function () {
                 contents.splice(index, 1);
             }
         }
-        function has(entity){
+        function has(entity) {
             let index = contents.indexOf(entity);
             return index === -1 ? false : true
         }
@@ -149,7 +149,7 @@ MyGame.gameModel = function () {
                 let component = entity.components['board-position'];
                 // Set baba's position to be the board cells position;
                 entity.addComponent(MyGame.components.Position(board.cells[component.x][component.y].center));
-                if(!board.cells[component.x][component.y].has(entity)){
+                if (!board.cells[component.x][component.y].has(entity)) {
                     board.cells[component.x][component.y].addContent(entity);
                 }
             }
@@ -274,9 +274,8 @@ MyGame.gameModel = function () {
     function initializeParticleCall(x, y, type) {
 
         // console.log("adding new particle");
-        let particle = MyGame.systems.entityFactory.createEntity();
-        particle.addComponent(MyGame.components.BoardPosition({ x: x, y: y }));
-        particle.addComponent(MyGame.components.ParticleEffect({key: type}))
+        let particle = initializeEntityAtXY(x, y);
+        particle.addComponent(MyGame.components.ParticleEffect({ key: type }))
         // console.log(particle);
         return particle;
     }
@@ -320,34 +319,34 @@ MyGame.gameModel = function () {
         let mEntity = initializeText(x, y, 'FLAG', 'word-flag');
         entities[mEntity.id] = mEntity;
     }
-    function addWord_Baba(x, y, entities){
+    function addWord_Baba(x, y, entities) {
         let mEntity = initializeText(x, y, 'BABA', 'word-baba');
         entities[mEntity.id] = mEntity;
     }
-    function addWord_You(x, y, entities){
+    function addWord_You(x, y, entities) {
         let mEntity = initializeText(x, y, 'YOU', 'word-you');
         entities[mEntity.id] = mEntity;
     }
-    function addWord_Win(x, y, entities){
+    function addWord_Win(x, y, entities) {
         let mEntity = initializeText(x, y, 'WIN', 'word-win');
         entities[mEntity.id] = mEntity;
         // if the win condition changed:
         // let particle = initializeParticle(x, y, 'smoke');
         // entities[particle.id] = particle;
     }
-    function addWord_Rock(x, y, entities){
+    function addWord_Rock(x, y, entities) {
         let mEntity = initializeText(x, y, 'ROCK', 'word-rock');
         entities[mEntity.id] = mEntity;
     }
-    function addFlag(x, y, entities){
+    function addFlag(x, y, entities) {
         let mEntity = initializeFlag(x, y);
         entities[mEntity.id] = mEntity;
     }
-    function addFloor(x, y, entities){
+    function addFloor(x, y, entities) {
         let mEntity = initializeFloor(x, y);
         entities[mEntity.id] = mEntity;
     }
-    function addParticleCall(x, y, entities, type){
+    function addParticleCall(x, y, entities, type) {
         // console.log("adding particle")
         let mEntity = initializeParticleCall(x, y, type);
         entities[mEntity.id] = mEntity;
@@ -359,18 +358,21 @@ MyGame.gameModel = function () {
         // console.log(mBoard)
 
     }
-    function makeParticleCalls(calls, entities){
-        let particleCalls = [{effectCall: 'newYou', position: {x: 10, y: 10}}]
+    function makeParticleCalls(calls, entities) {
+        // let particleCalls = [{effectCall: 'newYou', position: {x: 10, y: 10}}]
         // console.log(particleCalls);
-        for(let i = 0; i < particleCalls.length; i++){
-            let call = particleCalls[i];
-            switch(call.effectCall){
-                case 'newYou':
-                    // console.log("adding new you particle")
-                    let x = call.position.x;
-                    let y = call.position.y;
-                    addParticleCall(x, y, entities, 'NEWISYOU');
-            }
+        for (let i = 0; i < calls.length; i++) {
+            let call = calls[i];
+            // switch(call.effectCall){
+            //     case 'NEWISYOU':
+            //         // console.log("adding new you particle")
+            //         let x = call.position.x;
+            //         let y = call.position.y;
+            //         addParticleCall(x, y, entities, 'NEWISYOU');
+            // }
+            let x = call.position.x;
+            let y = call.position.y;
+            addParticleCall(x, y, entities, call.effectCall);
         }
         addThingsToBoard(mBoard, entities);
     }

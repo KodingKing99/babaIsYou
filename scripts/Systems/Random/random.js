@@ -5,7 +5,7 @@
 // Singleton so that there is only one of these throughout the program.
 //
 // ------------------------------------------------------------------
-MyGame.systems.Random = (function() {
+MyGame.systems.Random = (function () {
     'use strict';
 
     function nextDouble() {
@@ -23,6 +23,31 @@ MyGame.systems.Random = (function() {
             x: Math.cos(angle),
             y: Math.sin(angle)
         };
+    }
+    function nextUpVector() {
+        return {
+            x: 0,
+            y: -(nextDouble()),
+        }
+    }
+
+    function nextDownVector() {
+        return {
+            x: 0,
+            y: nextDouble(),
+        }
+    }
+    function nextRightVector() {
+        return {
+            x: nextDouble(),
+            y: 0,
+        }
+    }
+    function nextLeftVector() {
+        return {
+            x: -(nextDouble()),
+            y: 0,
+        }
     }
 
     //
@@ -54,19 +79,25 @@ MyGame.systems.Random = (function() {
             x2 = 2 * Math.random() - 1;
             z = (x1 * x1) + (x2 * x2);
         } while (z >= 1);
-        
+
         z = Math.sqrt((-2 * Math.log(z)) / z);
         y1 = x1 * z;
         y2 = x2 * z;
-        
+
         return mean + y1 * stdDev;
     }
+    // function uniformDist(start, end, ){
 
+    // }
     return {
-        nextDouble : nextDouble,
-        nextRange : nextRange,
-        nextCircleVector : nextCircleVector,
-        nextGaussian : nextGaussian
+        nextDouble: nextDouble,
+        nextRange: nextRange,
+        nextCircleVector: nextCircleVector,
+        nextGaussian: nextGaussian,
+        nextUpVector: nextUpVector,
+        nextDownVector: nextDownVector,
+        nextRightVector: nextRightVector,
+        nextLeftVector: nextLeftVector
     };
 
 }());

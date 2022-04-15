@@ -136,11 +136,16 @@ MyGame.systems.rules = (function () {
         for (let key in nouns) {
             let noun = nouns[key];
             if (updateList[noun.id]) {
-                updateList[noun.id].change.push(sentance[ent3].components.text.key)
+                updateList[noun.id].change.push(sentance[ent3].components.text.key);
+
             }
             else {
                 updateList[noun.id] = { entity: noun, change: [sentance[ent3].components.text.key] }
             }
+            let position1 = sentance[ent1].components['board-position'];
+            let position2 = sentance[ent2].components['board-position'];
+            let position3 = sentance[ent3].components['board-position'];
+            updateList[noun.id].positions = [{ ...position1 }, { ...position2 }, { ...position3 }]
         }
 
     }
@@ -218,11 +223,36 @@ MyGame.systems.rules = (function () {
             }
         }
     }
-    function updateEntities(entities, updateList) {
+
+    let oldYou = "none";
+    function checkForEvents(entity, newUpdate, particleCalls) {
+        // console.log(newUpdate);
+        for (let i = 0; i < newUpdate.change.length; i++) {
+            if (newUpdate.change[i] === 'YOU') {
+                // console.log(oldYou);
+                // console.log(entity.components.noun.valueType)
+                if (oldYou !== entity.components.noun.valueType) {
+                    // console.log(oldYou);
+                    oldYou = entity.components.noun.valueType;
+                    // console.log(oldYou);
+                    // particleCalls.
+                    for(let j = 0; j < newUpdate.positions.length; j++){
+                        // console.log("pushing new call")
+                        particleCalls.push({effectCall: 'NEWISYOU', position: newUpdate.positions[j]});
+                        // console.log(particleCalls)
+                    }
+                }
+                // console.log(particleCalls);
+            }
+        }
+        // for(let i in changeList)
+    }
+    function updateEntities(entities, updateList, particleCalls) {
         for (let id in updateList) {
             // let changedEntity = updateList[id];
             let entity = entities[id];
 
+            checkForEvents(entity, updateList[id], particleCalls);
             if (!entity.components.properties) {
                 entity.addComponent(MyGame.components.Properties({ keys: updateList[id].change }));
             }
@@ -272,9 +302,9 @@ MyGame.systems.rules = (function () {
                 checkForRules(sentances, entities, updateList);
             }
         }
-
-        updateEntities(entities, updateList);
-        addComponents(entities, particleCalls);
+        // console.log(updateList);
+        updateEntities(entities, updateList, particleCalls);
+        addComponents(entities);
     }
     return {
         update: update

@@ -21,7 +21,7 @@ MyGame.systems.render.particles = (function (Random) {
         let p = {
             center: { x: spec.center.x, y: spec.center.y },
             size: { x: size, y: size },  // Making square particles
-            direction: Random.nextCircleVector(),
+            direction: spec.direction,
             speed: Random.nextGaussian(spec.speed.mean, spec.speed.stdev), // pixels per second
             rotation: 0,
             lifetime: Random.nextGaussian(spec.lifetime.mean, spec.lifetime.stdev),    // How long the particle should live, in seconds
@@ -68,6 +68,7 @@ MyGame.systems.render.particles = (function (Random) {
 
             //
             // Update its center
+            // console.log(particle);
             particle.center.x += (elapsedTime * particle.speed * particle.direction.x);
             particle.center.y += (elapsedTime * particle.speed * particle.direction.y);
 
@@ -138,7 +139,9 @@ MyGame.systems.render.particles = (function (Random) {
         // console.log(particle);
         for (let i in particles) {
             let particle = particles[i];
+            // console.log("rendering particle")
             // MyGame.systems.render.graphics.drawTexture(particle.image, particle.center, particle.rotation, particle.size);
+            // console.log("rendered particle")
             MyGame.systems.render.graphics.drawSquare(particle.center, particle.size.x, "green", "black");
         }
 
@@ -180,18 +183,86 @@ MyGame.systems.render.particles = (function (Random) {
     function gameWon() {
 
     }
-    function spawnYouParticles(ammount, x, y) {
-        for (let i = 0; i < ammount; i++) {
-            let spec = {
-                center: { x: x, y: y },
-                size: { mean: 5, stdev: 1 },
-                speed: { mean: 10, stdev: 4 },
-                lifetime: { mean: 5, stdev: 1 },
-                image: YOUPARTICLE,
-            }
-            let p = create(spec);
-            particles[p.name] = p;
+    function spawnYouParticleXY(x, y, direction) {
+        let spec = {
+            center: { x: x, y: y },
+            size: { mean: 5, stdev: 1 },
+            speed: { mean: 10, stdev: 4 },
+            lifetime: { mean: 5, stdev: 1 },
+            direction: direction,
+            image: YOUPARTICLE,
         }
+
+        let p = create(spec);
+        particles[p.name] = p;
+    }
+    function spawnLineParticles(ammount, x, y, direction, size) {
+        switch (direction) {
+            case 'up':
+                {
+                    let start = x - (size / 2);
+                    let end = x + (size / 2);
+                    let mY = y - (size / 2);
+                    for (let i = 0; i < ammount; i++) {
+                        let mX = MyGame.systems.Random.nextRange(start, end);
+                        let mDirection = Random.nextUpVector();
+                        spawnYouParticleXY(mX, mY, mDirection);
+                    }
+                    break;
+                }
+            case 'down':
+                {
+                    let start = x - (size / 2);
+                    let end = x + (size / 2);
+                    let mY = y + (size / 2);
+                    for (let i = 0; i < ammount; i++) {
+                        let mX = MyGame.systems.Random.nextRange(start, end);
+                        let mDirection = Random.nextDownVector();
+                        spawnYouParticleXY(mX, mY, mDirection);
+                    }
+                    break;
+                }
+            case 'right':
+                {
+                    let start = y - (size / 2);
+                    let end = y + (size / 2);
+                    let mX = x - (size / 2);
+                    for (let i = 0; i < ammount; i++) {
+                        let mY = MyGame.systems.Random.nextRange(start, end);
+                        let mDirection = Random.nextLeftVector();
+                        spawnYouParticleXY(mX, mY, mDirection);
+                    }
+                    break;
+                }
+            case 'left':
+                {
+                    let start = y - (size / 2);
+                    let end = y + (size / 2);
+                    let mX = x + (size / 2);
+                    for (let i = 0; i < ammount; i++) {
+                        let mY = MyGame.systems.Random.nextRange(start, end);
+                        let mDirection = Random.nextRightVector();
+                        spawnYouParticleXY(mX, mY, mDirection);
+                    }
+                    break;
+                }
+
+        }
+    }
+    function spawnYouParticles(ammount, x, y, size) {
+        spawnLineParticles(ammount, x, y, 'up', size);
+        spawnLineParticles(ammount, x, y, 'down', size);
+        spawnLineParticles(ammount, x, y, 'right', size);
+        spawnLineParticles(ammount, x, y, 'left', size);
+        // for (let i = 0; i < ammount; i++) {
+        //     let spec = {
+        //         center: { x: x, y: y },
+        //         size: { mean: 5, stdev: 1 },
+        //         speed: { mean: 10, stdev: 4 },
+        //         lifetime: { mean: 5, stdev: 1 },
+        //         image: YOUPARTICLE,
+        //     }
+        // }
         // console.log(particles);
     }
     //------------------------------------------------------------------
@@ -201,16 +272,16 @@ MyGame.systems.render.particles = (function (Random) {
     //------------------------------------------------------------------
     let isYouEffectTime = 0;
     function objectIsYou(entity, elapsedTime) {
-        isYouEffectTime -= elapsedTime;
+        // isYouEffectTime -= elapsedTime;
         // console.log("In object is you")
         // console.log(elapsedTime)
         // console.log(isYouEffectTime)
-        if (isYouEffectTime <= 0) {
-            isYouEffectTime += 1000;
+        // if (isYouEffectTime <= 0) {
+            // isYouEffectTime += 10000;
             // console.log("In object is you")
             // console.log(entity);
-            spawnYouParticles(100, entity.components.position.x, entity.components.position.y);
-        }
+            spawnYouParticles(100, entity.components.position.x, entity.components.position.y, entity.components.size.x);
+        // }
     }
 
     let api = {
