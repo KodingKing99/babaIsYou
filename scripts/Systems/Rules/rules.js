@@ -237,43 +237,12 @@ MyGame.systems.rules = (function () {
     function applyRulesHelper(sentance, entities, updateList) {
         let mKeys = Object.keys(sentance);
         let copy = [...mKeys];
-        // console.log(mKeys);
-        // for(let key in sentance){
-        //     console.log(sentance[key].components['board-position']);
-        // }
         copy.sort((a, b) => sentance[a].components['board-position'].x - sentance[b].components['board-position'].x)
         copy.sort((a, b) => sentance[a].components['board-position'].y - sentance[b].components['board-position'].y)
         applyRules(sentance, 0, copy, entities, updateList);
     }
     function checkForRules(sentances, entities, updateList) {
         if (Object.keys(sentances.down).length >= 3) {
-            // for(let i in sentances.down){
-            //     if(entities[i].components.text.valueType === 'Flag'){
-            //         // let i = [];
-            //         // let m = [...sentances.down];
-            //         // console.log(m);
-            //         console.log(sentances.down);
-            //         let mArr = [];
-            //         for(let id in sentances.down){
-            //             mArr.push([id, sentances.down[id].components['board-position']]);
-            //         }
-            //         mArr.sort((a, b) => a[1].x - b[1].x);
-            //         mArr.sort((a, b) => a[1].y - b[1].y);
-            //         console.log(mArr);
-            //         let dict = {};
-            //         // console.log(sentances.down);
-            //         for(let i = 0; i < mArr.length; i++){
-            //             let id = mArr[i][0];
-            //             dict[id] = {...entities[id]};
-            //         }
-            //         // sentances.down = dict;
-            //         // console.log(sentances.down);
-            //         console.log(dict);
-            //     }
-            // }
-            // if (hasIsInMiddle(sentances.down)) {
-            // }
-
             applyRulesHelper(sentances.down, entities, updateList);
         }
         if (Object.keys(sentances.right).length >= 3) {
@@ -338,20 +307,13 @@ MyGame.systems.rules = (function () {
             if (entity.components.properties) {
                 if (entity.components.properties.is('YOU')) {
                     if (!entity.components['keyboard-controlled']) {
-
-                        // console.log("adding keyboard component")
                         addInputComponent(entity);
-                        // console.log(entity)
                     }
                     if (!entity.components.movable) {
-                        // console.log("adding keyboard component")
                         addMovableComponent(entity);
                     }
-                    // console.log("in rules 301, entity is")
-                    // console.log(entity)
                 }
 
-                // console.log(entity);
             }
             else {
                 if (entity.components['keyboard-controlled']) {
@@ -370,17 +332,14 @@ MyGame.systems.rules = (function () {
         resetDefaults(entities);
         let updateList = {};
         for (let key in entities) {
-            // console.log(key)
             let entity = entities[key];
 
             if (entity.components.text) {
                 let sentances = getPossibleSentancesHelper(entity, board);
                 checkForRules(sentances, entities, updateList);
-                // addComponentsForProperites
             }
         }
 
-        // console.log(updateList);
         updateEntities(entities, updateList);
         addComponents(entities);
     }
