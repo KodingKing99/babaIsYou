@@ -3,7 +3,8 @@ MyGame.components.Noun = function(spec){
         BABA: 'Baba',
         WALL: 'Wall',
         ROCK: 'Rock',
-        HEDGE: 'Hedge'
+        HEDGE: 'Hedge',
+        FLAG: 'Flag',
     }
     return {
         get name(){return 'noun'},

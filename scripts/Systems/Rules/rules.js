@@ -12,6 +12,7 @@ MyGame.systems.rules = (function () {
         }
         return -1;
     }
+
     function getNeighborXY(direction, position, height, width) {
         switch (direction) {
             case 'up':
@@ -154,21 +155,56 @@ MyGame.systems.rules = (function () {
         }
         return isInMiddle;
     }
-    function applyRule(sentance, startIndex, keys) {
+    function getAllNouns(valueType, entities){
+        // console.log(`getting all ${valueType}s` )
+        let rDict = {}
+        for(let key in entities){
+            let entity = entities[key];
+            if(entity.components.noun){
+                if(entity.components.noun.valueType === valueType){
+                    rDict[entity.id] = entity;
+                }
+            }
+        }
+        return rDict;
+    }
+    function applyRule(sentance, startIndex, keys, entities) {
         let ent1 = keys[startIndex];
         let ent2 = keys[startIndex + 1];
         let ent3 = keys[startIndex + 2];
-        getEntity(sentance[ent1].components.noun, entities)
+        // console
+        // let noun = getEntity(sentance[ent1].components.noun, 'noun', entities)
+        // let noun = entities[sentance[ent1].id]
+        let nouns = getAllNouns(sentance[ent1].components.text.valueType, entities);
+
+        for(let key in nouns){
+            let noun = nouns[key];
+            if(sentance[ent1].components.text.valueType === 'Flag'){
+                console.log(sentance[ent3].components.text.key)
+                console.log(noun);
+            }
+            noun.addComponent(MyGame.components.Properties({keys: [sentance[ent3].components.text.key]}))
+            // if(sentance[ent1].components.text.valueType === 'Flag'){
+            //     console.log(sentance[ent3].components.text.key)
+            //     console.log(noun);
+            // }
+        }
+
+        // console.log(nouns);
     }
     function applyRules(sentance, startIndex, keys, entities) {
-        if (startIndex < keys.length - 3) {
+        // console.log(startIndex);
+        // console.log(keys.length);
+
+        if (startIndex < keys.length - 2) {
             let ent1 = keys[startIndex];
             let ent2 = keys[startIndex + 1];
             let ent3 = keys[startIndex + 2];
             if (sentance[ent1].components.text.wordType === 'NOUN') {
-                if (sentance[ent2.components.text.wordType === 'VERB']) {
-                    if (sentance[ent3.components.text.wordType === 'ADJECTIVE']) {
-                        applyRule(sentance, startIndex, keys)
+                if (sentance[ent2].components.text.wordType === 'VERB') {
+                    if (sentance[ent3].components.text.wordType === 'ADJECTIVE') {
+                        // console.log("Sentanace is valid, calling apply rule");
+                        applyRule(sentance, startIndex, keys, entities)
                         // applyRules(sentance, startIndex + 1, keys)
                     }
                 }
@@ -182,30 +218,44 @@ MyGame.systems.rules = (function () {
         }
 
     }
-    function applyRules(sentance, entities) {
-        let mKeys = Object.keys(dict);
-        // let word = mKeys[0];
-
-
+    function applyRulesHelper(sentance, entities) {
+        let mKeys = Object.keys(sentance);
+        applyRules(sentance, 0, mKeys, entities);
     }
-    function checkForRules(sentances) {
+    function checkForRules(sentances, entities) {
         if (Object.keys(sentances.down).length >= 3) {
             if (hasIsInMiddle(sentances.down)) {
-                applyRules(sentances.down);
+                applyRulesHelper(sentances.down, entities);
             }
-            // if(hasIsInMiddle(sentances.down)){
-            //     // applyRules(sentances.down);
-            // }
+        }
+        if(Object.keys(sentances.right).length >= 3){
+            if (hasIsInMiddle(sentances.right)){
+                applyRulesHelper(sentances.right, entities);
+            }
+        }
+    }
+    function resetDefaults(entities){
+        for(let key in entities){
+            let entity = entities[key];
+            if(entity.components.properties){
+                entity.removeComponent(entity.components.properties);
+                // console.log(entity);
+                if(entity.components.text){
+                    entity.addComponent(MyGame.components.Properties({keys: ['PUSH']}))
+                }
+            }
         }
     }
     function update(elapsedTime, entities, board) {
+        resetDefaults(entities);
         for (let key in entities) {
             // console.log(key)
             let entity = entities[key];
 
             if (entity.components.text) {
                 let sentances = getPossibleSentancesHelper(entity, board);
-                checkForRules(sentances);
+                checkForRules(sentances, entities);
+                // addComponentsForProperites
             }
         }
     }
