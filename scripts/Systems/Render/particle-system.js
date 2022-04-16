@@ -6,7 +6,8 @@
 
 MyGame.systems.render.particles = (function (Random) {
     'use strict';
-    let YOUPARTICLE = MyGame.assets['smoke'];
+    let YOUPARTICLE = MyGame.assets['sparkle'];
+    // console.log(YOUPARTICLE)
     let nextName = 1;       // Unique identifier for the next particle
     let particles = {};
 
@@ -22,12 +23,14 @@ MyGame.systems.render.particles = (function (Random) {
             center: { x: spec.center.x, y: spec.center.y },
             size: { x: size, y: size },  // Making square particles
             direction: spec.direction,
+            // speed: Random.nextGaussian(spec.speed.mean, spec.speed.stdev), // pixels per second
             speed: Random.nextGaussian(spec.speed.mean, spec.speed.stdev), // pixels per second
+            // speed: spec.speed,
             rotation: 0,
             lifetime: Random.nextGaussian(spec.lifetime.mean, spec.lifetime.stdev),    // How long the particle should live, in seconds
             alive: 0,    // How long the particle has been alive, in seconds,
             image: spec.image,
-            name: nextName++,
+            // name: nextName++,
         };
         return p;
     }
@@ -64,8 +67,7 @@ MyGame.systems.render.particles = (function (Random) {
         //
         // We work with time in seconds, elapsedTime comes in as milliseconds
         elapsedTime = elapsedTime / 1000;
-
-        Object.getOwnPropertyNames(particles).forEach(function (value, index, array) {
+        for(let value in particles){
             let particle = particles[value];
             //
             // Update how long it has been alive
@@ -76,7 +78,8 @@ MyGame.systems.render.particles = (function (Random) {
             // console.log(particle);
             particle.center.x += (elapsedTime * particle.speed * particle.direction.x);
             particle.center.y += (elapsedTime * particle.speed * particle.direction.y);
-
+            // console.log(particle.center.x);
+            // console.log(particle.center.y);
             //
             // Rotate proportional to its speed
             particle.rotation += particle.speed / 500;
@@ -86,14 +89,18 @@ MyGame.systems.render.particles = (function (Random) {
             if (particle.alive > particle.lifetime) {
                 removeMe.push(value);
             }
-        });
-
+        }
+        // Object.getOwnPropertyNames(particles).forEach(function (value, index, array) {
+            
+        // });
+        // console.log(removeMe)
         //
         // Remove all of the expired particles
         for (let particle = 0; particle < removeMe.length; particle++) {
             delete particles[removeMe[particle]];
         }
         removeMe.length = 0;
+        // console.log(removeMe)
 
         //
         // Generate some new particles
@@ -118,9 +125,11 @@ MyGame.systems.render.particles = (function (Random) {
         // render(particles);
         let deleteList = {};
         checkForNewCalls(entities, elapsedTime, deleteList);
+        // console.log(entities);
         for (let i in deleteList) {
             delete entities[i];
         }
+        // console.log(entities);
         updateParticles(elapsedTime);
         // for(let value in particles){
         //     let p = particles[value]
@@ -144,10 +153,11 @@ MyGame.systems.render.particles = (function (Random) {
         for (let i in particles) {
             let particle = particles[i];
             // console.log("rendering particle")
-            // MyGame.systems.render.graphics.drawTexture(particle.image, particle.center, particle.rotation, particle.size);
+            // console.log(particle);
+            MyGame.systems.render.graphics.drawTexture(MyGame.assets['sparkle'], particle.center, particle.rotation, particle.size);
             // console.log("rendered particle")
             // MyGame.systems.render.graphics.drawSquare(particle.center, particle.size.x, "green", "black");
-            MyGame.systems.render.graphics.drawCircle(particle.center, particle.size.x, "green");
+            // MyGame.systems.render.graphics.drawCircle(particle.center, particle.size.x, "green");
             // MyGame.systems.render.graphics.drawCircle({x: 0, y: 0}, 2, "green");
             // console.log("drew circle");
         }
@@ -193,15 +203,16 @@ MyGame.systems.render.particles = (function (Random) {
     function spawnYouParticleXY(x, y, direction) {
         let spec = {
             center: { x: x, y: y },
-            size: { mean: 5, stdev: 1 },
-            speed: { mean: 10, stdev: 4 },
-            lifetime: { mean: 5, stdev: 1 },
+            size: { mean: 15, stdev: 1 },
+            speed: { mean: 20, stdev: 5 },
+            // speed: 0.001,
+            lifetime: { mean: 0.5, stdev: 0.1 },
             direction: direction,
-            image: YOUPARTICLE,
+            image: MyGame.assets['sparkle']
         }
 
         let p = create(spec);
-        particles[p.name] = p;
+        particles[nextName++] = p;
     }
     function spawnLineParticles(ammount, x, y, direction, size) {
         switch (direction) {

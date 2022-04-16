@@ -151,15 +151,18 @@ MyGame.systems.render.graphics = (function() {
     //
     // --------------------------------------------------------------
     that.drawTexture = function(image, center, rotation, size) {
+        // debugger;
         this.saveContext(); 
 
-        this.rotateCanvas(center, rotation);
-
+        // this.rotateCanvas(center, rotation);
+        // console.log("drawing texture")
+        // console.log(image.width);
         context.drawImage(
             image,
             center.x - size.x / 2,
             center.y - size.y / 2,
             size.x, size.y);
+        // console.log("drew texture")
 
         that.restoreContext();
     }

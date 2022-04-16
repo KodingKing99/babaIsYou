@@ -27,25 +27,25 @@ MyGame.systems.Random = (function () {
     function nextUpVector() {
         return {
             x: 0,
-            y: -(nextDouble()),
+            y: -1,
         }
     }
 
     function nextDownVector() {
         return {
             x: 0,
-            y: nextDouble(),
+            y: 1,
         }
     }
     function nextRightVector() {
         return {
-            x: nextDouble(),
+            x: 1,
             y: 0,
         }
     }
     function nextLeftVector() {
         return {
-            x: -(nextDouble()),
+            x: -1,
             y: 0,
         }
     }
