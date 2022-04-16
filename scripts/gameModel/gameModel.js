@@ -77,6 +77,27 @@ MyGame.gameModel = function () {
                             case 'R':
                                 addWord_Rock(j, levelCount % 20, entities);
                                 break;
+                            case 'V':
+                                addWord_Lava(j, levelCount % 20, entities);
+                                break;
+                            case 'A':
+                                addWord_Water(j, levelCount % 20, entities);
+                                break;
+                            case 'N':
+                                addWord_Sink(j, levelCount % 20, entities);
+                                break;
+                            case 'K':
+                                addWord_Kill(j, levelCount % 20, entities);
+                                break;
+                            case 'v':
+                                addLava(j, levelCount % 20, entities);
+                                break;
+                            case 'a':
+                                addWater(j, levelCount % 20, entities);
+                                break;
+                            case 'g':
+                                addGrass(j, levelCount % 20, entities);
+                                break;
 
                         }
                     }
@@ -220,8 +241,23 @@ MyGame.gameModel = function () {
     ///////////////////////////
     function initializeFloor(x, y) {
         let floor = initializeEntityAtXY(x, y);
-        floor.addComponent(MyGame.components.Sprite({ assetKey: 'floor', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
+        floor.addComponent(MyGame.components.Sprite({ assetKey: 'floor', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }));
         return floor;
+    }
+    function initializeLava(x, y) {
+        let lava = initializeEntityAtXY(x, y);
+        lava.addComponent(MyGame.components.Sprite({ assetKey: 'lava', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
+        return lava;
+    }
+    function initializeWater(x, y) {
+        let water = initializeEntityAtXY(x, y);
+        water.addComponent(MyGame.components.Sprite({ assetKey: 'water', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
+        return water;
+    }
+    function initializeGrass(x, y) {
+        let grass = initializeEntityAtXY(x, y);
+        grass.addComponent(MyGame.components.Sprite({ assetKey: 'grass', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
+        return grass;
     }
 
     ///////////////////////////
@@ -241,7 +277,7 @@ MyGame.gameModel = function () {
     }
     function initializeEntityAtXY(x, y) {
         let mEntity = MyGame.systems.entityFactory.createEntity();
-        mEntity.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }))
+        mEntity.addComponent(MyGame.components.Size({ x: GAME_WIDTH / GRID_SIZE, y: GAME_WIDTH / GRID_SIZE }));
         mEntity.addComponent(MyGame.components.Rotation({ rotation: 0 }));
         // Set where mEntity is supposed to go on the board
         mEntity.addComponent(MyGame.components.BoardPosition({ x: x, y: y }))
@@ -299,6 +335,26 @@ MyGame.gameModel = function () {
         let mEntity = initializeHedge(x, y);
         entities[mEntity.id] = mEntity;
     }
+    function addFlag(x, y, entities) {
+        let mEntity = initializeFlag(x, y);
+        entities[mEntity.id] = mEntity;
+    }
+    function addFloor(x, y, entities) {
+        let mEntity = initializeFloor(x, y);
+        entities[mEntity.id] = mEntity;
+    }
+    function addLava(x, y, entities) {
+        let mEntity = initializeLava(x, y);
+        entities[mEntity.id] = mEntity;
+    }
+    function addWater(x, y, entities) {
+        let mEntity = initializeWater(x, y);
+        entities[mEntity.id] = mEntity;
+    }
+    function addGrass(x, y, entities) {
+        let mEntity = initializeGrass(x, y);
+        entities[mEntity.id] = mEntity;
+    }
     function addWord_Wall(x, y, entities) {
         let mEntity = initializeText(x, y, 'WALL', 'word-wall');
         entities[mEntity.id] = mEntity;
@@ -330,20 +386,26 @@ MyGame.gameModel = function () {
     function addWord_Win(x, y, entities) {
         let mEntity = initializeText(x, y, 'WIN', 'word-win');
         entities[mEntity.id] = mEntity;
-        // if the win condition changed:
-        // let particle = initializeParticle(x, y, 'smoke');
-        // entities[particle.id] = particle;
     }
     function addWord_Rock(x, y, entities) {
         let mEntity = initializeText(x, y, 'ROCK', 'word-rock');
         entities[mEntity.id] = mEntity;
     }
-    function addFlag(x, y, entities) {
-        let mEntity = initializeFlag(x, y);
+
+    function addWord_Lava(x, y, entities) {
+        let mEntity = initializeText(x, y, 'LAVA', 'word-lava');
         entities[mEntity.id] = mEntity;
     }
-    function addFloor(x, y, entities) {
-        let mEntity = initializeFloor(x, y);
+    function addWord_Water(x, y, entities) {
+        let mEntity = initializeText(x, y, 'WATER', 'word-water');
+        entities[mEntity.id] = mEntity;
+    }
+    function addWord_Sink(x, y, entities) {
+        let mEntity = initializeText(x, y, 'SINK', 'word-sink');
+        entities[mEntity.id] = mEntity;
+    }
+    function addWord_Kill(x, y, entities) {
+        let mEntity = initializeText(x, y, 'KILL', 'word-kill');
         entities[mEntity.id] = mEntity;
     }
     function addParticleCall(x, y, entities, type) {
