@@ -49,7 +49,24 @@ MyGame.systems.Random = (function () {
             y: 0,
         }
     }
+    function nextCircleXY(x, y, radius){
+        let r1 = Math.random();
+        let r2 = Math.random();
+        // if(r1 < 0.5){
+        //     r1 = -1;
+        // }
+        // else{
+        //     r1 = 1;
+        // }
+        let r = radius * r2;
+        // console.log(r2);
+        let cirleVec = nextCircleVector();
 
+        return {
+            x: x + (cirleVec.x * r),
+            y: y + (cirleVec.y * r),
+        }
+    }
     //
     // This is used to give a small performance optimization in generating gaussian random numbers.
     let usePrevious = false;
@@ -97,7 +114,8 @@ MyGame.systems.Random = (function () {
         nextUpVector: nextUpVector,
         nextDownVector: nextDownVector,
         nextRightVector: nextRightVector,
-        nextLeftVector: nextLeftVector
+        nextLeftVector: nextLeftVector,
+        nextCircleXY: nextCircleXY,
     };
 
 }());

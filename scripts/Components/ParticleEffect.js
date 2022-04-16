@@ -1,6 +1,7 @@
 MyGame.components.ParticleEffect = function(spec){
     const valueTypes = {
         NEWISYOU: 'NewIsYou',
+        BABAWALK: 'BabaWalk',
     };
     let isComplete = false;
     return {
