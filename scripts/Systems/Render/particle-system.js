@@ -146,7 +146,10 @@ MyGame.systems.render.particles = (function (Random) {
             // console.log("rendering particle")
             // MyGame.systems.render.graphics.drawTexture(particle.image, particle.center, particle.rotation, particle.size);
             // console.log("rendered particle")
-            MyGame.systems.render.graphics.drawSquare(particle.center, particle.size.x, "green", "black");
+            // MyGame.systems.render.graphics.drawSquare(particle.center, particle.size.x, "green", "black");
+            MyGame.systems.render.graphics.drawCircle(particle.center, particle.size.x, "green");
+            // MyGame.systems.render.graphics.drawCircle({x: 0, y: 0}, 2, "green");
+            // console.log("drew circle");
         }
 
 

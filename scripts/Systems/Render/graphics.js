@@ -101,8 +101,12 @@ MyGame.systems.render.graphics = (function() {
     //
     //------------------------------------------------------------------
     that.drawCircle = function(center, radius, color) {
+        // debugger;
+        // console.log('drawing circle')
         context.beginPath();
-        context.arc(center.x * canvas.width, center.y * canvas.width, 2 * radius * canvas.width, 2 * Math.PI, false);
+        // context.arc(center.x * (canvas.width) , center.y * canvas.width, 2 * radius * canvas.width, 2 * Math.PI, false);
+        // context.arc(center.x * canvas.width, center.y * canvas.width, 2 * radius * (canvas.width / 10), 2 * Math.PI, false);
+        context.arc(center.x , center.y , 2 * radius, 2 * Math.PI, false);
         context.closePath();
         context.fillStyle = color;
         context.fill();
