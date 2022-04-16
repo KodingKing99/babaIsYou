@@ -220,7 +220,7 @@ MyGame.systems.render.particles = (function (Random) {
                 {
                     let start = x - (size / 2);
                     let end = x + (size / 2);
-                    let mY = y - (size / 2);
+                    let mY = y - (size / 2) - 5;
                     for (let i = 0; i < ammount; i++) {
                         let mX = MyGame.systems.Random.nextRange(start, end);
                         let mDirection = Random.nextUpVector();
@@ -232,7 +232,7 @@ MyGame.systems.render.particles = (function (Random) {
                 {
                     let start = x - (size / 2);
                     let end = x + (size / 2);
-                    let mY = y + (size / 2);
+                    let mY = y + (size / 2) + 5;
                     for (let i = 0; i < ammount; i++) {
                         let mX = MyGame.systems.Random.nextRange(start, end);
                         let mDirection = Random.nextDownVector();
