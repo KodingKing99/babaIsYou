@@ -6,7 +6,8 @@
 
 MyGame.systems.render.particles = (function (Random) {
     'use strict';
-    let YOUPARTICLE = MyGame.assets['smoke'];
+    let YOUPARTICLE = MyGame.assets['sparkle'];
+    // console.log(YOUPARTICLE)
     let nextName = 1;       // Unique identifier for the next particle
     let particles = {};
 
@@ -22,12 +23,14 @@ MyGame.systems.render.particles = (function (Random) {
             center: { x: spec.center.x, y: spec.center.y },
             size: { x: size, y: size },  // Making square particles
             direction: spec.direction,
+            // speed: Random.nextGaussian(spec.speed.mean, spec.speed.stdev), // pixels per second
             speed: Random.nextGaussian(spec.speed.mean, spec.speed.stdev), // pixels per second
+            // speed: spec.speed,
             rotation: 0,
             lifetime: Random.nextGaussian(spec.lifetime.mean, spec.lifetime.stdev),    // How long the particle should live, in seconds
             alive: 0,    // How long the particle has been alive, in seconds,
             image: spec.image,
-            name: nextName++,
+            // name: nextName++,
         };
         return p;
     }
@@ -36,6 +39,10 @@ MyGame.systems.render.particles = (function (Random) {
         switch (call.components['particle-effect'].valueType) {
             case 'NewIsYou':
                 objectIsYou(call, elapsedTime)
+                break;
+            case 'BabaWalk':
+                walkingEffect(call, elapsedTime)
+                break;
         }
     }
     function checkForNewCalls(entities, elapsedTime, deleteList) {
@@ -49,10 +56,10 @@ MyGame.systems.render.particles = (function (Random) {
         calls.sort((a, b) => a.components['board-position'].y - b.components['board-position'].y)
         calls.sort((a, b) => a.components['board-position'].x - b.components['board-position'].x)
         // console.log(calls);
-        
+
         for (let i = 0; i < calls.length; i++) {
             makeCall(calls[i], elapsedTime)
-            if(calls[i].components['particle-effect'].isComplete){
+            if (calls[i].components['particle-effect'].isComplete) {
                 deleteList[calls[i].id] = true;
             }
         }
@@ -64,8 +71,7 @@ MyGame.systems.render.particles = (function (Random) {
         //
         // We work with time in seconds, elapsedTime comes in as milliseconds
         elapsedTime = elapsedTime / 1000;
-
-        Object.getOwnPropertyNames(particles).forEach(function (value, index, array) {
+        for (let value in particles) {
             let particle = particles[value];
             //
             // Update how long it has been alive
@@ -76,32 +82,21 @@ MyGame.systems.render.particles = (function (Random) {
             // console.log(particle);
             particle.center.x += (elapsedTime * particle.speed * particle.direction.x);
             particle.center.y += (elapsedTime * particle.speed * particle.direction.y);
+            // console.log(particle.center.x);
+            // console.log(particle.center.y);
+            let speed = particle.speed;
+            particle.rotation += (speed / 500) * (Math.PI / 180);
 
-            //
-            // Rotate proportional to its speed
-            particle.rotation += particle.speed / 500;
-
-            //
             // If the lifetime has expired, identify it for removal
             if (particle.alive > particle.lifetime) {
                 removeMe.push(value);
             }
-        });
-
-        //
+        }
         // Remove all of the expired particles
         for (let particle = 0; particle < removeMe.length; particle++) {
             delete particles[removeMe[particle]];
         }
         removeMe.length = 0;
-
-        //
-        // Generate some new particles
-        // for (let particle = 0; particle < 1; particle++) {
-        //     //
-        //     // Assign a unique name to each particle
-        //     particles[nextName++] = create();
-        // }
     }
 
     //------------------------------------------------------------------
@@ -111,22 +106,12 @@ MyGame.systems.render.particles = (function (Random) {
     //
     //------------------------------------------------------------------
     function update(entities, elapsedTime) {
-        // TODO: get particles from entities
-        // if no particles:
-        // let particles = {};
-
-        // render(particles);
         let deleteList = {};
         checkForNewCalls(entities, elapsedTime, deleteList);
         for (let i in deleteList) {
             delete entities[i];
         }
         updateParticles(elapsedTime);
-        // for(let value in particles){
-        //     let p = particles[value]
-        //     // console.logp)
-        //     render(p);
-        // }
         render(particles)
     }
 
@@ -136,20 +121,12 @@ MyGame.systems.render.particles = (function (Random) {
     //
     //------------------------------------------------------------------
     function render(particles) {
-        // Object.getOwnPropertyNames(particles).forEach( function(value) {
-        //     let particle = particles[value];
-        //     MyGame.systems.render.graphics.drawTexture(image, particle.center, particle.rotation, particle.size);
-        // });
-        // console.log(particle);
         for (let i in particles) {
             let particle = particles[i];
-            // console.log("rendering particle")
-            // MyGame.systems.render.graphics.drawTexture(particle.image, particle.center, particle.rotation, particle.size);
-            // console.log("rendered particle")
+            MyGame.systems.render.graphics.drawTexture(particle.image, { ...particle.center }, { ...particle.rotation }, particle.size);
             // MyGame.systems.render.graphics.drawSquare(particle.center, particle.size.x, "green", "black");
-            MyGame.systems.render.graphics.drawCircle(particle.center, particle.size.x, "green");
+            // MyGame.systems.render.graphics.drawCircle(particle.center, particle.size.x, "green");
             // MyGame.systems.render.graphics.drawCircle({x: 0, y: 0}, 2, "green");
-            // console.log("drew circle");
         }
 
 
@@ -190,26 +167,40 @@ MyGame.systems.render.particles = (function (Random) {
     function gameWon() {
 
     }
+    function spawnParticleHelper(spec) {
+        let p = create(spec);
+        particles[nextName++] = p;
+    }
     function spawnYouParticleXY(x, y, direction) {
         let spec = {
             center: { x: x, y: y },
-            size: { mean: 5, stdev: 1 },
-            speed: { mean: 10, stdev: 4 },
-            lifetime: { mean: 5, stdev: 1 },
+            size: { mean: 15, stdev: 1 },
+            speed: { mean: 20, stdev: 5 },
+            // speed: 0.001,
+            lifetime: { mean: 0.5, stdev: 0.1 },
             direction: direction,
-            image: YOUPARTICLE,
+            image: MyGame.assets['sparkle']
         }
-
-        let p = create(spec);
-        particles[p.name] = p;
+        spawnParticleHelper(spec);
     }
-    function spawnLineParticles(ammount, x, y, direction, size) {
+    function spawnCloudParticleXY(x, y, direction) {
+        let spec = {
+            center: { x: x, y: y },
+            size: { mean: 5, stdev: 1 },
+            speed: { mean: 20, stdev: 5 },
+            lifetime: { mean: 0.3, stdev: 0.3 },
+            direction: direction,
+            image: MyGame.assets['smoke']
+        }
+        spawnParticleHelper(spec);
+    }
+    function spawnLineParticles(ammount, x, y, direction, size, extraOffeset) {
         switch (direction) {
             case 'up':
                 {
                     let start = x - (size / 2);
                     let end = x + (size / 2);
-                    let mY = y - (size / 2);
+                    let mY = y - (size / 2) - extraOffeset;
                     for (let i = 0; i < ammount; i++) {
                         let mX = MyGame.systems.Random.nextRange(start, end);
                         let mDirection = Random.nextUpVector();
@@ -221,7 +212,7 @@ MyGame.systems.render.particles = (function (Random) {
                 {
                     let start = x - (size / 2);
                     let end = x + (size / 2);
-                    let mY = y + (size / 2);
+                    let mY = y + (size / 2) + extraOffeset;
                     for (let i = 0; i < ammount; i++) {
                         let mX = MyGame.systems.Random.nextRange(start, end);
                         let mDirection = Random.nextDownVector();
@@ -233,7 +224,7 @@ MyGame.systems.render.particles = (function (Random) {
                 {
                     let start = y - (size / 2);
                     let end = y + (size / 2);
-                    let mX = x - (size / 2);
+                    let mX = x - (size / 2) - extraOffeset;
                     for (let i = 0; i < ammount; i++) {
                         let mY = MyGame.systems.Random.nextRange(start, end);
                         let mDirection = Random.nextLeftVector();
@@ -245,7 +236,7 @@ MyGame.systems.render.particles = (function (Random) {
                 {
                     let start = y - (size / 2);
                     let end = y + (size / 2);
-                    let mX = x + (size / 2);
+                    let mX = x + (size / 2) + extraOffeset;
                     for (let i = 0; i < ammount; i++) {
                         let mY = MyGame.systems.Random.nextRange(start, end);
                         let mDirection = Random.nextRightVector();
@@ -256,13 +247,29 @@ MyGame.systems.render.particles = (function (Random) {
 
         }
     }
-    function spawnYouParticles(ammount, x, y, size) {
-        spawnLineParticles(ammount, x, y, 'up', size);
-        spawnLineParticles(ammount, x, y, 'down', size);
-        spawnLineParticles(ammount, x, y, 'right', size);
-        spawnLineParticles(ammount, x, y, 'left', size);
+    function spawnYouParticles(ammount, x, y, size, extraOffeset) {
+        spawnLineParticles(ammount, x, y, 'up', size, extraOffeset);
+        spawnLineParticles(ammount, x, y, 'down', size, extraOffeset);
+        spawnLineParticles(ammount, x, y, 'right', size, extraOffeset);
+        spawnLineParticles(ammount, x, y, 'left', size, extraOffeset);
 
-        // console.log(particles);
+    }
+    function spawnCloudParticles(ammount, x, y, size) {
+        // console.log(`original x y: ${x}, ${y}`)
+        // spawnOvalParticles(ammount, x, y, size);
+        let x1 = x - 5;
+        let y1 = y - 5;
+        let x2 = x + 5;
+        let y2 = y + 5;
+        for (let i = 0; i < ammount; i++) {
+            let circle1 = Random.nextCircleXY(x1, y1, size / 10);
+            let circle2 = Random.nextCircleXY(x2, y2, size / 10);
+            let direction = Random.nextUpVector();
+            spawnCloudParticleXY(circle1.x, circle1.y, direction);
+            spawnCloudParticleXY(circle2.x, circle2.y, direction);
+            // console.log(Random.nextCircleXY(x, y, 10));
+
+        }
     }
     //------------------------------------------------------------------
     //
@@ -274,10 +281,20 @@ MyGame.systems.render.particles = (function (Random) {
         isYouEffectTime -= elapsedTime;
         if (isYouEffectTime <= 0) {
             isYouEffectTime += 800;
-            spawnYouParticles(100, entity.components.position.x, entity.components.position.y, entity.components.size.x);
+            spawnYouParticles(100, entity.components.position.x, entity.components.position.y, entity.components.size.x, 5);
             entity.components['particle-effect'].isComplete = true;
         }
-        // console.log()
+    }
+    let walkingEffectTime = 0;
+    function walkingEffect(entity, elapsedTime) {
+        walkingEffectTime -= elapsedTime;
+        if (walkingEffectTime <= 0) {
+            walkingEffectTime += 200;
+            spawnCloudParticles(50, entity.components.position.x, entity.components.position.y, entity.components.size.x)
+            // spawnYouParticles(100, entity.components.position.x, entity.components.position.y, entity.components.size.x, 5);
+
+            entity.components['particle-effect'].isComplete = true;
+        }
     }
 
     let api = {

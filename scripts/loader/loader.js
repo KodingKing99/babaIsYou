@@ -237,6 +237,10 @@ MyGame.loader = (function() {
         {
             key: 'smoke',
             source: '/assets/smoke.png'
+        },
+        {
+            key: 'sparkle',
+            source: '/assets/sparkle.png'
         }
     ];
 

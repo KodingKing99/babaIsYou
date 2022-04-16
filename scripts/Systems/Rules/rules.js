@@ -229,17 +229,11 @@ MyGame.systems.rules = (function () {
         // console.log(newUpdate);
         for (let i = 0; i < newUpdate.change.length; i++) {
             if (newUpdate.change[i] === 'YOU') {
-                // console.log(oldYou);
-                // console.log(entity.components.noun.valueType)
+
                 if (oldYou !== entity.components.noun.valueType) {
-                    // console.log(oldYou);
                     oldYou = entity.components.noun.valueType;
-                    // console.log(oldYou);
-                    // particleCalls.
                     for(let j = 0; j < newUpdate.positions.length; j++){
-                        // console.log("pushing new call")
                         particleCalls.push({effectCall: 'NEWISYOU', position: newUpdate.positions[j]});
-                        // console.log(particleCalls)
                     }
                 }
                 // console.log(particleCalls);

@@ -22,38 +22,50 @@ MyGame.systems['movement'] = (function () {
             }
         }
     }
-    function moveUp(entity, board) {
+    function checkForEvents(entity, particleRequests) {
+        if (entity.components['noun']) {
+            if (entity.components.noun.valueType === 'Baba') {
+                let mpos = {...entity.components['board-position']};
+                particleRequests.push({ effectCall: 'BABAWALK', position: {x: mpos.x, y: mpos.y}})
+            }
+        }
+    }
+    function moveUp(entity, board, particleRequests) {
         let entityPosition = entity.components['board-position'];
         // console.log(`in move up. entity position is ${entityPosition}`)
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
+        checkForEvents(entity, particleRequests);
         if (entityPosition.y > 0) {
             entityPosition.y = entityPosition.y - 1;
+
             pushUp(entityPosition, board, moveUp)
             addEntityToBoard(entity, board);
         }
     }
-    function moveDown(entity, board) {
+    function moveDown(entity, board, particleRequests) {
         let entityPosition = entity.components['board-position'];
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
+        checkForEvents(entity, particleRequests);
         if (entityPosition.y < board.height - 1) {
             entityPosition.y = entityPosition.y + 1;
             pushUp({ ...entityPosition }, board, moveDown)
             addEntityToBoard(entity, board);
         }
     }
-    function moveLeft(entity, board) {
+    function moveLeft(entity, board, particleRequests) {
         let entityPosition = entity.components['board-position'];
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
+        checkForEvents(entity, particleRequests);
         if (entityPosition.x > 0) {
             entityPosition.x = entityPosition.x - 1;
             pushUp(entityPosition, board, moveLeft)
             addEntityToBoard(entity, board);
         }
     }
-    function moveRight(entity, board) {
+    function moveRight(entity, board, particleRequests) {
         let entityPosition = entity.components['board-position'];
-        // console.log(entityPosition);
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
+        checkForEvents(entity, particleRequests);
         if (entityPosition.x < board.width - 1) {
             entityPosition.x = entityPosition.x + 1;
             pushUp({ ...entityPosition }, board, moveRight)
@@ -61,7 +73,7 @@ MyGame.systems['movement'] = (function () {
         }
     }
     // Set the sprite of the bunny to face the right direction
-    function setFacing(entity, direction) {
+    function setFacing(entity, direction, particleRequests) {
         if (entity.components.sprite) {
             // if we are rendering the bunny
             if (entity.components.noun) {
@@ -85,6 +97,8 @@ MyGame.systems['movement'] = (function () {
                             break;
 
                     }
+                    // Add walking particle effect to requests for baba
+                    // particleRequests.push({})
                 }
                 // entity.components.sprite.key = 'bunnyUp';
 
@@ -92,67 +106,67 @@ MyGame.systems['movement'] = (function () {
             }
         }
     }
-    function moveEntityOnBoard(entity, board) {
+    function moveEntityOnBoard(entity, board, particleRequests) {
         let movable = entity.components.movable;
         switch (movable.moveDirection) {
             case MyGame.constants.direction.UP:
                 // if (canMove) {
-                    movable.moveDirection = MyGame.constants.direction.STOPPED;
-                    moveUp(entity, board);
-                    setFacing(entity, MyGame.constants.direction.UP);
-                    // canMove = false;
-                    break;
-                // }
-                // else {
-                //     canMove = true;
-                //     break;
-                // }
+                movable.moveDirection = MyGame.constants.direction.STOPPED;
+                moveUp(entity, board, particleRequests);
+                setFacing(entity, MyGame.constants.direction.UP);
+                // canMove = false;
+                break;
+            // }
+            // else {
+            //     canMove = true;
+            //     break;
+            // }
 
             case MyGame.constants.direction.DOWN:
                 // if (canMove) {
-                    movable.moveDirection = MyGame.constants.direction.STOPPED;
-                    moveDown(entity, board);
-                    setFacing(entity, MyGame.constants.direction.DOWN);
-                    // canMove = false;
-                    break;
-                // }
-                // else {
-                //     canMove = true;
-                //     break;
-                // }
+                movable.moveDirection = MyGame.constants.direction.STOPPED;
+                moveDown(entity, board, particleRequests);
+                setFacing(entity, MyGame.constants.direction.DOWN, particleRequests);
+                // canMove = false;
+                break;
+            // }
+            // else {
+            //     canMove = true;
+            //     break;
+            // }
 
 
             case MyGame.constants.direction.RIGHT:
                 // if (canMove) {
-                    movable.moveDirection = MyGame.constants.direction.STOPPED;
-                    moveRight(entity, board);
-                    setFacing(entity, MyGame.constants.direction.RIGHT);
-                    // canMove = false;
-                    break;
-                // }
-                // else {
-                //     canMove = true;
-                //     break;
-                // }
+                movable.moveDirection = MyGame.constants.direction.STOPPED;
+                moveRight(entity, board, particleRequests);
+                setFacing(entity, MyGame.constants.direction.RIGHT, particleRequests);
+                // canMove = false;
+                break;
+            // }
+            // else {
+            //     canMove = true;
+            //     break;
+            // }
 
             case MyGame.constants.direction.LEFT:
                 // if (canMove) {
-                    movable.moveDirection = MyGame.constants.direction.STOPPED;
-                    moveLeft(entity, board);
-                    setFacing(entity, MyGame.constants.direction.LEFT);
-                    // canMove = false;
-                    break;
-                // }
-                // else {
-                //    canMove = true;
-                //    break; 
-                // }
+                movable.moveDirection = MyGame.constants.direction.STOPPED;
+                moveLeft(entity, board, particleRequests);
+                setFacing(entity, MyGame.constants.direction.LEFT, particleRequests);
+                // canMove = false;
+                break;
+            // }
+            // else {
+            //    canMove = true;
+            //    break; 
+            // }
 
 
         }
 
     }
-    function update(elapsedTime, entities, gameBoard) {
+    function update(elapsedTime, entities, gameBoard, particleRequests) {
         // moveTime -= elapsedTime;
         // if(moveTime <= 0){
         //     moveTime += 750
@@ -161,7 +175,7 @@ MyGame.systems['movement'] = (function () {
         for (let key in entities) {
             let entity = entities[key];
             if (entity.components.movable) {
-                moveEntityOnBoard(entity, gameBoard);
+                moveEntityOnBoard(entity, gameBoard, particleRequests);
             }
         }
     }

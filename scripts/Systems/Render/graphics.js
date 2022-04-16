@@ -127,7 +127,7 @@ MyGame.systems.render.graphics = (function() {
     that.drawSubTexture = function(image, sx, sy, subTextureWidth, subTextureHeight, center, rotation, size) {
         this.saveContext(); 
 
-        this.rotateCanvas(center, rotation);
+        // this.rotateCanvas(center, rotation);
         //
         // Pick the selected sprite from the sprite sheet to render
         context.drawImage(
@@ -151,15 +151,19 @@ MyGame.systems.render.graphics = (function() {
     //
     // --------------------------------------------------------------
     that.drawTexture = function(image, center, rotation, size) {
+        // debugger;
         this.saveContext(); 
-
+        // console.log(rotation);
+        // console.log(center);
         this.rotateCanvas(center, rotation);
-
+        // console.log("drawing texture")
+        // console.log(image.width);
         context.drawImage(
             image,
             center.x - size.x / 2,
             center.y - size.y / 2,
             size.x, size.y);
+        // console.log("drew texture")
 
         that.restoreContext();
     }

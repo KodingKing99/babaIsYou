@@ -442,7 +442,7 @@ MyGame.gameModel = function () {
         let particleCalls = [];
         MyGame.systems.rules.update(elapsedTime, entities, mBoard, particleCalls);
         MyGame.systems.keyboardInput.update(elapsedTime, entities);
-        MyGame.systems.movement.update(elapsedTime, entities, mBoard);
+        MyGame.systems.movement.update(elapsedTime, entities, mBoard, particleCalls);
         MyGame.systems.render.renderAnimatedSprite.update(elapsedTime, entities);
         makeParticleCalls(particleCalls, entities);
         MyGame.systems.render.particles.update(entities, elapsedTime);
