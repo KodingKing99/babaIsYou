@@ -46,10 +46,15 @@ MyGame.systems.render.particles = (function (Random) {
                 calls.push({ ...entity });
             }
         }
+        calls.sort((a, b) => a.components['board-position'].y - b.components['board-position'].y)
+        calls.sort((a, b) => a.components['board-position'].x - b.components['board-position'].x)
         // console.log(calls);
+        
         for (let i = 0; i < calls.length; i++) {
             makeCall(calls[i], elapsedTime)
-            deleteList[calls[i].id] = true;
+            if(calls[i].components['particle-effect'].isComplete){
+                deleteList[calls[i].id] = true;
+            }
         }
 
     }
@@ -123,7 +128,6 @@ MyGame.systems.render.particles = (function (Random) {
         //     render(p);
         // }
         render(particles)
-
     }
 
     //------------------------------------------------------------------
@@ -254,15 +258,7 @@ MyGame.systems.render.particles = (function (Random) {
         spawnLineParticles(ammount, x, y, 'down', size);
         spawnLineParticles(ammount, x, y, 'right', size);
         spawnLineParticles(ammount, x, y, 'left', size);
-        // for (let i = 0; i < ammount; i++) {
-        //     let spec = {
-        //         center: { x: x, y: y },
-        //         size: { mean: 5, stdev: 1 },
-        //         speed: { mean: 10, stdev: 4 },
-        //         lifetime: { mean: 5, stdev: 1 },
-        //         image: YOUPARTICLE,
-        //     }
-        // }
+
         // console.log(particles);
     }
     //------------------------------------------------------------------
@@ -272,16 +268,13 @@ MyGame.systems.render.particles = (function (Random) {
     //------------------------------------------------------------------
     let isYouEffectTime = 0;
     function objectIsYou(entity, elapsedTime) {
-        // isYouEffectTime -= elapsedTime;
-        // console.log("In object is you")
-        // console.log(elapsedTime)
-        // console.log(isYouEffectTime)
-        // if (isYouEffectTime <= 0) {
-            // isYouEffectTime += 10000;
-            // console.log("In object is you")
-            // console.log(entity);
+        isYouEffectTime -= elapsedTime;
+        if (isYouEffectTime <= 0) {
+            isYouEffectTime += 800;
             spawnYouParticles(100, entity.components.position.x, entity.components.position.y, entity.components.size.x);
-        // }
+            entity.components['particle-effect'].isComplete = true;
+        }
+        // console.log()
     }
 
     let api = {
