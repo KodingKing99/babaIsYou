@@ -82,7 +82,9 @@ MyGame.systems.render.particles = (function (Random) {
             // console.log(particle.center.y);
             //
             // Rotate proportional to its speed
-            particle.rotation += particle.speed / 500;
+            let speed = particle.speed;
+            // particle.rotation += (particle.speed / 500) * (Math.PI / 180);
+            particle.rotation += (speed / 500) * (Math.PI / 180);
 
             //
             // If the lifetime has expired, identify it for removal
@@ -149,12 +151,12 @@ MyGame.systems.render.particles = (function (Random) {
         //     let particle = particles[value];
         //     MyGame.systems.render.graphics.drawTexture(image, particle.center, particle.rotation, particle.size);
         // });
-        // console.log(particle);
+        // console.log(particles);
         for (let i in particles) {
             let particle = particles[i];
             // console.log("rendering particle")
             // console.log(particle);
-            MyGame.systems.render.graphics.drawTexture(MyGame.assets['sparkle'], particle.center, particle.rotation, particle.size);
+            MyGame.systems.render.graphics.drawTexture(MyGame.assets['sparkle'], {...particle.center}, {...particle.rotation}, particle.size);
             // console.log("rendered particle")
             // MyGame.systems.render.graphics.drawSquare(particle.center, particle.size.x, "green", "black");
             // MyGame.systems.render.graphics.drawCircle(particle.center, particle.size.x, "green");
@@ -214,13 +216,13 @@ MyGame.systems.render.particles = (function (Random) {
         let p = create(spec);
         particles[nextName++] = p;
     }
-    function spawnLineParticles(ammount, x, y, direction, size) {
+    function spawnLineParticles(ammount, x, y, direction, size, extraOffeset) {
         switch (direction) {
             case 'up':
                 {
                     let start = x - (size / 2);
                     let end = x + (size / 2);
-                    let mY = y - (size / 2) - 5;
+                    let mY = y - (size / 2) - extraOffeset;
                     for (let i = 0; i < ammount; i++) {
                         let mX = MyGame.systems.Random.nextRange(start, end);
                         let mDirection = Random.nextUpVector();
@@ -232,7 +234,7 @@ MyGame.systems.render.particles = (function (Random) {
                 {
                     let start = x - (size / 2);
                     let end = x + (size / 2);
-                    let mY = y + (size / 2) + 5;
+                    let mY = y + (size / 2) + extraOffeset;
                     for (let i = 0; i < ammount; i++) {
                         let mX = MyGame.systems.Random.nextRange(start, end);
                         let mDirection = Random.nextDownVector();
@@ -244,7 +246,7 @@ MyGame.systems.render.particles = (function (Random) {
                 {
                     let start = y - (size / 2);
                     let end = y + (size / 2);
-                    let mX = x - (size / 2);
+                    let mX = x - (size / 2) - extraOffeset;
                     for (let i = 0; i < ammount; i++) {
                         let mY = MyGame.systems.Random.nextRange(start, end);
                         let mDirection = Random.nextLeftVector();
@@ -256,7 +258,7 @@ MyGame.systems.render.particles = (function (Random) {
                 {
                     let start = y - (size / 2);
                     let end = y + (size / 2);
-                    let mX = x + (size / 2);
+                    let mX = x + (size / 2) + extraOffeset;
                     for (let i = 0; i < ammount; i++) {
                         let mY = MyGame.systems.Random.nextRange(start, end);
                         let mDirection = Random.nextRightVector();
@@ -267,11 +269,11 @@ MyGame.systems.render.particles = (function (Random) {
 
         }
     }
-    function spawnYouParticles(ammount, x, y, size) {
-        spawnLineParticles(ammount, x, y, 'up', size);
-        spawnLineParticles(ammount, x, y, 'down', size);
-        spawnLineParticles(ammount, x, y, 'right', size);
-        spawnLineParticles(ammount, x, y, 'left', size);
+    function spawnYouParticles(ammount, x, y, size, extraOffeset) {
+        spawnLineParticles(ammount, x, y, 'up', size, extraOffeset);
+        spawnLineParticles(ammount, x, y, 'down', size, extraOffeset);
+        spawnLineParticles(ammount, x, y, 'right', size, extraOffeset);
+        spawnLineParticles(ammount, x, y, 'left', size, extraOffeset);
 
         // console.log(particles);
     }
@@ -285,7 +287,7 @@ MyGame.systems.render.particles = (function (Random) {
         isYouEffectTime -= elapsedTime;
         if (isYouEffectTime <= 0) {
             isYouEffectTime += 800;
-            spawnYouParticles(100, entity.components.position.x, entity.components.position.y, entity.components.size.x);
+            spawnYouParticles(100, entity.components.position.x, entity.components.position.y, entity.components.size.x, 5);
             entity.components['particle-effect'].isComplete = true;
         }
         // console.log()
