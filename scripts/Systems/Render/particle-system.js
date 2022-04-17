@@ -32,6 +32,9 @@ MyGame.systems.render.particles = (function (Random) {
             image: spec.image,
             // name: nextName++,
         };
+        if(spec.decay){
+            p.decay = spec.decay;
+        }
         return p;
     }
     function makeCall(call, elapsedTime) {
@@ -44,7 +47,7 @@ MyGame.systems.render.particles = (function (Random) {
                 walkingEffect(call, elapsedTime)
                 break;
             case 'Won':
-                walkingEffect(call, elapsedTime)
+                gameWon(call, elapsedTime)
                 break;
         }
     }
@@ -90,6 +93,9 @@ MyGame.systems.render.particles = (function (Random) {
             let speed = particle.speed;
             particle.rotation += (speed / 500) * (Math.PI / 180);
 
+            if(particle.decay){
+                particle.speed = particle.speed * particle.decay;
+            }
             // If the lifetime has expired, identify it for removal
             if (particle.alive > particle.lifetime) {
                 removeMe.push(value);
@@ -135,41 +141,6 @@ MyGame.systems.render.particles = (function (Random) {
 
     }
 
-    //------------------------------------------------------------------
-    //
-    // creates the particle effect when a player dies
-    //
-    //------------------------------------------------------------------
-    function playerDeath() {
-
-    }
-
-    //------------------------------------------------------------------
-    //
-    // creates the particle effect when an object is destroyed
-    //
-    //------------------------------------------------------------------
-    function objectDeath() {
-
-    }
-
-    //------------------------------------------------------------------
-    //
-    // creates the particle effect when the condition IS WIN changes
-    //
-    //------------------------------------------------------------------
-    function objectIsWin(x, y) {
-
-    }
-
-    //------------------------------------------------------------------
-    //
-    // creates the particle effect when the winning condition is met
-    //
-    //------------------------------------------------------------------
-    function gameWon() {
-
-    }
     function spawnParticleHelper(spec) {
         let p = create(spec);
         particles[nextName++] = p;
@@ -194,6 +165,18 @@ MyGame.systems.render.particles = (function (Random) {
             lifetime: { mean: 0.3, stdev: 0.3 },
             direction: direction,
             image: MyGame.assets['smoke']
+        }
+        spawnParticleHelper(spec);
+    }
+    function spawnWinParticleXY(x, y, direction) {
+        let spec = {
+            center: { x: x, y: y },
+            size: { mean: 10, stdev: 2 },
+            speed: { mean: 150, stdev: 30 },
+            lifetime: { mean: 1, stdev: 1 },
+            direction: direction,
+            decay: 0.99,
+            image: MyGame.assets['firework'],
         }
         spawnParticleHelper(spec);
     }
@@ -274,6 +257,63 @@ MyGame.systems.render.particles = (function (Random) {
 
         }
     }
+    function spawnWinParticles(ammount, x, y, size){
+        for(let i = 0; i < ammount; i++) {
+            let circle = Random.nextCircleXY(x, y, size);
+            spawnWinParticleXY(circle.x, circle.y, circle.vector)  
+        }
+    }
+    //------------------------------------------------------------------
+    //
+    // creates the particle effect when a player dies
+    //
+    //------------------------------------------------------------------
+    function playerDeath() {
+
+    }
+
+    //------------------------------------------------------------------
+    //
+    // creates the particle effect when an object is destroyed
+    //
+    //------------------------------------------------------------------
+    function objectDeath() {
+
+    }
+
+    //------------------------------------------------------------------
+    //
+    // creates the particle effect when the condition IS WIN changes
+    //
+    //------------------------------------------------------------------
+    function objectIsWin(x, y) {
+
+    }
+
+    //------------------------------------------------------------------
+    //
+    // creates the particle effect when the winning condition is met
+    //
+    //------------------------------------------------------------------
+    let winEffectTime = 0;
+    function gameWon(entity, elapsedTime) {
+        winEffectTime -= elapsedTime;
+        if (winEffectTime <= 0) {
+            let r = Random.nextDouble();
+            if(r <= 0.3){
+                winEffectTime += 500;
+            }
+            else if (r <= 0.7 ){
+                winEffectTime += 700;
+            }
+            else{
+                winEffectTime += 1000
+            }
+            spawnWinParticles(500, entity.components.position.x, entity.components.position.y, entity.components.size.x)
+            entity.components['particle-effect'].isComplete = true;
+        }
+    }
+
     //------------------------------------------------------------------
     //
     // creates the particle effect when the verb for IS YOU changes

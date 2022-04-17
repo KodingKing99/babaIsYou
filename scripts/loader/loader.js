@@ -213,7 +213,11 @@ MyGame.loader = (function() {
         {
             key: 'sparkle',
             source: '/assets/sparkle.png'
-        }
+        },
+        {
+            key: 'firework',
+            source: '/assets/firework.png'
+        },
     ];
 
     //------------------------------------------------------------------
