@@ -65,6 +65,7 @@ MyGame.systems.Random = (function () {
         return {
             x: x + (cirleVec.x * r),
             y: y + (cirleVec.y * r),
+            get vector(){return {...cirleVec}}
         }
     }
     //
