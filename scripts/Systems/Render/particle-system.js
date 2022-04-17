@@ -43,6 +43,9 @@ MyGame.systems.render.particles = (function (Random) {
             case 'BabaWalk':
                 walkingEffect(call, elapsedTime)
                 break;
+            case 'Won':
+                walkingEffect(call, elapsedTime)
+                break;
         }
     }
     function checkForNewCalls(entities, elapsedTime, deleteList) {

@@ -229,11 +229,10 @@ MyGame.systems.rules = (function () {
         // console.log(newUpdate);
         for (let i = 0; i < newUpdate.change.length; i++) {
             if (newUpdate.change[i] === 'YOU') {
-
                 if (oldYou !== entity.components.noun.valueType) {
                     oldYou = entity.components.noun.valueType;
-                    for(let j = 0; j < newUpdate.positions.length; j++){
-                        particleCalls.push({effectCall: 'NEWISYOU', position: newUpdate.positions[j]});
+                    for (let j = 0; j < newUpdate.positions.length; j++) {
+                        particleCalls.push({ effectCall: 'NEWISYOU', position: newUpdate.positions[j] });
                     }
                 }
                 // console.log(particleCalls);
@@ -256,32 +255,37 @@ MyGame.systems.rules = (function () {
             // console.log(entity.components.properties.keys);
         }
     }
+    function removeInputComponent(entity) {
+        if (entity.components['keyboard-controlled']) {
+            entity.removeComponent(entity.components['keyboard-controlled'])
+        }
+        if (entity.components.movable) {
+            entity.removeComponent(entity.components.movable)
+        }
+    }
     let isNewYou = false;
     let wasYou;
     function addComponents(entities) {
+        // console.log(hasWon);
         for (let id in entities) {
             let entity = entities[id];
             if (entity.components.properties) {
                 if (entity.components.properties.is('YOU')) {
                     /// if it's not initialized
+                    // if (!hasWon) {
                     if (!entity.components['keyboard-controlled']) {
                         addInputComponent(entity);
                     }
                     if (!entity.components.movable) {
                         addMovableComponent(entity);
                     }
+                    if(MyGame.hasWon){
+                        removeInputComponent(entity);
+                    }
                 }
             }
             else {
-                if (entity.components['keyboard-controlled']) {
-                    console.log("removing keyabord component")
-                    entity.removeComponent(entity.components['keyboard-controlled'])
-                    console.log(entity);
-                }
-                if (entity.components.movable) {
-                    console.log("removing keyabord component")
-                    entity.removeComponent(entity.components.movable)
-                }
+                removeInputComponent(entity);
             }
         }
     }
