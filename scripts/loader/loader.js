@@ -147,6 +147,22 @@ MyGame.loader = (function() {
             source: '/assets/floor.png'
         },
         {
+            key: 'hedge',
+            source: '/assets/hedge_green1.png'
+        },
+        {
+            key: 'lava',
+            source: '/assets/lava.png'
+        },
+        {
+            key: 'water',
+            source: '/assets/water.png'
+        },
+        {
+            key: 'grass',
+            source: '/assets/grass.png'
+        },
+        {
             key: 'word-you',
             source: '/assets/word-you.png'
         },
@@ -183,10 +199,6 @@ MyGame.loader = (function() {
             source: '/assets/word-push.png'
         },
         {
-            key: 'hedge',
-            source: '/assets/hedge_green1.png'
-        },
-        {
             key: 'word-wall',
             source: '/assets/word-wall.png'
         },
@@ -205,6 +217,22 @@ MyGame.loader = (function() {
         {
             key: 'word-wall',
             source: '/assets/word-wall_green1.png'
+        },
+        {
+            key: 'word-lava',
+            source: '/assets/word-lava.png'
+        },
+        {
+            key: 'word-water',
+            source: '/assets/word-water.png'
+        },
+        {
+            key: 'word-sink',
+            source: '/assets/word-sink.png'
+        },
+        {
+            key: 'word-kill',
+            source: '/assets/word-kill.png'
         },
         {
             key: 'smoke',

@@ -1,12 +1,12 @@
 MyGame.screens['customizeControlsScreen'] = (function (game, keyboard) {
     function initialize() {
     //     // do something
-    //     document.getElementById('customizeControlsBackButt').addEventListener(
-    //         'click', () => { game.showScreen('mainMenu'); }
-    //     );
+        document.getElementById('customizeControlsBackButt').addEventListener(
+            'click', () => { game.showScreen('mainMenu'); }
+        );
     //     // if(key)
     //     // document.getElementById('currentMoveUp').innerHTML += keyboard.currentControls['MoveUp']
-    // }
+    }
     // function changeControl(domElement, control) {
     //     domElement.innerHTML = "";
     //     domElement.innerHTML += "Press Key to Change Control";
@@ -27,7 +27,7 @@ MyGame.screens['customizeControlsScreen'] = (function (game, keyboard) {
     //             render();
     //         }
     //     );
-    }
+    // }
     // function render() {
     //     if (keyboard.currentControls['MoveUp']) {
     //         let myKey = document.getElementById('currentMoveUp');
@@ -53,11 +53,11 @@ MyGame.screens['customizeControlsScreen'] = (function (game, keyboard) {
     //         myKey.innerHTML = "";
     //         myKey.innerHTML += keyboard.currentControls['MoveDown']
     //     }
-    //     if (keyboard.currentControls['Shoot']) {
-    //         let myKey = document.getElementById('currentShoot');
+    //     if (keyboard.currentControls['Undo']) {
+    //         let myKey = document.getElementById('currentUndo');
     //         // clear innerHTML
     //         myKey.innerHTML = "";
-    //         myKey.innerHTML += keyboard.currentControls['Shoot']
+    //         myKey.innerHTML += keyboard.currentControls['Undo']
     //     }
     // }
     function run() {
@@ -91,11 +91,11 @@ MyGame.screens['customizeControlsScreen'] = (function (game, keyboard) {
         //         'click', () => { changeControl(myKey, 'MoveDown') }
         //     )
         // }
-        // if (keyboard.currentControls['Shoot']) {
-        //     let myKey = document.getElementById('currentShoot');
+        // if (keyboard.currentControls['Undo']) {
+        //     let myKey = document.getElementById('currentUndo');
         //     // clear innerHTML
         //     myKey.addEventListener(
-        //         'click', () => { changeControl(myKey, 'Shoot') }
+        //         'click', () => { changeControl(myKey, 'Undo') }
         //     )
         // }
     }
