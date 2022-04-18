@@ -21,6 +21,9 @@ MyGame.screens['gamePlayScreen'] = (function(game){
                 }
             }
         );
+        document.getElementById('canvasBack').addEventListener(
+            'click', () => { game.showScreen('mainMenu'); }
+        );
     }
     function update(elapsedTime){
         // do nothing for now
