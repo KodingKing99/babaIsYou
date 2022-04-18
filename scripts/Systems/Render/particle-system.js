@@ -259,7 +259,7 @@ MyGame.systems.render.particles = (function (Random) {
     }
     function spawnWinParticles(ammount, x, y, size){
         for(let i = 0; i < ammount; i++) {
-            let circle = Random.nextCircleXY(x, y, size);
+            let circle = Random.nextCircleXY(x, y, size / 2);
             spawnWinParticleXY(circle.x, circle.y, circle.vector)  
         }
     }

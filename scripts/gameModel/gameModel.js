@@ -7,8 +7,8 @@ MyGame.gameModel = function () {
     function parseLevelsFile(entities) {
         let levelsTxt = MyGame.assets['levels-all'];
         console.log(levelsTxt);
-        let s = ""
-        s.split()
+        // let s = ""
+        // s.split()
         levelsTxt = levelsTxt.split(/Level-\d/)
         // console.log("level1 text after split")
         // console.log(levelsTxt[MyGame.level]);
