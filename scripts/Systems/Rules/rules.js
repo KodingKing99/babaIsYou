@@ -212,13 +212,21 @@ MyGame.systems.rules = (function () {
     }
 
     function resetDefaults(entities) {
+        // console.log(entities)
         for (let key in entities) {
             let entity = entities[key];
             if (entity.components.properties) {
                 entity.removeComponent(entity.components.properties);
                 // console.log(entity);
-                if (entity.components.text) {
-                    entity.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
+
+            }
+            if (entity.components.text) {
+                entity.addComponent(MyGame.components.Properties({ keys: ['PUSH'] }))
+            }
+            else if (entity.components.noun) {
+                // console.log(entity.components.noun.valueType)
+                if (entity.components.noun.valueType === 'Hedge') {
+                    entity.addComponent(MyGame.components.Properties({ keys: ['STOP'] }));
                 }
             }
         }
@@ -279,7 +287,7 @@ MyGame.systems.rules = (function () {
                     if (!entity.components.movable) {
                         addMovableComponent(entity);
                     }
-                    if(MyGame.hasWon){
+                    if (MyGame.hasWon) {
                         removeInputComponent(entity);
                     }
                 }
