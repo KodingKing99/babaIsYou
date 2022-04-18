@@ -6,18 +6,13 @@ MyGame.gameModel = function () {
     /////////
     function parseLevelsFile(entities) {
         let levelsTxt = MyGame.assets['levels-all'];
-        console.log(levelsTxt);
-        // let s = ""
-        // s.split()
-        levelsTxt = levelsTxt.split(/Level-\d/)
-        // console.log("level1 text after split")
-        // console.log(levelsTxt[MyGame.level]);
-        levelsTxt = levelsTxt[MyGame.level].split('\n')
         // console.log(levelsTxt);
+        levelsTxt = levelsTxt.split(/Level-\d/)
+
+        levelsTxt = levelsTxt[MyGame.level].split('\n')
         let levelCount;
         for (let i = 0; i < levelsTxt.length; i++) {
             if (levelsTxt[i].match(/\d\d x \d\d/)) {
-                // console.log(`Grid is ${levelsTxt[i]}`)
                 GRID_SIZE = levelsTxt[i].split('x')[0];
                 CELL_SIZE = GAME_WIDTH / GRID_SIZE;
                 levelCount = 0;
