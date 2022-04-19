@@ -310,7 +310,15 @@ MyGame.gameModel = function () {
         // console.log(particle);
         return particle;
     }
-
+    
+    function addUndoKeybEntity(entities){
+        let mEntity = MyGame.systems.entityFactory.createEntity();
+        mEntity.addComponent(MyGame.components.UndoKeyboardControlled({
+            'z': 'UNDO',
+            'r': 'RESET'
+        }));
+        entities[mEntity.id] = mEntity;
+    }
     //------------------------------------------------------------------
     //  for calling the correct initialize function
     //------------------------------------------------------------------
@@ -412,8 +420,7 @@ MyGame.gameModel = function () {
         parseLevelsFile(entities);
         mBoard = Board(GRID_SIZE);
         addThingsToBoard(mBoard, entities);
-        // console.log(mBoard)
-
+        addUndoKeybEntity(entities);
     }
     function makeParticleCalls(calls, entities) {
         // let particleCalls = [{effectCall: 'newYou', position: {x: 10, y: 10}}]

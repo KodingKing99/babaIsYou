@@ -35,7 +35,7 @@ MyGame.loader = (function() {
             scripts: ['Components/KeyboardControlled', 'Components/Sprite',
                     'Components/Position','Components/Size', 'Components/Rotation', 
                     'Components/BoardPosition', 'Components/Movable', 'Components/Noun', 'Components/Properties',
-                    'Components/Text', 'Components/ParticleEffect', 'Components/Undo'],
+                    'Components/Text', 'Components/ParticleEffect', 'Components/Undo', 'Components/UndoKeyboardControlled'],
             message: 'Components loaded',
             onComplete: null
         },

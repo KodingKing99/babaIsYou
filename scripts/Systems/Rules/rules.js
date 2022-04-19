@@ -191,11 +191,10 @@ MyGame.systems.rules = (function () {
     function addInputComponent(entity) {
         entity.addComponent(MyGame.components.KeyboardControlled({
             keys: {
-                'ArrowUp': {action: MyGame.constants.direction.UP, isDir: true},
-                'ArrowDown': {action: MyGame.constants.direction.DOWN, isDir: true},
-                'ArrowLeft': {action: MyGame.constants.direction.LEFT, isDir: true},
-                'ArrowRight': {action: MyGame.constants.direction.RIGHT, isDir: true},
-                'z': {action: 'UNDO', isDir: false},
+                'ArrowUp': MyGame.constants.direction.UP,
+                'ArrowDown': MyGame.constants.direction.DOWN,
+                'ArrowLeft': MyGame.constants.direction.LEFT,
+                'ArrowRight': MyGame.constants.direction.RIGHT,
             },
         }))
     }

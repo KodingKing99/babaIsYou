@@ -23,78 +23,45 @@ MyGame.systems.keyboardInput = (function () {
         delete keysDown[key];
     }
 
-    
+
     // function
-    function moveAll(entities, key, input){
-        for(let id in entities){
+    function moveAll(entities, key, input) {
+        for (let id in entities) {
             let entity = entities[id];
-            if(entity.components.movable){
-                entity.components.movable.facing = input.keys[key].action;
-                entity.components.movable.moveDirection = input.keys[key].action;
+            if (entity.components.movable) {
+                entity.components.movable.facing = input.keys[key];
+                entity.components.movable.moveDirection = input.keys[key];
             }
         }
     }
-    function setUndo(entity){
+    function setUndo(entity, action) {
         // console.log("undoing...")
-        entity.addComponent(MyGame.components.Undo());
+        entity.addComponent(MyGame.components.Undo({ type: action }));
     }
     function doMove(entities) {
         for (let id in entities) {
             let entity = entities[id];
             if (entity.components['keyboard-controlled']) {
                 let input = entity.components['keyboard-controlled'];
-                let dirCount = 0;
-                // for (let key in input.keys) {
-                //     for(let dir in MyGame.constants.direction){
-                //         if(input.keys[key] === MyGame.constants.direction[dir]){
-                //             dirCount++;
-                //         }
-                //     }
-                // }
                 for (let key in input.keys) {
                     if (keysDown[key]) {
-                        // if(input[key])
-                        if(input.keys[key].isDir){
-                            moveAll(entities, key, input);
-                            keyRelease2(key);
-                        }
-                        else{
-                            setUndo(entity)
-                            keyRelease2(key);
-                        }
+                        moveAll(entities, key, input);
+                        keyRelease2(key);
+                    }
+                }
+            }
+            else if (entity.components['undo-keyboard-controlled']) {
+                let input = entity.components['undo-keyboard-controlled'];
+                for (let key in input.keys) {
+                    if (keysDown[key]) {
+                        setUndo(entity, input.keys[key]);
+                        keyRelease2(key);
                     }
                 }
             }
         }
     }
-    // function checkIsYou(entities){
-    //     for (let id in entities) {
-    //         let entity = entities[id];
-    //         if (entity.components.properties) {
-    //             if (entity.components.properties.is('YOU')) {
-    //                 // console.log(`Entity is you: ${entity.components.noun.valueType}`)
-    //                 addInputComponent(entity);
-    //                 // console.log(entity);
-    //             }
-    //             else {
-    //                 // console.log("hello");
-    //                 // if (entity.components['keyboard-controlled']) {
-    //                 //     console.log(`Removing keyboard input from entity:`)
-    //                 //     entity.removeComponent(entity.components['keyboard-controlled']);
-    //                 //     console.log(entity);
-    //                 // }
-    //                 // console.log('hello')
-    //                 // console.log(entity.components.movable);
-    //             }
-    //         }
-    //         else{
-    //             if(entity.components.movable) {
-    //                 console.log("removing moving component")
-    //                 entity.removeComponent(entity.components.movable);
-    //             }
-    //         }
-    //     }   
-    // }
+
     // --------------------------------------------------------------
     //
     // Public interface used to update entities based on keyboard input.
@@ -112,7 +79,7 @@ MyGame.systems.keyboardInput = (function () {
         //     doMove(entities, entity);
         // }
 
-        
+
     }
 
     window.addEventListener('keydown', keyPress);
