@@ -10,14 +10,14 @@ MyGame.systems['movement'] = (function () {
         entity.components.position.y = boardCenterY;
         entity.components.position.x = boardCenterX;
     }
-    function pushUp(entityPosition, board, callback) {
+    function pushUp(entityPosition, board, callback, particleRequests, updateList) {
         // console.log(`cell contents at ${board.cells[entityPosition.x][entityPosition.y].x}, ${board.cells[entityPosition.x][entityPosition.y].y}`)
         // console.log(board.cells[entityPosition.x][entityPosition.y].contents)
         for (let index in board.cells[entityPosition.x][entityPosition.y].contents) {
             let mEntity = board.cells[entityPosition.x][entityPosition.y].contents[index];
             if (mEntity.components.properties) {
                 if (mEntity.components.properties.is('PUSH')) {
-                    callback(mEntity, board);
+                    callback(mEntity, board, particleRequests, updateList);
                 }
             }
         }
@@ -25,49 +25,53 @@ MyGame.systems['movement'] = (function () {
     function checkForPreMoveEvents(entity, particleRequests, contents) {
         if (entity.components['noun']) {
             if (entity.components.noun.valueType === 'Baba') {
-                let mpos = {...entity.components['board-position']};
-                particleRequests.push({ effectCall: 'BABAWALK', position: {x: mpos.x, y: mpos.y}})
+                let mpos = { ...entity.components['board-position'] };
+                particleRequests.push({ effectCall: 'BABAWALK', position: { x: mpos.x, y: mpos.y } })
             }
         }
     }
-    function checkForProperty(contents, property){
+    function checkForProperty(contents, property) {
         let found = false;
-        for(let i = 0; i < contents.length; i++){
-            if(contents[i].components.properties){
-                if(contents[i].components.properties.is(property)){
+        for (let i = 0; i < contents.length; i++) {
+            if (contents[i].components.properties) {
+                if (contents[i].components.properties.is(property)) {
                     found = true;
                 }
             }
         }
         return found;
     }
-    function checkForWins(position, board){
+    function checkForWins(position, board) {
         let hasWon = false;
         let contents = board.cells[position.x][position.y].contents;
         // console.log(contents);
-        for(let i = 0; i < contents.length; i++){
+        for (let i = 0; i < contents.length; i++) {
             // console.log(contents[i])
-            if(contents[i].components.properties){
-                if(contents[i].components.properties.is('WIN')){
+            if (contents[i].components.properties) {
+                if (contents[i].components.properties.is('WIN')) {
                     hasWon = true;
                 }
             }
         }
         return hasWon;
     }
-    function checkForPostMoveEvents(entity, particleRequests, board){
+    function checkForPostMoveEvents(entity, particleRequests, board) {
 
-        if(entity.components.noun){
-            let pos = entity.components['board-position'];
-            let contents = board.cells[pos.x][pos.y].contents
-            // let foundWin = checkForWins(entity.components['board-position'], board)
-            let foundWin = checkForProperty(contents, 'WIN')
-            if(foundWin){
-                particleRequests.push({effectCall: 'WON', position: {x: 5, y: 10}})
-                particleRequests.push({effectCall: 'WON', position: {x: 10, y: 5}})
-                particleRequests.push({effectCall: 'WON', position: {x: 15, y: 15}})
-                particleRequests.push({effectCall: 'WON', position: {x: 3, y: 5}})
-                MyGame.hasWon = true;
+        if (entity.components.noun) {
+            if (entity.components.properties) {
+                if (entity.components.properties.is('YOU')) {
+                    let pos = entity.components['board-position'];
+                    let contents = board.cells[pos.x][pos.y].contents
+                    // let foundWin = checkForWins(entity.components['board-position'], board)
+                    let foundWin = checkForProperty(contents, 'WIN')
+                    if (foundWin) {
+                        particleRequests.push({ effectCall: 'WON', position: { x: 5, y: 10 } })
+                        particleRequests.push({ effectCall: 'WON', position: { x: 10, y: 5 } })
+                        particleRequests.push({ effectCall: 'WON', position: { x: 15, y: 15 } })
+                        particleRequests.push({ effectCall: 'WON', position: { x: 3, y: 5 } })
+                        MyGame.hasWon = true;
+                    }
+                }
             }
         }
     }
@@ -75,48 +79,51 @@ MyGame.systems['movement'] = (function () {
         let entityPosition = entity.components['board-position'];
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         checkForPreMoveEvents(entity, particleRequests);
-        if (entityPosition.y > 0 && !checkForProperty(board.cells[entityPosition.x][entityPosition.y - 1].contents, 'STOP')){
+        if (entityPosition.y > 0 && !checkForProperty(board.cells[entityPosition.x][entityPosition.y - 1].contents, 'STOP')) {
             // let mChange = {};
             // mChange[entity.id] = {...entityPosition}
-            updateList[entity.id] = {...entityPosition};
+            updateList[entity.id] = { ...entityPosition };
             entityPosition.y = entityPosition.y - 1;
             checkForPostMoveEvents(entity, particleRequests, board)
-            pushUp(entityPosition, board, moveUp)
+            pushUp(entityPosition, board, moveUp, particleRequests, updateList)
             addEntityToBoard(entity, board);
         }
     }
-    function moveDown(entity, board, particleRequests) {
+    function moveDown(entity, board, particleRequests, updateList) {
         let entityPosition = entity.components['board-position'];
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         checkForPreMoveEvents(entity, particleRequests);
         // if (entityPosition.y < board.height - 1) {
-        if (entityPosition.y < board.height - 1 && !checkForProperty(board.cells[entityPosition.x][entityPosition.y + 1].contents, 'STOP')){
+        if (entityPosition.y < board.height - 1 && !checkForProperty(board.cells[entityPosition.x][entityPosition.y + 1].contents, 'STOP')) {
+            updateList[entity.id] = { ...entityPosition };
             entityPosition.y = entityPosition.y + 1;
             checkForPostMoveEvents(entity, particleRequests, board)
-            pushUp({ ...entityPosition }, board, moveDown)
+            pushUp({ ...entityPosition }, board, moveDown, particleRequests, updateList)
             addEntityToBoard(entity, board);
         }
     }
-    function moveLeft(entity, board, particleRequests) {
+    function moveLeft(entity, board, particleRequests, updateList) {
         let entityPosition = entity.components['board-position'];
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         checkForPreMoveEvents(entity, particleRequests);
         // if (entityPosition.x > 0) {
-        if (entityPosition.x > 0 && !checkForProperty(board.cells[entityPosition.x - 1][entityPosition.y].contents, 'STOP')){
+        if (entityPosition.x > 0 && !checkForProperty(board.cells[entityPosition.x - 1][entityPosition.y].contents, 'STOP')) {
+            updateList[entity.id] = { ...entityPosition };
             entityPosition.x = entityPosition.x - 1;
             checkForPostMoveEvents(entity, particleRequests, board)
-            pushUp(entityPosition, board, moveLeft)
+            pushUp(entityPosition, board, moveLeft, particleRequests, updateList)
             addEntityToBoard(entity, board);
         }
     }
-    function moveRight(entity, board, particleRequests) {
+    function moveRight(entity, board, particleRequests, updateList) {
         let entityPosition = entity.components['board-position'];
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         checkForPreMoveEvents(entity, particleRequests);
-        if (entityPosition.x < board.width - 1 && !checkForProperty(board.cells[entityPosition.x + 1][entityPosition.y].contents, 'STOP')){
+        if (entityPosition.x < board.width - 1 && !checkForProperty(board.cells[entityPosition.x + 1][entityPosition.y].contents, 'STOP')) {
+            updateList[entity.id] = { ...entityPosition };
             entityPosition.x = entityPosition.x + 1;
             checkForPostMoveEvents(entity, particleRequests, board)
-            pushUp({ ...entityPosition }, board, moveRight)
+            pushUp({ ...entityPosition }, board, moveRight, particleRequests, updateList)
             addEntityToBoard(entity, board);
         }
     }
@@ -165,21 +172,21 @@ MyGame.systems['movement'] = (function () {
 
             case MyGame.constants.direction.DOWN:
                 movable.moveDirection = MyGame.constants.direction.STOPPED;
-                moveDown(entity, board, particleRequests);
+                moveDown(entity, board, particleRequests, updateList);
                 setFacing(entity, MyGame.constants.direction.DOWN, particleRequests);
                 break;
 
 
             case MyGame.constants.direction.RIGHT:
                 movable.moveDirection = MyGame.constants.direction.STOPPED;
-                moveRight(entity, board, particleRequests);
+                moveRight(entity, board, particleRequests, updateList);
                 setFacing(entity, MyGame.constants.direction.RIGHT, particleRequests);
                 break;
 
 
             case MyGame.constants.direction.LEFT:
                 movable.moveDirection = MyGame.constants.direction.STOPPED;
-                moveLeft(entity, board, particleRequests);
+                moveLeft(entity, board, particleRequests, updateList);
                 setFacing(entity, MyGame.constants.direction.LEFT, particleRequests);
                 break;
 
