@@ -34,9 +34,8 @@ MyGame.systems.keyboardInput = (function () {
             }
         }
     }
-    function setUndo(entity){
-        // console.log("undoing...")
-        entity.addComponent(MyGame.components.Undo());
+    function setUndo(entity, action){
+        entity.addComponent(MyGame.components.Undo({type: action}));
     }
     function doMove(entities) {
         for (let id in entities) {
@@ -59,7 +58,7 @@ MyGame.systems.keyboardInput = (function () {
                             keyRelease2(key);
                         }
                         else{
-                            setUndo(entity)
+                            setUndo(entity, input.keys[key].action)
                             keyRelease2(key);
                         }
                     }

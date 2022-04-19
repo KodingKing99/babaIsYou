@@ -196,6 +196,7 @@ MyGame.systems.rules = (function () {
                 'ArrowLeft': {action: MyGame.constants.direction.LEFT, isDir: true},
                 'ArrowRight': {action: MyGame.constants.direction.RIGHT, isDir: true},
                 'z': {action: 'UNDO', isDir: false},
+                'r': {action: 'RESET', isDir: false},
             },
         }))
     }
