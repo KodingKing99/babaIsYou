@@ -71,11 +71,14 @@ MyGame.systems['movement'] = (function () {
             }
         }
     }
-    function moveUp(entity, board, particleRequests) {
+    function moveUp(entity, board, particleRequests, updateList) {
         let entityPosition = entity.components['board-position'];
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
-        checkForPreMoveEvents(entity, particleRequests, );
+        checkForPreMoveEvents(entity, particleRequests);
         if (entityPosition.y > 0 && !checkForProperty(board.cells[entityPosition.x][entityPosition.y - 1].contents, 'STOP')){
+            // let mChange = {};
+            // mChange[entity.id] = {...entityPosition}
+            updateList[entity.id] = {...entityPosition};
             entityPosition.y = entityPosition.y - 1;
             checkForPostMoveEvents(entity, particleRequests, board)
             pushUp(entityPosition, board, moveUp)
@@ -151,12 +154,12 @@ MyGame.systems['movement'] = (function () {
             }
         }
     }
-    function moveEntityOnBoard(entity, board, particleRequests, hasWon) {
+    function moveEntityOnBoard(entity, board, particleRequests, updateList) {
         let movable = entity.components.movable;
         switch (movable.moveDirection) {
             case MyGame.constants.direction.UP:
                 movable.moveDirection = MyGame.constants.direction.STOPPED;
-                moveUp(entity, board, particleRequests);
+                moveUp(entity, board, particleRequests, updateList);
                 setFacing(entity, MyGame.constants.direction.UP);
                 break;
 
@@ -184,11 +187,11 @@ MyGame.systems['movement'] = (function () {
         }
 
     }
-    function update(elapsedTime, entities, gameBoard, particleRequests) {
+    function update(elapsedTime, entities, gameBoard, particleRequests, updateList) {
         for (let key in entities) {
             let entity = entities[key];
             if (entity.components.movable) {
-                moveEntityOnBoard(entity, gameBoard, particleRequests);
+                moveEntityOnBoard(entity, gameBoard, particleRequests, updateList);
             }
         }
     }

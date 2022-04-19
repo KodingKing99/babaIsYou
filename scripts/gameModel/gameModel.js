@@ -437,10 +437,11 @@ MyGame.gameModel = function () {
     MyGame.hasWon = false;
     function update(elapsedTime) {
         let particleCalls = [];
+        let changed = {};
         MyGame.systems.rules.update(elapsedTime, entities, mBoard, particleCalls);
-        // console.log(hasWon);
         MyGame.systems.keyboardInput.update(elapsedTime, entities);
-        MyGame.systems.movement.update(elapsedTime, entities, mBoard, particleCalls);
+        MyGame.systems.movement.update(elapsedTime, entities, mBoard, particleCalls, changed);
+        MyGame.systems.undo.update(entities, elapsedTime, mBoard, changed);
         MyGame.systems.render.renderAnimatedSprite.update(elapsedTime, entities);
         makeParticleCalls(particleCalls, entities);
         MyGame.systems.render.particles.update(entities, elapsedTime);

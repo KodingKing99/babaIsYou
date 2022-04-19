@@ -35,7 +35,7 @@ MyGame.loader = (function() {
             scripts: ['Components/KeyboardControlled', 'Components/Sprite',
                     'Components/Position','Components/Size', 'Components/Rotation', 
                     'Components/BoardPosition', 'Components/Movable', 'Components/Noun', 'Components/Properties',
-                    'Components/Text', 'Components/ParticleEffect'],
+                    'Components/Text', 'Components/ParticleEffect', 'Components/Undo'],
             message: 'Components loaded',
             onComplete: null
         },
@@ -72,6 +72,11 @@ MyGame.loader = (function() {
         {
             scripts: ['Systems/Movement/movement'],
             message: 'movement system loaded',
+            onComplete: null
+        },
+        {
+            scripts: ['Systems/Undo/undo'],
+            message: 'undo system loaded',
             onComplete: null
         },
         {

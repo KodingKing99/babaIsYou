@@ -12,6 +12,7 @@ MyGame.systems.keyboardInput = (function () {
 
     function keyPress(e) {
         e.preventDefault();
+        // console.log(e.key);
         keysDown[e.key] = e.timeStamp;
     }
 
@@ -28,20 +29,39 @@ MyGame.systems.keyboardInput = (function () {
         for(let id in entities){
             let entity = entities[id];
             if(entity.components.movable){
-                entity.components.movable.facing = input.keys[key];
-                entity.components.movable.moveDirection = input.keys[key];
+                entity.components.movable.facing = input.keys[key].action;
+                entity.components.movable.moveDirection = input.keys[key].action;
             }
         }
+    }
+    function setUndo(entity){
+        // console.log("undoing...")
+        entity.addComponent(MyGame.components.Undo());
     }
     function doMove(entities) {
         for (let id in entities) {
             let entity = entities[id];
             if (entity.components['keyboard-controlled']) {
                 let input = entity.components['keyboard-controlled'];
+                let dirCount = 0;
+                // for (let key in input.keys) {
+                //     for(let dir in MyGame.constants.direction){
+                //         if(input.keys[key] === MyGame.constants.direction[dir]){
+                //             dirCount++;
+                //         }
+                //     }
+                // }
                 for (let key in input.keys) {
                     if (keysDown[key]) {
-                        moveAll(entities, key, input);
-                        keyRelease2(key);
+                        // if(input[key])
+                        if(input.keys[key].isDir){
+                            moveAll(entities, key, input);
+                            keyRelease2(key);
+                        }
+                        else{
+                            setUndo(entity)
+                            keyRelease2(key);
+                        }
                     }
                 }
             }
