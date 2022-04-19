@@ -34,9 +34,8 @@ MyGame.systems.keyboardInput = (function () {
             }
         }
     }
-    function setUndo(entity, action) {
-        // console.log("undoing...")
-        entity.addComponent(MyGame.components.Undo({ type: action }));
+    function setUndo(entity, action){
+        entity.addComponent(MyGame.components.Undo({type: action}));
     }
     function doMove(entities) {
         for (let id in entities) {
