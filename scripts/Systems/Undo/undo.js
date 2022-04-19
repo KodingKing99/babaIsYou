@@ -23,7 +23,7 @@ MyGame.systems.undo = (function () {
         }
 
     }
-    function update(entities, elapsedTime, board, changed) {
+    function update(entities, elapsedTime, board, changed, reInitializeFunct) {
         // console.log(changeList);
         if (Object.keys(changed).length > 0) {
             mStack.push(changed);
@@ -35,6 +35,9 @@ MyGame.systems.undo = (function () {
                 if (entity.components.undo.type === MyGame.constants.undo.UNDO) {
                     doUndo(entities, board);
                     entity.removeComponent(entity.components.undo)
+                }
+                else if (entity.components.undo.type === MyGame.constants.undo.RESET){
+                    reInitializeFunct();
                 }
             }
         }

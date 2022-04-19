@@ -424,18 +424,16 @@ MyGame.gameModel = function () {
         addThingsToBoard(mBoard, entities);
         addUndoKeybEntity(entities);
     }
+    function reInitialize(){
+        entities = {};
+        parseLevelsFile(entities);
+        mBoard = Board(GRID_SIZE);
+        addThingsToBoard(mBoard, entities);
+        addUndoKeybEntity(entities);
+    }
     function makeParticleCalls(calls, entities) {
-        // let particleCalls = [{effectCall: 'newYou', position: {x: 10, y: 10}}]
-        // console.log(particleCalls);
         for (let i = 0; i < calls.length; i++) {
             let call = calls[i];
-            // switch(call.effectCall){
-            //     case 'NEWISYOU':
-            //         // console.log("adding new you particle")
-            //         let x = call.position.x;
-            //         let y = call.position.y;
-            //         addParticleCall(x, y, entities, 'NEWISYOU');
-            // }
             let x = call.position.x;
             let y = call.position.y;
             addParticleCall(x, y, entities, call.effectCall);
@@ -450,7 +448,7 @@ MyGame.gameModel = function () {
         MyGame.systems.rules.update(elapsedTime, entities, mBoard, particleCalls);
         MyGame.systems.keyboardInput.update(elapsedTime, entities);
         MyGame.systems.movement.update(elapsedTime, entities, mBoard, particleCalls, changed);
-        MyGame.systems.undo.update(entities, elapsedTime, mBoard, changed);
+        MyGame.systems.undo.update(entities, elapsedTime, mBoard, changed, reInitialize);
         MyGame.systems.render.renderAnimatedSprite.update(elapsedTime, entities);
         makeParticleCalls(particleCalls, entities);
         MyGame.systems.render.particles.update(entities, elapsedTime);
