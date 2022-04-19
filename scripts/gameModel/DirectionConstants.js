@@ -8,3 +8,9 @@ MyGame.constants.direction = Object.freeze(
         STOPPED: 'stopped'
     }
 );
+MyGame.constants.undo = Object.freeze(
+    {
+        UNDO: 'undo',
+        RESET: 'reset'
+    }
+)

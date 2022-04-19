@@ -32,9 +32,10 @@ MyGame.systems.undo = (function () {
         for (let id in entities) {
             let entity = entities[id];
             if (entity.components.undo) {
-                doUndo(entities, board);
-                entity.removeComponent(entity.components.undo)
-                // console.log(entity);
+                if (entity.components.undo.type === MyGame.constants.undo.UNDO) {
+                    doUndo(entities, board);
+                    entity.removeComponent(entity.components.undo)
+                }
             }
         }
     }

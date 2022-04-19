@@ -51,6 +51,8 @@ MyGame.systems.keyboardInput = (function () {
             }
             else if (entity.components['undo-keyboard-controlled']) {
                 let input = entity.components['undo-keyboard-controlled'];
+                // console.log(entity);
+                
                 for (let key in input.keys) {
                     if (keysDown[key]) {
                         setUndo(entity, input.keys[key]);
@@ -67,18 +69,7 @@ MyGame.systems.keyboardInput = (function () {
     //
     // --------------------------------------------------------------
     function update(elapsedTime, entities) {
-        // for (let id in entities) {
-        //     let entity = entities[id];
-        //     checkIsYou(entity);
-        // }
-        // checkIsYou(entities);
         doMove(entities);
-        // for(let id in entities) {
-        //     let entity = entities[id];
-        //     doMove(entities, entity);
-        // }
-
-
     }
 
     window.addEventListener('keydown', keyPress);

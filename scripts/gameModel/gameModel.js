@@ -310,12 +310,14 @@ MyGame.gameModel = function () {
         // console.log(particle);
         return particle;
     }
-    
-    function addUndoKeybEntity(entities){
+
+    function addUndoKeybEntity(entities) {
         let mEntity = MyGame.systems.entityFactory.createEntity();
         mEntity.addComponent(MyGame.components.UndoKeyboardControlled({
-            'z': 'UNDO',
-            'r': 'RESET'
+            keys: {
+                'z': MyGame.constants.undo.UNDO,
+                'r': MyGame.constants.undo.RESET,
+            }
         }));
         entities[mEntity.id] = mEntity;
     }
