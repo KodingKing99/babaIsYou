@@ -5,6 +5,9 @@ MyGame.components.Noun = function(spec){
         ROCK: 'Rock',
         HEDGE: 'Hedge',
         FLAG: 'Flag',
+        WATER: 'Water',
+        LAVA: 'Lava',
+        FLOOR: 'Floor',
     }
     return {
         get name(){return 'noun'},

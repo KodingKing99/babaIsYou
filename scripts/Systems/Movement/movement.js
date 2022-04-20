@@ -30,7 +30,7 @@ MyGame.systems['movement'] = (function () {
             }
         }
     }
-    function checkForProperty(contents, property) {
+    function checkForProperty(contents, property, log=false) {
         let found = false;
         for (let i = 0; i < contents.length; i++) {
             if (contents[i].components.properties) {
@@ -38,6 +38,9 @@ MyGame.systems['movement'] = (function () {
                     found = true;
                 }
             }
+        }
+        if(log){
+            console.log(contents);
         }
         return found;
     }
@@ -65,6 +68,52 @@ MyGame.systems['movement'] = (function () {
         }
         return hasWon;
     }
+    function checkSink(entity, updateList, toDelete, board){
+        // sink events
+        let pos = entity.components['board-position'];
+        let contents = board.cells[pos.x][pos.y].contents
+        // let foundWin = checkForWins(entity.components['board-position'], board)
+        let foundSink = checkForProperty(contents, 'SINK');
+        if (foundSink) {
+            console.log(contents);
+            toDelete[entity.id] = true;
+            checkUndo(entity, updateList, 'delete');
+            let index = getIndexWithProperty(contents, 'SINK');
+            let mEntPos = entity.components['board-position']; 
+            board.cells[mEntPos.x][mEntPos.y].removeContent(entity)
+            if (index != -1) {
+                toDelete[contents[index].id] = true;
+                checkUndo(contents[index], updateList, 'delete')
+                mEntPos = contents[index].components['board-position'];
+                board.cells[mEntPos.x][mEntPos.y].removeContent(contents[index])
+            }
+            // console.log(board.cells[mEntPos.x][mEntPos.y].contents);
+            // console.log(updateList);
+        }
+    }
+    function checkKill(entity, updateList, toDelete, board){
+        // sink events
+        let pos = entity.components['board-position'];
+        let contents = board.cells[pos.x][pos.y].contents
+        // let foundWin = checkForWins(entity.components['board-position'], board)
+        let foundKill = checkForProperty(contents, 'KILL');
+        if (foundKill) {
+            // console.log(contents);
+            toDelete[entity.id] = true;
+            checkUndo(entity, updateList, 'delete');
+            let mEntPos = entity.components['board-position']; 
+            board.cells[mEntPos.x][mEntPos.y].removeContent(entity)
+            // let index = getIndexWithProperty(contents, 'SINK');
+            // if (index != -1) {
+            //     toDelete[contents[index].id] = true;
+            //     checkUndo(contents[index], updateList, 'delete')
+            //     mEntPos = contents[index].components['board-position'];
+            //     board.cells[mEntPos.x][mEntPos.y].removeContent(contents[index])
+            // }
+            // console.log(board.cells[mEntPos.x][mEntPos.y].contents);
+            // console.log(updateList);
+        }
+    }
     function checkForPostMoveEvents(entity, particleRequests, board, toDelete, updateList) {
 
         if (entity.components.noun) {
@@ -82,21 +131,8 @@ MyGame.systems['movement'] = (function () {
                         MyGame.hasWon = true;
                     }
                 }
-                // sink events
-                let pos = entity.components['board-position'];
-                let contents = board.cells[pos.x][pos.y].contents
-                // let foundWin = checkForWins(entity.components['board-position'], board)
-                let foundSink = checkForProperty(contents, 'SINK');
-                if (foundSink) {
-                    console.log(contents);
-                    toDelete[entity.id] = true;
-                    checkUndo(entity, updateList, 'delete');
-                    let index = getIndexWithProperty(contents, 'SINK');
-                    if (index != -1) {
-                        toDelete[contents[index].id] = true;
-                        checkUndo(contents[index], updateList, 'delete')
-                    }
-                }
+                checkSink(entity, updateList, toDelete, board);
+                checkKill(entity, updateList, toDelete, board);
             }
         }
     }
@@ -245,6 +281,7 @@ MyGame.systems['movement'] = (function () {
             let entity = entities[key];
             if (entity.components.movable) {
                 moveEntityOnBoard(entity, gameBoard, particleRequests, updateList, toDelete);
+                // console.log(updateList)
             }
         }
         for (let id in toDelete) {

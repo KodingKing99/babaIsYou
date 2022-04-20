@@ -13,55 +13,71 @@ MyGame.systems.undo = (function () {
         let addList = {}
         if (mStack.length > 0) {
             let top = mStack.pop();
-            for (let id in entities) {
-                if (top[id]) {
-                    for (let i = 0; i < top[id].length; i++) {
-                        let change = top[id][i];
-                        if (change.type === 'move') {
-                            console.log(change)
+            for (let id in top) {
+                for (let i = 0; i < top[id].length; i++) {
+                    let change = top[id][i];
+                    // console.log(top[id]);
+                    if (change.type === 'add') {
+                        console.log(top[id]);
+                        deleteList[change.entity.id] = true;
+                        addList[change.entity.id] = { position: { ...change.entity.components['board-position'] }, addType: change.nounType }
+                    }
+                    else if (change.type === 'delete') {
+                        console.log("undoing delete");
+                        let mEnt = change.entity;
+                        if (mEnt.components.noun) {
+                            console.log("undoing delete for")
+                            console.log(mEnt);
+                            let entityPosition = mEnt.components['board-position'];
+                            addList[mEnt.id] = { position: { ...entityPosition }, addType: mEnt.components.noun.valueType, entity: {...mEnt} };
+                        }
+                    }
+                   
+            }
+            for (let id in deleteList) {
+                delete entities[id];
+            }
+            // if(Object.keys(addList).length > 0){
+            //     console.log(addList);
+            // }
+            for (let id in addList) {
+                /// for when things that can move get deleted.
+                if(addList[id].entity && addList[id].entity.components.properties && //addList[id].entity.components.movable){ 
+                    (addList[id].entity.components.properties.is('YOU') || addList[id].entity.components.properties.is('PUSH'))){
+                    entities[id] = addList[id].entity;
+                }
+                else{
+                    nounCommandPat[addList[id].addType](addList[id].position.x, addList[id].position.y, entities)
+                }
+            }
+            for (let id in top) {
+                for (let i = 0; i < top[id].length; i++) {
+                    let change = top[id][i];
+                    // console.log(change);
+                    if (change.type === 'move') {
+                        if (entities[id]) {
                             let entityPosition = entities[id].components['board-position'];
                             board.cells[entityPosition.x][entityPosition.y].removeContent(entities[id]);
-                            // let changePosition = change.entity.components['board-position'];
                             entityPosition.x = change.position.x;
                             entityPosition.y = change.position.y;
                             addEntityToBoard(entities[id], board)
-                            // console.log
                         }
-                        else if (change.type === 'add') {
-                            console.log(top[id]);
-                            deleteList[change.entity.id] = true;
-                            addList[change.entity.id] = {position: {...change.entity.components['board-position']}, addType: change.nounType}
-                        }
-                        else if (change.type === 'delete') {
-                            let mEnt = change.entity;
-                            if (mEnt.components.noun) {
-                                let entityPosition = mEnt.components['board-position'];
-                                addList[mEnt.id] = {position: {...entityPosition}, addType: mEnt.components.noun.valueType};
-                            }
-                        }
+                        // else if (addList[id]){
+                        //     // mStack.push({type: 'move', position: {ch}})
+                        // }
                     }
-
+                }
                 }
             }
         }
-        for (let id in deleteList) {
-            delete entities[id];
-        }
-        // if(Object.keys(addList).length > 0){
-        //     console.log(addList);
-        // }
-        for (let id in addList){
-            // console.log(addList[id]);
-            // console.log(nounCommandPat);
-            nounCommandPat[addList[id].addType](addList[id].position.x, addList[id].position.y, entities);
-        }
+        
 
     }
     function update(entities, elapsedTime, board, changed, reInitializeFunct, nounCommandPat) {
         // console.log(changeList);
         if (Object.keys(changed).length > 0) {
             mStack.push(changed);
-            // console.log(mStack);
+            console.log(mStack);
         }
         for (let id in entities) {
             let entity = entities[id];

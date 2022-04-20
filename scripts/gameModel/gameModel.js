@@ -216,6 +216,9 @@ MyGame.gameModel = function () {
         //-------------------------------------------------------------
         return baba;
     }
+    // function reInitializeBaba(entity){
+    //     let baba = en
+    // }
     ///////////////////////////
     // Inititialize rock
     ///////////////////////////
@@ -248,24 +251,27 @@ MyGame.gameModel = function () {
     // Inititialize floor
     ///////////////////////////
     function initializeFloor(x, y) {
-        let floor = initializeEntityAtXY(x, y);
-        floor.addComponent(MyGame.components.Sprite({ assetKey: 'floor', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }));
-        return floor;
+        let mEntity = initializeEntityAtXY(x, y);
+        mEntity.addComponent(MyGame.components.Sprite({ assetKey: 'floor', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }));
+        mEntity.addComponent(MyGame.components.Noun({ key: 'FLOOR' }))
+        return mEntity;
     }
     function initializeLava(x, y) {
-        let lava = initializeEntityAtXY(x, y);
-        lava.addComponent(MyGame.components.Sprite({ assetKey: 'lava', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
-        return lava;
+        let mEntity = initializeEntityAtXY(x, y);
+        mEntity.addComponent(MyGame.components.Sprite({ assetKey: 'lava', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
+        mEntity.addComponent(MyGame.components.Noun({ key: 'LAVA' }))
+        return mEntity;
     }
     function initializeWater(x, y) {
-        let water = initializeEntityAtXY(x, y);
-        water.addComponent(MyGame.components.Sprite({ assetKey: 'water', animationTime: 200, spriteCount: 3, spritesToAnimate: 3 }))
-        return water;
+        let mEntity = initializeEntityAtXY(x, y);
+        mEntity.addComponent(MyGame.components.Sprite({ assetKey: 'water', animationTime: 200, spriteCount: 3, spritesToAnimate: 3 }))
+        mEntity.addComponent(MyGame.components.Noun({ key: 'WATER' }))
+        return mEntity;
     }
     function initializeGrass(x, y) {
-        let grass = initializeEntityAtXY(x, y);
-        grass.addComponent(MyGame.components.Sprite({ assetKey: 'grass', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
-        return grass;
+        let mEntity = initializeEntityAtXY(x, y);
+        mEntity.addComponent(MyGame.components.Sprite({ assetKey: 'grass', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
+        return mEntity;
     }
 
     ///////////////////////////
