@@ -149,7 +149,7 @@ MyGame.systems.rules = (function () {
         }
 
     }
-    function applyNounRule(sentance, startIndex, keys, entities, updateList){
+    function applyNounRule(sentance, startIndex, keys, entities, updateList) {
         let ent1 = keys[startIndex];
         let ent2 = keys[startIndex + 1];
         let ent3 = keys[startIndex + 2];
@@ -162,7 +162,7 @@ MyGame.systems.rules = (function () {
             else {
                 updateList[noun.id] = { entity: noun, change: [sentance[ent3].components.text.valueType] }
             }
-            
+
             // let position1 = sentance[ent1].components['board-position'];
             // let position2 = sentance[ent2].components['board-position'];
             // let position3 = sentance[ent3].components['board-position'];
@@ -181,7 +181,7 @@ MyGame.systems.rules = (function () {
                     if (sentance[ent3].components.text.wordType === 'ADJECTIVE') {
                         applyRule(sentance, startIndex, keys, entities, updateList)
                     }
-                    else if (sentance[ent3].components.text.wordType === 'NOUN'){
+                    else if (sentance[ent3].components.text.wordType === 'NOUN') {
                         applyNounRule(sentance, startIndex, keys, entities, nounList)
                     }
                 }
@@ -288,27 +288,34 @@ MyGame.systems.rules = (function () {
             // console.log(entity.components.properties.keys);
         }
     }
-    // function 
+    function checkUndo(entity, undoList, type) {
+        if (!undoList[entity.id]) {
+            undoList[entity.id] = [{ type: type, entity: { ...entity } }]
+        }
+        else {
+            undoList[entity.id].push({ type: type, entity: { ...entity } })
+        }
+    }
     function updateNouns(entities, updateList, particleCalls, nounCommandPat, board, undoList) {
         let deleteList = {};
         let mNew = {};
         let mOld = {};
-        for(let id in updateList){
+        for (let id in updateList) {
             let entity = entities[id];
-            let entityPosition = {...entity.components['board-position']};
+            let entityPosition = { ...entity.components['board-position'] };
             deleteList[entity.id] = true;
-            // undoList[entity.id] = {'type': 'delete', entity: {...entity}};
-            // console.log(updateList[id].change[0]);
-            // mOld = {...entities};
+            checkUndo(entity, undoList, 'delete');
+            // undoList[entity.id] = ;
+            mOld = { ...entities };
             nounCommandPat[updateList[id].change[0]](entityPosition.x, entityPosition.y, entities);
-            // mNew = {...entities};
-            // for(let mKey in mNew){
-                // if(!mOld[mKey]){
-                    // undoList[mNew[mKey].id] = {'type': 'add', entity: {...mNew[mKey]}}
-                // }
-            // }
+            mNew = { ...entities };
+            for (let mKey in mNew) {
+                if (!mOld[mKey]) {
+                    checkUndo(mNew[mKey], undoList, 'add');
+                }
+            }
         }
-        for(let id in deleteList){
+        for (let id in deleteList) {
             delete entities[id];
         }
     }

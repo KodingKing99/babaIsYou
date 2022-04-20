@@ -75,14 +75,21 @@ MyGame.systems['movement'] = (function () {
             }
         }
     }
+    function checkUndo(entity, undoList, type) {
+        if (undoList[entity.id]) {
+            undoList[entity.id].push({ type: type, position: { ...entity.components['board-position']}});
+        }
+        else {
+            undoList[entity.id] = [{ type: type, position: { ...entity.components['board-position']}}]
+        }
+    }
     function moveUp(entity, board, particleRequests, updateList) {
         let entityPosition = entity.components['board-position'];
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         checkForPreMoveEvents(entity, particleRequests);
         if (entityPosition.y > 0 && !checkForProperty(board.cells[entityPosition.x][entityPosition.y - 1].contents, 'STOP')) {
-            // let mChange = {};
-            // mChange[entity.id] = {...entityPosition}
-            updateList[entity.id] = { ...entityPosition };
+            // updateList[entity.id] = { ...entityPosition };
+            checkUndo(entity, updateList, 'move')
             entityPosition.y = entityPosition.y - 1;
             checkForPostMoveEvents(entity, particleRequests, board)
             pushUp(entityPosition, board, moveUp, particleRequests, updateList)
@@ -95,7 +102,8 @@ MyGame.systems['movement'] = (function () {
         checkForPreMoveEvents(entity, particleRequests);
         // if (entityPosition.y < board.height - 1) {
         if (entityPosition.y < board.height - 1 && !checkForProperty(board.cells[entityPosition.x][entityPosition.y + 1].contents, 'STOP')) {
-            updateList[entity.id] = {type: 'move', position: { ...entityPosition } };
+            // updateList[entity.id] = {type: 'move', position: { ...entityPosition } };
+            checkUndo(entity, updateList, 'move')
             entityPosition.y = entityPosition.y + 1;
             checkForPostMoveEvents(entity, particleRequests, board)
             pushUp({ ...entityPosition }, board, moveDown, particleRequests, updateList)
@@ -108,7 +116,8 @@ MyGame.systems['movement'] = (function () {
         checkForPreMoveEvents(entity, particleRequests);
         // if (entityPosition.x > 0) {
         if (entityPosition.x > 0 && !checkForProperty(board.cells[entityPosition.x - 1][entityPosition.y].contents, 'STOP')) {
-            updateList[entity.id] = {type: 'move', position: { ...entityPosition } };
+            // updateList[entity.id] = {type: 'move', position: { ...entityPosition } };
+            checkUndo(entity, updateList, 'move')
             entityPosition.x = entityPosition.x - 1;
             checkForPostMoveEvents(entity, particleRequests, board)
             pushUp(entityPosition, board, moveLeft, particleRequests, updateList)
@@ -120,7 +129,8 @@ MyGame.systems['movement'] = (function () {
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         checkForPreMoveEvents(entity, particleRequests);
         if (entityPosition.x < board.width - 1 && !checkForProperty(board.cells[entityPosition.x + 1][entityPosition.y].contents, 'STOP')) {
-            updateList[entity.id] = {type: 'move', position: { ...entityPosition } };
+            // updateList[entity.id] = {type: 'move', position: { ...entityPosition } };
+            checkUndo(entity, updateList, 'move')
             entityPosition.x = entityPosition.x + 1;
             checkForPostMoveEvents(entity, particleRequests, board)
             pushUp({ ...entityPosition }, board, moveRight, particleRequests, updateList)
