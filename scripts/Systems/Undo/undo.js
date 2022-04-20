@@ -28,6 +28,7 @@ MyGame.systems.undo = (function () {
                             // console.log
                         }
                         else if (change.type === 'add') {
+                            console.log(top[id]);
                             deleteList[change.entity.id] = true;
                             addList[change.entity.id] = {position: {...change.entity.components['board-position']}, addType: change.nounType}
                         }
