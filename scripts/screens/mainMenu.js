@@ -6,15 +6,15 @@ MyGame.screens['mainMenu'] = (function(game) {
         // Setup each of menu events for the screens
         document.getElementById('new-game').addEventListener(
             'click',
-            function() {game.showScreen('gamePlayScreen'); });
-        document.getElementById('customize-controls').addEventListener(
-            'click', function(){game.showScreen('customizeControlsScreen')}
+            function(){ game.showScreen('levelsScreen') }
         )
-        // document.getElementById('high-scores').addEventListener(
-        //     'click', () => {game.showScreen('highScoresScreen')}
-        // )
+        document.getElementById('customize-controls').addEventListener(
+            'click', 
+            function(){ game.showScreen('customizeControlsScreen') }
+        )
         document.getElementById('credits').addEventListener(
-            'click', () => {game.showScreen('creditsScreen')}
+            'click', 
+            () => { game.showScreen('creditsScreen') }
         )
     }
     function run() {

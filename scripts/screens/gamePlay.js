@@ -4,7 +4,6 @@ MyGame.screens['gamePlayScreen'] = (function(game){
     let model = null;
 
     function run(){
-        // do nothing for now
         lastTimeStamp = performance.now();
         cancelNextRequest = false;
         // parseLevelsFile();
@@ -12,7 +11,6 @@ MyGame.screens['gamePlayScreen'] = (function(game){
         gameLoop(lastTimeStamp);
     }
     function initialize(){
-        // do nothing for now
         window.addEventListener(
             'keydown', function stopFrame(e) {
                 if (e.key === 'Escape') {
@@ -26,7 +24,6 @@ MyGame.screens['gamePlayScreen'] = (function(game){
         );
     }
     function update(elapsedTime){
-        // do nothing for now
         model.update(elapsedTime);
     }
     
