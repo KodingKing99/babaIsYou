@@ -158,16 +158,28 @@ MyGame.gameModel = function () {
         }
 
     }
-    function addThingsToBoard(board, entities) {
+    function addThingsToBoard(board, entities, log=false) {
         for (let key in entities) {
             let entity = entities[key];
             if (entity.components['board-position']) {
                 let component = entity.components['board-position'];
                 // Set baba's position to be the board cells position;
-                entity.addComponent(MyGame.components.Position(board.cells[component.x][component.y].center));
-                if (!board.cells[component.x][component.y].has(entity)) {
-                    board.cells[component.x][component.y].addContent(entity);
+                // console.log(component)
+                // debugger;
+
+                if(!entity.components.position){
+                    if(log){
+                        console.log(component);
+                        console.log(entity)
+                        console.log(key);
+                        // consol
+                    }
+                    entity.addComponent(MyGame.components.Position({...board.cells[component.x][component.y].center}));
+                    if (!board.cells[component.x][component.y].has(entity)) {
+                        board.cells[component.x][component.y].addContent(entity);
+                    }
                 }
+
             }
         }
     }
@@ -360,6 +372,17 @@ MyGame.gameModel = function () {
         let mEntity = initializeGrass(x, y);
         entities[mEntity.id] = mEntity;
     }
+    let nounCommandPat = {};
+    nounCommandPat['Wall'] = addWall;
+    nounCommandPat['Rock'] = addRock;
+    nounCommandPat['Hedge'] = addHedge;
+    nounCommandPat['Baba'] = addBaba;
+    nounCommandPat['Flag'] = addFlag;
+    nounCommandPat['Lava'] = addLava;
+    nounCommandPat['Water'] = addWater;
+    nounCommandPat['Grass'] = addGrass;
+    nounCommandPat['Floor'] = addFloor;
+    nounCommandPat['Add'] = addThingsToBoard;
     function addWord_Wall(x, y, entities) {
         let mEntity = initializeText(x, y, 'WALL', 'word-wall');
         entities[mEntity.id] = mEntity;
@@ -445,7 +468,7 @@ MyGame.gameModel = function () {
     function update(elapsedTime) {
         let particleCalls = [];
         let changed = {};
-        MyGame.systems.rules.update(elapsedTime, entities, mBoard, particleCalls);
+        MyGame.systems.rules.update(elapsedTime, entities, mBoard, particleCalls, nounCommandPat);
         MyGame.systems.keyboardInput.update(elapsedTime, entities);
         MyGame.systems.movement.update(elapsedTime, entities, mBoard, particleCalls, changed);
         MyGame.systems.undo.update(entities, elapsedTime, mBoard, changed, reInitialize);
