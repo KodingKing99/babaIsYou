@@ -27,7 +27,7 @@ MyGame.loader = (function() {
         }, 
         {
             scripts: ['screens/mainMenu', 'screens/credits',
-                    'screens/customizeControls', 'screens/gamePlay'],
+                    'screens/customizeControls', 'screens/gamePlay', 'screens/levels'],
             message: 'Other screens loaded',
             onComplete: null
         },

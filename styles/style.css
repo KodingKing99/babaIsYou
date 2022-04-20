@@ -51,6 +51,11 @@ ul{
     font-size: 25px;
     display: inline-block;
 }
+#game #levelsScreen h4{
+    /* width: 10%; */
+    font-size: 25px;
+    display: inline-block;
+}
 #game .default:hover{
     color: purple;
     cursor:default;
