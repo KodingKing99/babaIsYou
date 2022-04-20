@@ -288,14 +288,25 @@ MyGame.systems.rules = (function () {
             // console.log(entity.components.properties.keys);
         }
     }
-    function updateNouns(entities, updateList, particleCalls, nounCommandPat, board) {
+    // function 
+    function updateNouns(entities, updateList, particleCalls, nounCommandPat, board, undoList) {
         let deleteList = {};
+        let mNew = {};
+        let mOld = {};
         for(let id in updateList){
             let entity = entities[id];
             let entityPosition = {...entity.components['board-position']};
             deleteList[entity.id] = true;
-            console.log(updateList[id].change[0])
-            nounCommandPat[updateList[id].change[0]](entityPosition.x, entityPosition.y, entities)
+            // undoList[entity.id] = {'type': 'delete', entity: {...entity}};
+            // console.log(updateList[id].change[0]);
+            // mOld = {...entities};
+            nounCommandPat[updateList[id].change[0]](entityPosition.x, entityPosition.y, entities);
+            // mNew = {...entities};
+            // for(let mKey in mNew){
+                // if(!mOld[mKey]){
+                    // undoList[mNew[mKey].id] = {'type': 'add', entity: {...mNew[mKey]}}
+                // }
+            // }
         }
         for(let id in deleteList){
             delete entities[id];
@@ -335,13 +346,12 @@ MyGame.systems.rules = (function () {
             }
         }
     }
-    function update(elapsedTime, entities, board, particleCalls, nounCommandPat) {
+    function update(elapsedTime, entities, board, particleCalls, nounCommandPat, undoList) {
         resetDefaults(entities);
         let updateList = {};
         let nounList = {}
         for (let key in entities) {
             let entity = entities[key];
-
             if (entity.components.text) {
                 let sentances = getPossibleSentancesHelper(entity, board);
                 checkForRules(sentances, entities, updateList, nounList);
@@ -349,7 +359,7 @@ MyGame.systems.rules = (function () {
         }
         // console.log(updateList);
         updateEntities(entities, updateList, particleCalls);
-        updateNouns(entities, nounList, particleCalls, nounCommandPat, board)
+        updateNouns(entities, nounList, particleCalls, nounCommandPat, board, undoList)
         addComponents(entities);
     }
     return {
