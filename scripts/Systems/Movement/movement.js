@@ -10,14 +10,14 @@ MyGame.systems['movement'] = (function () {
         entity.components.position.y = boardCenterY;
         entity.components.position.x = boardCenterX;
     }
-    function pushUp(entityPosition, board, callback, particleRequests, updateList) {
+    function pushUp(entityPosition, board, callback, particleRequests, updateList, toDelete) {
         // console.log(`cell contents at ${board.cells[entityPosition.x][entityPosition.y].x}, ${board.cells[entityPosition.x][entityPosition.y].y}`)
         // console.log(board.cells[entityPosition.x][entityPosition.y].contents)
         for (let index in board.cells[entityPosition.x][entityPosition.y].contents) {
             let mEntity = board.cells[entityPosition.x][entityPosition.y].contents[index];
             if (mEntity.components.properties) {
                 if (mEntity.components.properties.is('PUSH')) {
-                    callback(mEntity, board, particleRequests, updateList);
+                    callback(mEntity, board, particleRequests, updateList, toDelete);
                 }
             }
         }
@@ -41,6 +41,16 @@ MyGame.systems['movement'] = (function () {
         }
         return found;
     }
+    function getIndexWithProperty(contents, property) {
+        for (let i = 0; i < contents.length; i++) {
+            if (contents[i].components.properties) {
+                if (contents[i].components.properties.is(property)) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
     function checkForWins(position, board) {
         let hasWon = false;
         let contents = board.cells[position.x][position.y].contents;
@@ -55,7 +65,7 @@ MyGame.systems['movement'] = (function () {
         }
         return hasWon;
     }
-    function checkForPostMoveEvents(entity, particleRequests, board) {
+    function checkForPostMoveEvents(entity, particleRequests, board, toDelete, updateList) {
 
         if (entity.components.noun) {
             if (entity.components.properties) {
@@ -72,18 +82,43 @@ MyGame.systems['movement'] = (function () {
                         MyGame.hasWon = true;
                     }
                 }
+                // sink events
+                let pos = entity.components['board-position'];
+                let contents = board.cells[pos.x][pos.y].contents
+                // let foundWin = checkForWins(entity.components['board-position'], board)
+                let foundSink = checkForProperty(contents, 'SINK');
+                if (foundSink) {
+                    console.log(contents);
+                    toDelete[entity.id] = true;
+                    checkUndo(entity, updateList, 'delete');
+                    let index = getIndexWithProperty(contents, 'SINK');
+                    if (index != -1) {
+                        toDelete[contents[index].id] = true;
+                        checkUndo(contents[index], updateList, 'delete')
+                    }
+                }
             }
         }
     }
     function checkUndo(entity, undoList, type) {
-        if (undoList[entity.id]) {
-            undoList[entity.id].push({ type: type, position: { ...entity.components['board-position']}});
+        if (type === 'move') {
+            if (undoList[entity.id]) {
+                undoList[entity.id].push({ type: type, position: { ...entity.components['board-position'] } });
+            }
+            else {
+                undoList[entity.id] = [{ type: type, position: { ...entity.components['board-position'] } }]
+            }
         }
-        else {
-            undoList[entity.id] = [{ type: type, position: { ...entity.components['board-position']}}]
+        else if (type === 'delete') {
+            if (undoList[entity.id]) {
+                undoList[entity.id].push({ type: type, entity: { ...entity } });
+            }
+            else {
+                undoList[entity.id] = [{ type: type, entity: { ...entity }}]
+            }
         }
     }
-    function moveUp(entity, board, particleRequests, updateList) {
+    function moveUp(entity, board, particleRequests, updateList, toDelete) {
         let entityPosition = entity.components['board-position'];
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         checkForPreMoveEvents(entity, particleRequests);
@@ -91,12 +126,12 @@ MyGame.systems['movement'] = (function () {
             // updateList[entity.id] = { ...entityPosition };
             checkUndo(entity, updateList, 'move')
             entityPosition.y = entityPosition.y - 1;
-            checkForPostMoveEvents(entity, particleRequests, board)
-            pushUp(entityPosition, board, moveUp, particleRequests, updateList)
+            checkForPostMoveEvents(entity, particleRequests, board, toDelete, updateList)
+            pushUp(entityPosition, board, moveUp, particleRequests, updateList, toDelete)
             addEntityToBoard(entity, board);
         }
     }
-    function moveDown(entity, board, particleRequests, updateList) {
+    function moveDown(entity, board, particleRequests, updateList, toDelete) {
         let entityPosition = entity.components['board-position'];
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         checkForPreMoveEvents(entity, particleRequests);
@@ -105,12 +140,12 @@ MyGame.systems['movement'] = (function () {
             // updateList[entity.id] = {type: 'move', position: { ...entityPosition } };
             checkUndo(entity, updateList, 'move')
             entityPosition.y = entityPosition.y + 1;
-            checkForPostMoveEvents(entity, particleRequests, board)
-            pushUp({ ...entityPosition }, board, moveDown, particleRequests, updateList)
+            checkForPostMoveEvents(entity, particleRequests, board, toDelete, updateList)
+            pushUp({ ...entityPosition }, board, moveDown, particleRequests, updateList, toDelete)
             addEntityToBoard(entity, board);
         }
     }
-    function moveLeft(entity, board, particleRequests, updateList) {
+    function moveLeft(entity, board, particleRequests, updateList, toDelete) {
         let entityPosition = entity.components['board-position'];
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         checkForPreMoveEvents(entity, particleRequests);
@@ -119,12 +154,12 @@ MyGame.systems['movement'] = (function () {
             // updateList[entity.id] = {type: 'move', position: { ...entityPosition } };
             checkUndo(entity, updateList, 'move')
             entityPosition.x = entityPosition.x - 1;
-            checkForPostMoveEvents(entity, particleRequests, board)
-            pushUp(entityPosition, board, moveLeft, particleRequests, updateList)
+            checkForPostMoveEvents(entity, particleRequests, board, toDelete, updateList)
+            pushUp(entityPosition, board, moveLeft, particleRequests, updateList, toDelete)
             addEntityToBoard(entity, board);
         }
     }
-    function moveRight(entity, board, particleRequests, updateList) {
+    function moveRight(entity, board, particleRequests, updateList, toDelete) {
         let entityPosition = entity.components['board-position'];
         board.cells[entityPosition.x][entityPosition.y].removeContent(entity);
         checkForPreMoveEvents(entity, particleRequests);
@@ -132,8 +167,8 @@ MyGame.systems['movement'] = (function () {
             // updateList[entity.id] = {type: 'move', position: { ...entityPosition } };
             checkUndo(entity, updateList, 'move')
             entityPosition.x = entityPosition.x + 1;
-            checkForPostMoveEvents(entity, particleRequests, board)
-            pushUp({ ...entityPosition }, board, moveRight, particleRequests, updateList)
+            checkForPostMoveEvents(entity, particleRequests, board, toDelete, updateList)
+            pushUp({ ...entityPosition }, board, moveRight, particleRequests, updateList, toDelete)
             addEntityToBoard(entity, board);
         }
     }
@@ -171,32 +206,32 @@ MyGame.systems['movement'] = (function () {
             }
         }
     }
-    function moveEntityOnBoard(entity, board, particleRequests, updateList) {
+    function moveEntityOnBoard(entity, board, particleRequests, updateList, toDelete) {
         let movable = entity.components.movable;
         switch (movable.moveDirection) {
             case MyGame.constants.direction.UP:
                 movable.moveDirection = MyGame.constants.direction.STOPPED;
-                moveUp(entity, board, particleRequests, updateList);
+                moveUp(entity, board, particleRequests, updateList, toDelete);
                 setFacing(entity, MyGame.constants.direction.UP);
                 break;
 
             case MyGame.constants.direction.DOWN:
                 movable.moveDirection = MyGame.constants.direction.STOPPED;
-                moveDown(entity, board, particleRequests, updateList);
+                moveDown(entity, board, particleRequests, updateList, toDelete);
                 setFacing(entity, MyGame.constants.direction.DOWN, particleRequests);
                 break;
 
 
             case MyGame.constants.direction.RIGHT:
                 movable.moveDirection = MyGame.constants.direction.STOPPED;
-                moveRight(entity, board, particleRequests, updateList);
+                moveRight(entity, board, particleRequests, updateList, toDelete);
                 setFacing(entity, MyGame.constants.direction.RIGHT, particleRequests);
                 break;
 
 
             case MyGame.constants.direction.LEFT:
                 movable.moveDirection = MyGame.constants.direction.STOPPED;
-                moveLeft(entity, board, particleRequests, updateList);
+                moveLeft(entity, board, particleRequests, updateList, toDelete);
                 setFacing(entity, MyGame.constants.direction.LEFT, particleRequests);
                 break;
 
@@ -205,11 +240,15 @@ MyGame.systems['movement'] = (function () {
 
     }
     function update(elapsedTime, entities, gameBoard, particleRequests, updateList) {
+        let toDelete = {}
         for (let key in entities) {
             let entity = entities[key];
             if (entity.components.movable) {
-                moveEntityOnBoard(entity, gameBoard, particleRequests, updateList);
+                moveEntityOnBoard(entity, gameBoard, particleRequests, updateList, toDelete);
             }
+        }
+        for (let id in toDelete) {
+            delete entities[id];
         }
     }
 

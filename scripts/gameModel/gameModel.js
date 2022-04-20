@@ -10,6 +10,7 @@ MyGame.gameModel = function () {
         levelsTxt = levelsTxt.split(/Level-\d/)
 
         levelsTxt = levelsTxt[MyGame.level].split('\n')
+        console.log(levelsTxt);
         let levelCount;
         for (let i = 0; i < levelsTxt.length; i++) {
             if (levelsTxt[i].match(/\d\d x \d\d/)) {
@@ -258,7 +259,7 @@ MyGame.gameModel = function () {
     }
     function initializeWater(x, y) {
         let water = initializeEntityAtXY(x, y);
-        water.addComponent(MyGame.components.Sprite({ assetKey: 'water', animationTime: 150, spriteCount: 3, spritesToAnimate: 3 }))
+        water.addComponent(MyGame.components.Sprite({ assetKey: 'water', animationTime: 200, spriteCount: 3, spritesToAnimate: 3 }))
         return water;
     }
     function initializeGrass(x, y) {

@@ -9,13 +9,19 @@ MyGame.components.Text = function(spec){
         BABA: 'Baba',
         FLAG: 'Flag',
         YOU: 'You',
-        WIN: 'Win'
+        WIN: 'Win',
+        SINK: 'Sink',
+        KILL: 'Kill',
+        WATER: 'Water',
+        LAVA: 'Lava',
     }
     const adjectives = {
         STOP: true,
         PUSH: true,
         WIN: true,
         YOU: true,
+        SINK: true,
+        KILL: true,
     };
     const verbs = {
         IS: true
@@ -25,6 +31,8 @@ MyGame.components.Text = function(spec){
         ROCK: true,
         BABA: true,
         FLAG: true,
+        WATER: true,
+        LAVA: true,
     } 
     function isAdjective(key){
         if(adjectives[key]){

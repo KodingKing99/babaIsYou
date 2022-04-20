@@ -180,6 +180,9 @@ MyGame.systems.rules = (function () {
                 if (sentance[ent2].components.text.wordType === 'VERB') {
                     if (sentance[ent3].components.text.wordType === 'ADJECTIVE') {
                         applyRule(sentance, startIndex, keys, entities, updateList)
+                        // if (sentance[ent3].components.text.valueType === 'Sink'){
+                        //     console.log(sentance)
+                        // }
                     }
                     else if (sentance[ent3].components.text.wordType === 'NOUN') {
                         applyNounRule(sentance, startIndex, keys, entities, nounList)
