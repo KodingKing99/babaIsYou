@@ -288,13 +288,14 @@ MyGame.systems.rules = (function () {
             // console.log(entity.components.properties.keys);
         }
     }
-    function checkUndo(entity, undoList, type) {
+    function checkUndo(entity, undoList, type, nounType=false) {
         if (!undoList[entity.id]) {
-            undoList[entity.id] = [{ type: type, entity: { ...entity } }]
+            undoList[entity.id] = [{ type: type, entity: { ...entity }, nounType: nounType }]
         }
         else {
-            undoList[entity.id].push({ type: type, entity: { ...entity } })
+            undoList[entity.id].push({ type: type, entity: { ...entity }, nounType: nounType })
         }
+
     }
     function updateNouns(entities, updateList, particleCalls, nounCommandPat, board, undoList) {
         let deleteList = {};
@@ -305,13 +306,12 @@ MyGame.systems.rules = (function () {
             let entityPosition = { ...entity.components['board-position'] };
             deleteList[entity.id] = true;
             checkUndo(entity, undoList, 'delete');
-            // undoList[entity.id] = ;
             mOld = { ...entities };
             nounCommandPat[updateList[id].change[0]](entityPosition.x, entityPosition.y, entities);
             mNew = { ...entities };
             for (let mKey in mNew) {
                 if (!mOld[mKey]) {
-                    checkUndo(mNew[mKey], undoList, 'add');
+                    checkUndo(mNew[mKey], undoList, 'add', entity.components.noun.valueType);
                 }
             }
         }

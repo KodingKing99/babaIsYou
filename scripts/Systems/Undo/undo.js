@@ -10,6 +10,7 @@ MyGame.systems.undo = (function () {
     }
     function doUndo(entities, board, nounCommandPat) {
         let deleteList = {}
+        let addList = {}
         if (mStack.length > 0) {
             let top = mStack.pop();
             for (let id in entities) {
@@ -28,12 +29,13 @@ MyGame.systems.undo = (function () {
                         }
                         else if (change.type === 'add') {
                             deleteList[change.entity.id] = true;
+                            addList[change.entity.id] = {position: {...change.entity.components['board-position']}, addType: change.nounType}
                         }
                         else if (change.type === 'delete') {
                             let mEnt = change.entity;
                             if (mEnt.components.noun) {
                                 let entityPosition = mEnt.components['board-position'];
-                                nounCommandPat[mEnt.components.noun.valueType](entityPosition.x, entityPosition.y, entities);
+                                addList[mEnt.id] = {position: {...entityPosition}, addType: mEnt.components.noun.valueType};
                             }
                         }
                     }
@@ -43,6 +45,14 @@ MyGame.systems.undo = (function () {
         }
         for (let id in deleteList) {
             delete entities[id];
+        }
+        // if(Object.keys(addList).length > 0){
+        //     console.log(addList);
+        // }
+        for (let id in addList){
+            // console.log(addList[id]);
+            // console.log(nounCommandPat);
+            nounCommandPat[addList[id].addType](addList[id].position.x, addList[id].position.y, entities);
         }
 
     }
