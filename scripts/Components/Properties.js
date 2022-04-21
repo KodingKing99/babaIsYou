@@ -4,6 +4,8 @@ MyGame.components.Properties = function (spec) {
         YOU: 1,
         PUSH: 2,
         WIN: 4,
+        SINK: 8,
+        KILL: 16
     }
     function is(type){
         for(let i = 0; i < spec.keys.length; i++){

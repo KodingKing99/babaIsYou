@@ -285,6 +285,14 @@ MyGame.systems.rules = (function () {
             else {
                 entity.components.properties.add(updateList[id].change);
             }
+            // for(let i = 0; i < entity.components.properties.keys.length; i++){
+            //     let key =entity.components.properties.keys[i]; 
+            //     if(key === 'SINK'){
+            //         console.log(entity);
+            //     }
+            // }
+            // if(entity.components.properties.)
+            // for(let key in)
             // console.log(entity.components.properties.keys);
         }
     }
