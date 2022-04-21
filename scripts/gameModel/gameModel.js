@@ -442,12 +442,14 @@ MyGame.gameModel = function () {
         entities[mEntity.id] = mEntity;
     }
     function initialize() {
+        MyGame.assets['backgroundMusic'].play();
         parseLevelsFile(entities);
         mBoard = Board(GRID_SIZE);
         addThingsToBoard(mBoard, entities);
         addUndoKeybEntity(entities);
     }
     function reInitialize(){
+        MyGame.assets['backgroundMusic'].play();
         entities = {};
         parseLevelsFile(entities);
         mBoard = Board(GRID_SIZE);

@@ -110,7 +110,19 @@ MyGame.loader = (function() {
         {
             key: 'backgroundImage',
             source: '../assets/babaIsYouBackground.png'
-        }, 
+        },
+        {
+            key: 'backgroundMusic',
+            source: '/assets/backgroundMusic.mp3'
+        },
+        {
+            key: 'fireworkSound',
+            source: '/assets/fireworkSound.mp3'
+        },
+        {
+            key: 'newWinSound',
+            source: '/assets/newWinSound.mp3'
+        },
         {
             key: 'bunnyDown',
             source: '/assets/bunnyDown.png'
@@ -339,7 +351,7 @@ MyGame.loader = (function() {
                 if (xhr.status === 200) {
                     if (fileExtension === 'png' || fileExtension === 'jpg') {
                         asset = new Image();
-                    } else if (fileExtension === 'mp3') {
+                    } else if (fileExtension === 'mp3' || fileExtension === 'wav') {
                         asset = new Audio();
                     } else if (fileExtension === 'txt') {
                         if (onSuccess) { onSuccess(xhr.responseText); }
@@ -348,10 +360,18 @@ MyGame.loader = (function() {
                         if (onError) { onError('Unknown file extension: ' + fileExtension); }
                     }
                     if (xhr.responseType === 'blob') {
-                        asset.onload = function() {
-                            window.URL.revokeObjectURL(asset.src);
-                            if (onSuccess) { onSuccess(asset); }
-                        };
+                        if (fileExtension === 'mp3') {
+                            asset.oncanplaythrough = function() {
+                                asset.oncanplaythrough = null;  // Ugh, what a hack!
+                                window.URL.revokeObjectURL(asset.src);
+                                if (onSuccess) { onSuccess(asset); }
+                            };
+                        } else {
+                            asset.onload = function() {
+                                window.URL.revokeObjectURL(asset.src);
+                                if (onSuccess) { onSuccess(asset); }
+                            };
+                        }
                         asset.src = window.URL.createObjectURL(xhr.response);
                     }
                 } else {

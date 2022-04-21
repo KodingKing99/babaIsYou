@@ -178,6 +178,7 @@ MyGame.systems.render.particles = (function (Random) {
             decay: 0.99,
             image: MyGame.assets['firework'],
         }
+        MyGame.assets['fireworkSound'].play();
         spawnParticleHelper(spec);
     }
     function spawnLineParticles(ammount, x, y, direction, size, extraOffeset) {

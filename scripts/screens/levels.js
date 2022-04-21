@@ -1,6 +1,6 @@
 MyGame.screens['levelsScreen'] = (function(game) {
     function initialize() {
-        // Setup each of menu events for the screens
+        // Setup each level event for the menu screen
         document.getElementById('level1').addEventListener(
             'click',
             function(){
