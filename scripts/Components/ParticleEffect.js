@@ -3,6 +3,7 @@ MyGame.components.ParticleEffect = function(spec){
         NEWISYOU: 'NewIsYou',
         BABAWALK: 'BabaWalk',
         WON: 'Won',
+        NEWWIN: 'NewWin'
     };
     let isComplete = false;
     return {

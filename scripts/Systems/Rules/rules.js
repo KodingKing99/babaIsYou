@@ -258,6 +258,7 @@ MyGame.systems.rules = (function () {
     }
 
     let oldYou = "none";
+    let oldWin = "none";
     function checkForEvents(entity, newUpdate, particleCalls) {
         // console.log(newUpdate);
         for (let i = 0; i < newUpdate.change.length; i++) {
@@ -269,6 +270,14 @@ MyGame.systems.rules = (function () {
                     }
                 }
                 // console.log(particleCalls);
+            }
+            if (newUpdate.change[i] === 'WIN') {
+                if (oldWin !== entity.components.noun.valueType) {
+                    oldWin = entity.components.noun.valueType;
+                    for (let j = 0; j < newUpdate.positions.length; j++) {
+                        particleCalls.push({ effectCall: 'NEWWIN', position: newUpdate.positions[j] });
+                    }
+                }
             }
         }
         // for(let i in changeList)

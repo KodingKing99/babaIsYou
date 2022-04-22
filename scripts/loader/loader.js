@@ -267,6 +267,10 @@ MyGame.loader = (function() {
             key: 'firework',
             source: '/assets/firework.png'
         },
+        {
+            key: 'confetti',
+            source: 'assets/confetti.png'
+        },
     ];
 
     //------------------------------------------------------------------
