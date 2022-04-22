@@ -449,6 +449,7 @@ MyGame.gameModel = function () {
         entities[mEntity.id] = mEntity;
     }
     function initialize() {
+        MyGame.assets['backgroundMusic'].loop = true;
         MyGame.assets['backgroundMusic'].play();
         parseLevelsFile(entities);
         mBoard = Board(GRID_SIZE);
@@ -456,7 +457,6 @@ MyGame.gameModel = function () {
         addUndoKeybEntity(entities);
     }
     function reInitialize(){
-        MyGame.assets['backgroundMusic'].play();
         entities = {};
         parseLevelsFile(entities);
         mBoard = Board(GRID_SIZE);

@@ -123,6 +123,10 @@ MyGame.loader = (function() {
             key: 'newWinSound',
             source: '/assets/newWinSound.mp3'
         },
+        // {
+        //     key: 'moveSound',
+        //     source: 'assets/moveSound.mp3'
+        // },
         {
             key: 'bunnyDown',
             source: '/assets/bunnyDown.png'
