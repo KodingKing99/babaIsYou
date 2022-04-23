@@ -136,8 +136,6 @@ MyGame.systems.render.particles = (function (Random) {
             // MyGame.systems.render.graphics.drawCircle(particle.center, particle.size.x, "green");
             // MyGame.systems.render.graphics.drawCircle({x: 0, y: 0}, 2, "green");
         }
-
-
     }
 
     function spawnParticleHelper(spec) {
@@ -186,7 +184,7 @@ MyGame.systems.render.particles = (function (Random) {
             center: { x: x, y: y },
             size: { mean: 30, stdev: 2 },
             speed: { mean: 20, stdev: 5 },
-            lifetime: { mean: 1, stdev: 1 },
+            lifetime: { mean: .5, stdev: .5 },
             direction: direction,
             decay: 0.99,
             image: MyGame.assets['confetti'],
@@ -201,23 +199,17 @@ MyGame.systems.render.particles = (function (Random) {
                 {
                     let start = x - (size / 2);
                     let end = x + (size / 2);
-                    // let start = x - (size / 2);
-                    // let end = x - (size / 4);
                     let mY = y - (size / 2);
-                    for ( let j = 0; j < 4; j ++) {
-                        // start = start + ((size / 4) * j);
-                        // end = end + ((size / 4) * j);
-                        for (let i = 0; i < amount; i++) {
-                            let mX = MyGame.systems.Random.nextRange(start, end);
-                            let mDirection = Random.nextUpVector();
-                            spawnWinChangeParticleXY(mX, mY, mDirection);
-                        }
+                    for (let i = 0; i < amount; i++) {
+                        let mX = MyGame.systems.Random.nextRange(start, end);
+                        let mDirection = Random.nextUpVector();
+                        spawnWinChangeParticleXY(mX, mY, mDirection);
                     }
                     break;
                 }
             case 'down':
                 {
-                    let start = x - (size / 2);
+                    let start = x - (size / 2) - 10;
                     let end = x + (size / 2);
                     let mY = y + (size / 2);
                     for (let i = 0; i < amount; i++) {

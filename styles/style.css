@@ -40,6 +40,10 @@ ul{
     cursor: pointer;
     font-size: 35px;
 }
+#game li{
+    cursor: pointer;
+    font-size: 35px;
+}
 #game h4:hover{
     color: darkgreen;
 }

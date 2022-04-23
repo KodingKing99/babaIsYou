@@ -1,3 +1,45 @@
+(almost) No Rules
+20 x 20
+hhhhhhhhhhhhhhhhhhhh
+h                  h
+h                  h
+h                  h
+h                  h
+h                  h
+h                  h
+h   wwwwwwwwwwww   h
+h        r         h
+h     b  r   f     h
+h        r         h
+h   aaaaa  vvvvv   h
+h                  h
+h                  h
+h                  h
+h                  h
+h                  h
+h                  h
+h                  h
+hhhhhhhhhhhhhhhhhhhh
+                    
+                    
+    V IK   A IN     
+                    
+     W      R       
+      IS     IP     
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+     BIY     IX     
+            F       
+                    
+                    
+                    
+                    
+                    
 Level-1
 20 x 20
 hhhhhhhhhhhhhhhhhhhh

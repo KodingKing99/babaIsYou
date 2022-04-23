@@ -5,6 +5,8 @@ let MyGame = {
     assets: {},
     components: {},
     constants: {},
+    level: 0,
+    levelInfo: [],
 };
 requirejs.config({
     baseUrl: 'scripts',

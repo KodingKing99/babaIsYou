@@ -5,12 +5,15 @@ MyGame.gameModel = function () {
     // Setting game width to canvas width
     /////////
     function parseLevelsFile(entities) {
-        let levelsTxt = MyGame.assets['levels-all'];
+        // let levelsTxt = MyGame.assets['levels-all'];
         // console.log(levelsTxt);
-        levelsTxt = levelsTxt.split(/Level-\d/)
-
-        levelsTxt = levelsTxt[MyGame.level].split('\n')
+        // levelsTxt = levelsTxt.split(/Level-\d/);
+        
+        let levelsTxt = MyGame.levelInfo[MyGame.level];
+        console.log("level Info", MyGame.levelInfo)
+        console.log("level:", MyGame.level)
         console.log(levelsTxt);
+        
         let levelCount;
         for (let i = 0; i < levelsTxt.length; i++) {
             if (levelsTxt[i].match(/\d\d x \d\d/)) {
@@ -23,7 +26,6 @@ MyGame.gameModel = function () {
             }
             else {
                 for (let j = 0; j < levelsTxt[i].length; j++) {
-                    // console.log(levelCount);
                     if (levelCount >= 0) {
                         switch (levelsTxt[i][j]) {
                             case 'b':

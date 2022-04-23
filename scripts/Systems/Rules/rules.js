@@ -216,10 +216,10 @@ MyGame.systems.rules = (function () {
     function addInputComponent(entity) {
         entity.addComponent(MyGame.components.KeyboardControlled({
             keys: {
-                'ArrowUp': MyGame.constants.direction.UP,
-                'ArrowDown': MyGame.constants.direction.DOWN,
-                'ArrowLeft': MyGame.constants.direction.LEFT,
-                'ArrowRight': MyGame.constants.direction.RIGHT,
+                'w': MyGame.constants.direction.UP,
+                's': MyGame.constants.direction.DOWN,
+                'a': MyGame.constants.direction.LEFT,
+                'd': MyGame.constants.direction.RIGHT,
             },
         }))
     }
@@ -256,7 +256,7 @@ MyGame.systems.rules = (function () {
             }
         }
     }
-
+    // let oldWinList = [];
     let oldYou = "none";
     let oldWin = "none";
     function checkForEvents(entity, newUpdate, particleCalls) {
@@ -269,17 +269,22 @@ MyGame.systems.rules = (function () {
                         particleCalls.push({ effectCall: 'NEWISYOU', position: newUpdate.positions[j] });
                     }
                 }
-                // console.log(particleCalls);
             }
             if (newUpdate.change[i] === 'WIN') {
+                // if (!oldWinList.includes(entity.components.noun.valueType)) {
+                //     oldWinList.push(entity.components.noun.valueType);
+                //     particleCalls.push({ effectCall: 'NEWWIN', position: newUpdate.positions[0] });
+                // }
+                // if (oldWin === "none") {
+                //     oldWin = entity.components.noun.valueType;
+                // }
                 if (oldWin !== entity.components.noun.valueType) {
                     oldWin = entity.components.noun.valueType;
-                    for (let j = 0; j < newUpdate.positions.length; j++) {
-                        particleCalls.push({ effectCall: 'NEWWIN', position: newUpdate.positions[j] });
-                    }
+                    particleCalls.push({ effectCall: 'NEWWIN', position: newUpdate.positions[0] });
                 }
             }
         }
+        oldWinList = [];
         // for(let i in changeList)
     }
     function updateEntities(entities, updateList, particleCalls) {
