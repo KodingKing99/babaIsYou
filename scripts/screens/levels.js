@@ -1,11 +1,20 @@
 MyGame.screens['levelsScreen'] = (function(game) {
     function initialize() {
-        // 
-        // put all the information about each level in its own list
-        //
-        let levelsTxt = MyGame.assets['levels-all'].split('\n');
+        let levelNames = parseLevelNames();
+        createLevelButtons(levelNames);
+
+        document.getElementById('levelsBackButton').addEventListener(
+            'click',
+            () => {game.showScreen('mainMenu')}
+        )
+    }
+
+    // 
+    // put all the information about each level in its own list
+    //
+    function parseLevelNames() {
         let levelNames = [];
-        // levelsTxt = levelsTxt.split('\n')
+        let levelsTxt = MyGame.assets['levels-all'].split('\n');
         let levelIndex = 0;
         let levelList = [];
         for (let i = 0; i < levelsTxt.length; i++) {
@@ -18,7 +27,13 @@ MyGame.screens['levelsScreen'] = (function(game) {
             }
             levelList.push(levelsTxt[i]);
         }
+        return levelNames;
+    }
 
+    //
+    // create a button for each level
+    //
+    function createLevelButtons(levelNames) {
         let levels = document.getElementById("levels");        
         for (let l = 0; l < levelNames.length; l++) {
             let li = document.createElement("li");
@@ -33,12 +48,8 @@ MyGame.screens['levelsScreen'] = (function(game) {
             )
             levels.appendChild(li);
         }
-
-        document.getElementById('levelsBackButton').addEventListener(
-            'click',
-            () => {game.showScreen('mainMenu')}
-        )
     }
+
     function run() {
         //
         // I know this is empty, there isn't anything to do.

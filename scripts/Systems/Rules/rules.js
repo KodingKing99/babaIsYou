@@ -280,6 +280,7 @@ MyGame.systems.rules = (function () {
                 // }
                 if (oldWin !== entity.components.noun.valueType) {
                     oldWin = entity.components.noun.valueType;
+                    console.log("oldWin", oldWin);
                     particleCalls.push({ effectCall: 'NEWWIN', position: newUpdate.positions[0] });
                 }
             }

@@ -26,7 +26,7 @@ MyGame.systems['movement'] = (function () {
         if (entity.components['noun']) {
             if (entity.components.noun.valueType === 'Baba') {
                 let mpos = { ...entity.components['board-position'] };
-                particleRequests.push({ effectCall: 'BABAWALK', position: { x: mpos.x, y: mpos.y } })
+                particleRequests.push({ effectCall: 'BABAWALK', position: { x: mpos.x, y: mpos.y } });
             }
         }
     }
@@ -68,7 +68,7 @@ MyGame.systems['movement'] = (function () {
         }
         return hasWon;
     }
-    function checkSink(entity, updateList, toDelete, board){
+    function checkSink(entity, particleRequests, updateList, toDelete, board){
         // sink events
         let pos = entity.components['board-position'];
         let contents = board.cells[pos.x][pos.y].contents
@@ -87,22 +87,21 @@ MyGame.systems['movement'] = (function () {
                 mEntPos = contents[index].components['board-position'];
                 board.cells[mEntPos.x][mEntPos.y].removeContent(contents[index])
             }
-            // console.log(board.cells[mEntPos.x][mEntPos.y].contents);
-            // console.log(updateList);
+            particleRequests.push({ effectCall: 'DEATH', position: { x: mEntPos.x, y: mEntPos.y } });
         }
     }
-    function checkKill(entity, updateList, toDelete, board){
+    function checkKill(entity, particleRequests, updateList, toDelete, board){
         // sink events
         let pos = entity.components['board-position'];
         let contents = board.cells[pos.x][pos.y].contents
         // let foundWin = checkForWins(entity.components['board-position'], board)
         let foundKill = checkForProperty(contents, 'KILL');
         if (foundKill) {
-            // console.log(contents);
             toDelete[entity.id] = true;
             checkUndo(entity, updateList, 'delete');
             let mEntPos = entity.components['board-position']; 
-            board.cells[mEntPos.x][mEntPos.y].removeContent(entity)
+            board.cells[mEntPos.x][mEntPos.y].removeContent(entity);
+            particleRequests.push({ effectCall: 'DEATH', position: { x: mEntPos.x, y: mEntPos.y } });
             // let index = getIndexWithProperty(contents, 'SINK');
             // if (index != -1) {
             //     toDelete[contents[index].id] = true;
@@ -120,19 +119,19 @@ MyGame.systems['movement'] = (function () {
             if (entity.components.properties) {
                 if (entity.components.properties.is('YOU')) {
                     let pos = entity.components['board-position'];
-                    let contents = board.cells[pos.x][pos.y].contents
+                    let contents = board.cells[pos.x][pos.y].contents;
                     // let foundWin = checkForWins(entity.components['board-position'], board)
-                    let foundWin = checkForProperty(contents, 'WIN')
+                    let foundWin = checkForProperty(contents, 'WIN');
                     if (foundWin) {
-                        particleRequests.push({ effectCall: 'WON', position: { x: 5, y: 10 } })
-                        particleRequests.push({ effectCall: 'WON', position: { x: 10, y: 5 } })
-                        particleRequests.push({ effectCall: 'WON', position: { x: 15, y: 15 } })
-                        particleRequests.push({ effectCall: 'WON', position: { x: 3, y: 5 } })
+                        particleRequests.push({ effectCall: 'WON', position: { x: 5, y: 10 } });
+                        particleRequests.push({ effectCall: 'WON', position: { x: 10, y: 5 } });
+                        particleRequests.push({ effectCall: 'WON', position: { x: 15, y: 15 } });
+                        particleRequests.push({ effectCall: 'WON', position: { x: 3, y: 5 } });
                         MyGame.hasWon = true;
                     }
                 }
-                checkSink(entity, updateList, toDelete, board);
-                checkKill(entity, updateList, toDelete, board);
+                checkSink(entity, particleRequests, updateList, toDelete, board);
+                checkKill(entity, particleRequests, updateList, toDelete, board);
             }
         }
     }

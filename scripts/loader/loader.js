@@ -273,6 +273,10 @@ MyGame.loader = (function() {
             key: 'confetti',
             source: 'assets/confetti.png'
         },
+        {
+            key: 'death',
+            source: 'assets/death.png'
+        },
     ];
 
     //------------------------------------------------------------------

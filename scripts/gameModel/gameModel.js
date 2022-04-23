@@ -5,14 +5,8 @@ MyGame.gameModel = function () {
     // Setting game width to canvas width
     /////////
     function parseLevelsFile(entities) {
-        // let levelsTxt = MyGame.assets['levels-all'];
-        // console.log(levelsTxt);
-        // levelsTxt = levelsTxt.split(/Level-\d/);
         
         let levelsTxt = MyGame.levelInfo[MyGame.level];
-        console.log("level Info", MyGame.levelInfo)
-        console.log("level:", MyGame.level)
-        console.log(levelsTxt);
         
         let levelCount;
         for (let i = 0; i < levelsTxt.length; i++) {
@@ -175,7 +169,6 @@ MyGame.gameModel = function () {
                         console.log(component);
                         console.log(entity)
                         console.log(key);
-                        // consol
                     }
                     entity.addComponent(MyGame.components.Position({...board.cells[component.x][component.y].center}));
                     if (!board.cells[component.x][component.y].has(entity)) {
@@ -311,18 +304,6 @@ MyGame.gameModel = function () {
         return mEntity;
     }
 
-    //////////////////////////////
-    // Initialize particle
-    //////////////////////////////
-    // function initializeParticle(x, y, assetKey) {
-    //     let particle = MyGame.systems.entityFactory.createEntity();
-    //     particle.addComponent(MyGame.components.Size({ x: 30, y: 30 }));
-    //     // Set where particle is supposed to go on the board
-    //     particle.addComponent(MyGame.components.BoardPosition({ x: x, y: y }));
-    //     particle.addComponent(MyGame.components.Sprite({ assetKey: assetKey, animationTime: 200, spriteCount: 1, spritesToAnimate: 1 }));
-    //     particle.addComponent(MyGame.components.Properties({ keys: ['PARTICLE'] }));
-    //     return particle;
-    // }
     function initializeParticleCall(x, y, type) {
 
         // console.log("adding new particle");
@@ -428,7 +409,6 @@ MyGame.gameModel = function () {
         let mEntity = initializeText(x, y, 'ROCK', 'word-rock');
         entities[mEntity.id] = mEntity;
     }
-
     function addWord_Lava(x, y, entities) {
         let mEntity = initializeText(x, y, 'LAVA', 'word-lava');
         entities[mEntity.id] = mEntity;
