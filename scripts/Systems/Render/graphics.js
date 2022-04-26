@@ -168,6 +168,27 @@ MyGame.systems.render.graphics = (function() {
         that.restoreContext();
     }
 
+    //------------------------------------------------------------------
+    //
+    // Draw some text to the screen to indicate the game is over
+    //
+    //------------------------------------------------------------------
+    that.drawText = function(spec) {
+        context.save();
+
+        context.font = spec.font,
+        context.fillStyle = spec.fill;
+        if (spec.hasOwnProperty('stroke')) {
+            context.strokeStyle = spec.stroke;
+        }
+        context.textBaseline = 'top';
+
+        context.fillText(spec.text, spec.position.x, spec.position.y);
+        context.strokeText(spec.text, spec.position.x, spec.position.y);
+
+        context.restore();
+    }
+
     Object.defineProperty(that, 'width', {
         get: () => canvas.width
     });

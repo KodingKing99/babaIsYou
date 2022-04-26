@@ -2,11 +2,11 @@ MyGame.screens['gamePlayScreen'] = (function(game){
     let cancelNextRequest = true;
     let lastTimeStamp;
     let model = null;
+    let inputBuffer = {};
 
     function run(){
         lastTimeStamp = performance.now();
         cancelNextRequest = false;
-        // parseLevelsFile();
         model = MyGame.gameModel();
         gameLoop(lastTimeStamp);
     }
@@ -15,7 +15,6 @@ MyGame.screens['gamePlayScreen'] = (function(game){
             'keydown', function stopFrame(e) {
                 if (e.key === 'Escape') {
                     cancelNextRequest = true;
-                    // console.log('stop')
                 }
             }
         );
@@ -25,6 +24,19 @@ MyGame.screens['gamePlayScreen'] = (function(game){
     }
     function update(elapsedTime){
         model.update(elapsedTime);
+        if (MyGame.hasWon) {
+            window.addEventListener('keyup', function(event) {
+                inputBuffer[event.key] = event.key;
+            })
+            for (let input in inputBuffer) {
+                if (input === 'Enter') {
+                    cancelNextRequest = true;
+                    MyGame.level++
+                    run();
+                }
+            }
+            inputBuffer = {};
+        }
     }
     
     function gameLoop(time){

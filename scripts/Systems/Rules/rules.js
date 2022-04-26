@@ -260,7 +260,6 @@ MyGame.systems.rules = (function () {
     let oldYou = "none";
     let oldWin = "none";
     function checkForEvents(entity, newUpdate, particleCalls) {
-        // console.log(newUpdate);
         for (let i = 0; i < newUpdate.change.length; i++) {
             if (newUpdate.change[i] === 'YOU') {
                 if (oldYou !== entity.components.noun.valueType) {
@@ -280,7 +279,6 @@ MyGame.systems.rules = (function () {
                 // }
                 if (oldWin !== entity.components.noun.valueType) {
                     oldWin = entity.components.noun.valueType;
-                    console.log("oldWin", oldWin);
                     particleCalls.push({ effectCall: 'NEWWIN', position: newUpdate.positions[0] });
                 }
             }
