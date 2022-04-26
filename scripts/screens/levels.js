@@ -1,46 +1,55 @@
 MyGame.screens['levelsScreen'] = (function(game) {
     function initialize() {
-        // Setup each of menu events for the screens
-        document.getElementById('level1').addEventListener(
-            'click',
-            function(){
-                MyGame.level = 1;
-                game.showScreen('gamePlayScreen'); 
-            }
-        )
-        document.getElementById('level2').addEventListener(
-            'click',
-            function(){
-                MyGame.level = 2;
-                game.showScreen('gamePlayScreen');
-            }
-        )
-        document.getElementById('level3').addEventListener(
-            'click',
-            function(){
-                MyGame.level = 3;
-                game.showScreen('gamePlayScreen');
-            }
-        )
-        document.getElementById('level4').addEventListener(
-            'click',
-            function(){
-                MyGame.level = 4;
-                game.showScreen('gamePlayScreen');
-            }
-        )
-        document.getElementById('level5').addEventListener(
-            'click',
-            function(){
-                MyGame.level = 5;
-                game.showScreen('gamePlayScreen');
-            }
-        )
+        let levelNames = parseLevelNames();
+        createLevelButtons(levelNames);
+
         document.getElementById('levelsBackButton').addEventListener(
             'click',
             () => {game.showScreen('mainMenu')}
         )
     }
+
+    // 
+    // put all the information about each level in its own list
+    //
+    function parseLevelNames() {
+        let levelNames = [];
+        let levelsTxt = MyGame.assets['levels-all'].split('\n');
+        let levelIndex = 0;
+        let levelList = [];
+        for (let i = 0; i < levelsTxt.length; i++) {
+            if (levelsTxt[i].match(/\d\d x \d\d/)) {
+                levelList.pop();
+                MyGame.levelInfo[levelIndex] = levelList;
+                levelIndex ++;
+                levelList = [];
+                levelNames.push(levelsTxt[i-1]);
+            }
+            levelList.push(levelsTxt[i]);
+        }
+        return levelNames;
+    }
+
+    //
+    // create a button for each level
+    //
+    function createLevelButtons(levelNames) {
+        let levels = document.getElementById("levels");        
+        for (let l = 0; l < levelNames.length; l++) {
+            let li = document.createElement("li");
+            li.innerText = levelNames[l];
+            li.className = "default";
+            li.addEventListener(
+                'click',
+                function(){
+                    MyGame.level = l+1;
+                    game.showScreen('gamePlayScreen');
+                }
+            )
+            levels.appendChild(li);
+        }
+    }
+
     function run() {
         //
         // I know this is empty, there isn't anything to do.

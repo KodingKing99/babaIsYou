@@ -44,6 +44,10 @@ MyGame.systems.keyboardInput = (function () {
                 let input = entity.components['keyboard-controlled'];
                 for (let key in input.keys) {
                     if (keysDown[key]) {
+                        // MyGame.assets['moveSound'].play();
+                        let sound = new Audio();
+                        sound.src = 'assets/moveSound.mp3';
+                        sound.play();
                         moveAll(entities, key, input);
                         keyRelease2(key);
                     }

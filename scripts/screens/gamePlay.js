@@ -33,6 +33,8 @@ MyGame.screens['gamePlayScreen'] = (function(game){
         update(elapsedTime);
         if (!cancelNextRequest) {
             requestAnimationFrame(gameLoop);
+        } else {
+            MyGame.assets['backgroundMusic'].pause();
         }
     }
     return {

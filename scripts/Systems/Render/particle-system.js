@@ -38,7 +38,6 @@ MyGame.systems.render.particles = (function (Random) {
         return p;
     }
     function makeCall(call, elapsedTime) {
-        // console.log(call);
         switch (call.components['particle-effect'].valueType) {
             case 'NewIsYou':
                 objectIsYou(call, elapsedTime)
@@ -48,6 +47,12 @@ MyGame.systems.render.particles = (function (Random) {
                 break;
             case 'Won':
                 gameWon(call, elapsedTime)
+                break;
+            case 'NewWin':
+                objectIsWin(call);
+                break;
+            case 'Death':
+                objectDeath(call);
                 break;
         }
     }
@@ -61,7 +66,6 @@ MyGame.systems.render.particles = (function (Random) {
         }
         calls.sort((a, b) => a.components['board-position'].y - b.components['board-position'].y)
         calls.sort((a, b) => a.components['board-position'].x - b.components['board-position'].x)
-        // console.log(calls);
 
         for (let i = 0; i < calls.length; i++) {
             makeCall(calls[i], elapsedTime)
@@ -85,11 +89,9 @@ MyGame.systems.render.particles = (function (Random) {
 
             //
             // Update its center
-            // console.log(particle);
             particle.center.x += (elapsedTime * particle.speed * particle.direction.x);
             particle.center.y += (elapsedTime * particle.speed * particle.direction.y);
-            // console.log(particle.center.x);
-            // console.log(particle.center.y);
+
             let speed = particle.speed;
             particle.rotation += (speed / 500) * (Math.PI / 180);
 
@@ -137,8 +139,6 @@ MyGame.systems.render.particles = (function (Random) {
             // MyGame.systems.render.graphics.drawCircle(particle.center, particle.size.x, "green");
             // MyGame.systems.render.graphics.drawCircle({x: 0, y: 0}, 2, "green");
         }
-
-
     }
 
     function spawnParticleHelper(spec) {
@@ -178,7 +178,140 @@ MyGame.systems.render.particles = (function (Random) {
             decay: 0.99,
             image: MyGame.assets['firework'],
         }
+        MyGame.assets['fireworkSound'].play();
+        
         spawnParticleHelper(spec);
+    }
+
+    function spawnWinChangeParticleXY(x, y, direction) {
+        let spec = {
+            center: { x: x, y: y },
+            size: { mean: 30, stdev: 2 },
+            speed: { mean: 20, stdev: 5 },
+            lifetime: { mean: .5, stdev: .5 },
+            direction: direction,
+            decay: 0.99,
+            image: MyGame.assets['confetti'],
+        }
+        MyGame.assets['newWinSound'].play();
+        spawnParticleHelper(spec);
+    }
+    function spawnDeathParticleXY(x, y, direction) {
+        let spec = {
+            center: { x: x, y: y },
+            size: { mean: 15, stdev: 2 },
+            speed: { mean: 20, stdev: 5 },
+            lifetime: { mean: .5, stdev: .5 },
+            direction: direction,
+            decay: 0.99,
+            image: MyGame.assets['death'],
+        }
+        spawnParticleHelper(spec);
+    }
+
+    function spawnWinLineParticles(amount, x, y, direction, size) {
+        switch (direction) {
+            case 'up':
+                {
+                    let start = x - (size / 2);
+                    let end = x + (size / 2);
+                    let mY = y - (size / 2);
+                    for (let i = 0; i < amount; i++) {
+                        let mX = MyGame.systems.Random.nextRange(start, end);
+                        let mDirection = Random.nextUpVector();
+                        spawnWinChangeParticleXY(mX, mY, mDirection);
+                    }
+                    break;
+                }
+            case 'down':
+                {
+                    let start = x - (size / 2) - 10;
+                    let end = x + (size / 2);
+                    let mY = y + (size / 2);
+                    for (let i = 0; i < amount; i++) {
+                        let mX = MyGame.systems.Random.nextRange(start, end);
+                        let mDirection = Random.nextDownVector();
+                        spawnWinChangeParticleXY(mX, mY, mDirection);
+                    }
+                    break;
+                }
+            case 'right':
+                {
+                    let start = y - (size / 2);
+                    let end = y + (size / 2);
+                    let mX = x - (size / 2);
+                    for (let i = 0; i < amount; i++) {
+                        let mY = MyGame.systems.Random.nextRange(start, end);
+                        let mDirection = Random.nextLeftVector();
+                        spawnWinChangeParticleXY(mX, mY, mDirection);
+                    }
+                    break;
+                }
+            case 'left':
+                {
+                    let start = y - (size / 2);
+                    let end = y + (size / 2);
+                    let mX = x + (size / 2);
+                    for (let i = 0; i < amount; i++) {
+                        let mY = MyGame.systems.Random.nextRange(start, end);
+                        let mDirection = Random.nextRightVector();
+                        spawnWinChangeParticleXY(mX, mY, mDirection);
+                    }
+                    break;
+                }
+        }
+    }
+    function spawnDeathLineParticles(amount, x, y, direction, size) {
+        switch (direction) {
+            case 'up':
+                {
+                    let start = x - (size / 2);
+                    let end = x + (size / 2);
+                    let mY = y - (size / 2);
+                    for (let i = 0; i < amount; i++) {
+                        let mX = MyGame.systems.Random.nextRange(start, end);
+                        let mDirection = Random.nextUpVector();
+                        spawnDeathParticleXY(mX, mY, mDirection);
+                    }
+                    break;
+                }
+            case 'down':
+                {
+                    let start = x - (size / 2) - 10;
+                    let end = x + (size / 2);
+                    let mY = y + (size / 2);
+                    for (let i = 0; i < amount; i++) {
+                        let mX = MyGame.systems.Random.nextRange(start, end);
+                        let mDirection = Random.nextDownVector();
+                        spawnDeathParticleXY(mX, mY, mDirection);
+                    }
+                    break;
+                }
+            case 'right':
+                {
+                    let start = y - (size / 2);
+                    let end = y + (size / 2);
+                    let mX = x - (size / 2);
+                    for (let i = 0; i < amount; i++) {
+                        let mY = MyGame.systems.Random.nextRange(start, end);
+                        let mDirection = Random.nextLeftVector();
+                        spawnDeathParticleXY(mX, mY, mDirection);
+                    }
+                    break;
+                }
+            case 'left':
+                {
+                    let start = y - (size / 2);
+                    let end = y + (size / 2);
+                    let mX = x + (size / 2);
+                    for (let i = 0; i < amount; i++) {
+                        let mY = MyGame.systems.Random.nextRange(start, end);
+                        let mDirection = Random.nextRightVector();
+                        spawnDeathParticleXY(mX, mY, mDirection);
+                    }
+                    break;
+                }
+        }
     }
     function spawnLineParticles(ammount, x, y, direction, size, extraOffeset) {
         switch (direction) {
@@ -260,25 +393,22 @@ MyGame.systems.render.particles = (function (Random) {
     function spawnWinParticles(ammount, x, y, size){
         for(let i = 0; i < ammount; i++) {
             let circle = Random.nextCircleXY(x, y, size / 2);
-            spawnWinParticleXY(circle.x, circle.y, circle.vector)  
+            spawnWinParticleXY(circle.x, circle.y, circle.vector);
         }
     }
-    //------------------------------------------------------------------
-    //
-    // creates the particle effect when a player dies
-    //
-    //------------------------------------------------------------------
-    function playerDeath() {
 
+    function spawnWinChangeParticles(amount, x, y, size) {
+        spawnWinLineParticles(amount, x, y, 'up', size);
+        spawnWinLineParticles(amount, x, y, 'down', size);
+        spawnWinLineParticles(amount, x, y, 'right', size);
+        spawnWinLineParticles(amount, x, y, 'left', size);
     }
 
-    //------------------------------------------------------------------
-    //
-    // creates the particle effect when an object is destroyed
-    //
-    //------------------------------------------------------------------
-    function objectDeath() {
-
+    function spawnDeathParticles(amount, x, y, size) {
+        spawnDeathLineParticles(amount, x, y, 'up', size);
+        spawnDeathLineParticles(amount, x, y, 'down', size);
+        spawnDeathLineParticles(amount, x, y, 'right', size);
+        spawnDeathLineParticles(amount, x, y, 'left', size);
     }
 
     //------------------------------------------------------------------
@@ -286,8 +416,28 @@ MyGame.systems.render.particles = (function (Random) {
     // creates the particle effect when the condition IS WIN changes
     //
     //------------------------------------------------------------------
-    function objectIsWin(x, y) {
+    function objectIsWin(entity) {
+        spawnWinChangeParticles(20, entity.components.position.x, entity.components.position.y, entity.components.size.x);
+        entity.components['particle-effect'].isComplete = true;
+    }
+    //------------------------------------------------------------------
+    //
+    // creates the particle effect when a player dies
+    //
+    //------------------------------------------------------------------
+    function playerDeath(entity) {
+        spawnDeathParticles(50, entity.components.position.x, entity.components.position.y, entity.components.size.x);
+        entity.components['particle-effect'].isComplete = true;
+    }
 
+    //------------------------------------------------------------------
+    //
+    // creates the particle effect when an object is destroyed
+    //
+    //------------------------------------------------------------------
+    function objectDeath(entity) {
+        spawnDeathParticles(50, entity.components.position.x, entity.components.position.y, entity.components.size.x);
+        entity.components['particle-effect'].isComplete = true;
     }
 
     //------------------------------------------------------------------

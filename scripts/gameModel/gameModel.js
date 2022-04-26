@@ -5,12 +5,9 @@ MyGame.gameModel = function () {
     // Setting game width to canvas width
     /////////
     function parseLevelsFile(entities) {
-        let levelsTxt = MyGame.assets['levels-all'];
-        // console.log(levelsTxt);
-        levelsTxt = levelsTxt.split(/Level-\d/)
-
-        levelsTxt = levelsTxt[MyGame.level].split('\n')
-        console.log(levelsTxt);
+        
+        let levelsTxt = MyGame.levelInfo[MyGame.level];
+        
         let levelCount;
         for (let i = 0; i < levelsTxt.length; i++) {
             if (levelsTxt[i].match(/\d\d x \d\d/)) {
@@ -23,7 +20,6 @@ MyGame.gameModel = function () {
             }
             else {
                 for (let j = 0; j < levelsTxt[i].length; j++) {
-                    // console.log(levelCount);
                     if (levelCount >= 0) {
                         switch (levelsTxt[i][j]) {
                             case 'b':
@@ -173,7 +169,6 @@ MyGame.gameModel = function () {
                         console.log(component);
                         console.log(entity)
                         console.log(key);
-                        // consol
                     }
                     entity.addComponent(MyGame.components.Position({...board.cells[component.x][component.y].center}));
                     if (!board.cells[component.x][component.y].has(entity)) {
@@ -309,18 +304,6 @@ MyGame.gameModel = function () {
         return mEntity;
     }
 
-    //////////////////////////////
-    // Initialize particle
-    //////////////////////////////
-    // function initializeParticle(x, y, assetKey) {
-    //     let particle = MyGame.systems.entityFactory.createEntity();
-    //     particle.addComponent(MyGame.components.Size({ x: 30, y: 30 }));
-    //     // Set where particle is supposed to go on the board
-    //     particle.addComponent(MyGame.components.BoardPosition({ x: x, y: y }));
-    //     particle.addComponent(MyGame.components.Sprite({ assetKey: assetKey, animationTime: 200, spriteCount: 1, spritesToAnimate: 1 }));
-    //     particle.addComponent(MyGame.components.Properties({ keys: ['PARTICLE'] }));
-    //     return particle;
-    // }
     function initializeParticleCall(x, y, type) {
 
         // console.log("adding new particle");
@@ -426,7 +409,6 @@ MyGame.gameModel = function () {
         let mEntity = initializeText(x, y, 'ROCK', 'word-rock');
         entities[mEntity.id] = mEntity;
     }
-
     function addWord_Lava(x, y, entities) {
         let mEntity = initializeText(x, y, 'LAVA', 'word-lava');
         entities[mEntity.id] = mEntity;
@@ -449,6 +431,8 @@ MyGame.gameModel = function () {
         entities[mEntity.id] = mEntity;
     }
     function initialize() {
+        MyGame.assets['backgroundMusic'].loop = true;
+        MyGame.assets['backgroundMusic'].play();
         parseLevelsFile(entities);
         mBoard = Board(GRID_SIZE);
         addThingsToBoard(mBoard, entities);
