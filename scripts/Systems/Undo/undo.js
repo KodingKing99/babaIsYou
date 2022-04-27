@@ -18,16 +18,16 @@ MyGame.systems.undo = (function () {
                     let change = top[id][i];
                     // console.log(top[id]);
                     if (change.type === 'add') {
-                        console.log(top[id]);
+                        // console.log(top[id]);
                         deleteList[change.entity.id] = true;
                         addList[change.entity.id] = { position: { ...change.entity.components['board-position'] }, addType: change.nounType }
                     }
                     else if (change.type === 'delete') {
-                        console.log("undoing delete");
+                        // console.log("undoing delete");
                         let mEnt = change.entity;
                         if (mEnt.components.noun) {
-                            console.log("undoing delete for")
-                            console.log(mEnt);
+                            // console.log("undoing delete for")
+                            // console.log(mEnt);
                             let entityPosition = mEnt.components['board-position'];
                             addList[mEnt.id] = { position: { ...entityPosition }, addType: mEnt.components.noun.valueType, entity: {...mEnt} };
                         }
@@ -77,7 +77,7 @@ MyGame.systems.undo = (function () {
         // console.log(changeList);
         if (Object.keys(changed).length > 0) {
             mStack.push(changed);
-            console.log(mStack);
+            // console.log(mStack);
         }
         for (let id in entities) {
             let entity = entities[id];

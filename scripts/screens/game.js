@@ -21,7 +21,7 @@ MyGame.game = (function (screens) {
             active[screen].classList.remove('active');
         }
         // Tell the screen to start actively running
-        console.log(screens[id]);
+        // console.log(screens[id]);
         screens[id].run();
         //
         // Then, set the new screen to be active

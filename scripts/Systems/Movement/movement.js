@@ -40,7 +40,7 @@ MyGame.systems['movement'] = (function () {
             }
         }
         if(log){
-            console.log(contents);
+            // console.log(contents);
         }
         return found;
     }

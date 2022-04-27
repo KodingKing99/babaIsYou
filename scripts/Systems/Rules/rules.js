@@ -306,7 +306,7 @@ MyGame.systems.rules = (function () {
                 let pos = currentList[name];
                 particleCalls.push({ effectCall: "NEWWIN", position: pos });
                 oldItemNames = winItemNames;
-                console.log(oldItemNames);
+                // console.log(oldItemNames);
             }
         }
         for (let name of oldItemNames) {
