@@ -77,7 +77,7 @@ MyGame.systems.undo = (function () {
         // console.log(changeList);
         if (Object.keys(changed).length > 0) {
             mStack.push(changed);
-            console.log(mStack);
+            // console.log(mStack);
         }
         for (let id in entities) {
             let entity = entities[id];
