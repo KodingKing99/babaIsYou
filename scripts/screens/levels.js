@@ -18,7 +18,7 @@ MyGame.screens['levelsScreen'] = (function(game) {
         let levelIndex = 0;
         let levelList = [];
         for (let i = 0; i < levelsTxt.length; i++) {
-            if (levelsTxt[i].match(/\d\d x \d\d/)) {
+            if (levelsTxt[i].match(/\d\d x \d\d/) || i == levelsTxt.length - 1) {
                 levelList.pop();
                 MyGame.levelInfo[levelIndex] = levelList;
                 levelIndex ++;

@@ -11,7 +11,7 @@ MyGame.systems.render.graphics = (function() {
 
     let that = {};
     let canvas = document.getElementById('canvas');
-    let context = canvas.getContext('2d')
+    let context = canvas.getContext('2d');
 
     //------------------------------------------------------------------
     //
@@ -166,6 +166,27 @@ MyGame.systems.render.graphics = (function() {
         // console.log("drew texture")
 
         that.restoreContext();
+    }
+
+    //------------------------------------------------------------------
+    //
+    // Draw some text to the screen to indicate the game is over
+    //
+    //------------------------------------------------------------------
+    that.drawText = function(spec) {
+        context.save();
+
+        context.font = spec.font,
+        context.fillStyle = spec.fill;
+        if (spec.hasOwnProperty('stroke')) {
+            context.strokeStyle = spec.stroke;
+        }
+        context.textBaseline = 'top';
+
+        context.fillText(spec.text, spec.position.x, spec.position.y);
+        context.strokeText(spec.text, spec.position.x, spec.position.y);
+
+        context.restore();
     }
 
     Object.defineProperty(that, 'width', {

@@ -9,6 +9,12 @@ MyGame.systems.keyboardInput = (function () {
 
     'use strict';
     let keysDown = {};
+    let controls = {};
+
+    function registerControl (key, direction){
+        controls[direction] = key;
+        localStorage['MyGame.systems.keyboardInput.controls'] = JSON.stringify(controls);
+    }
 
     function keyPress(e) {
         e.preventDefault();
@@ -80,7 +86,9 @@ MyGame.systems.keyboardInput = (function () {
     // window.addEventListener('keyup', keyRelease);
 
     let api = {
-        update: update
+        update: update,
+        registerControl: registerControl,
+        get controls(){return {...controls}},
     };
 
     return api;

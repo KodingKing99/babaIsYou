@@ -16,11 +16,9 @@ MyGame.components.Properties = function (spec) {
         }
         return false;
     }
-    // console.log(spec.keys)
     function toString() {
         let mString = "this is "
         for (let i = 0; i < spec.keys.length; i++) {
-            // console.log(spec.keys[i]);
             let key = spec.keys[i];
             if (valueTypes[key]) {
                 mString += key;

@@ -7,7 +7,6 @@ MyGame.gameModel = function () {
     function parseLevelsFile(entities) {
         
         let levelsTxt = MyGame.levelInfo[MyGame.level];
-        
         let levelCount;
         for (let i = 0; i < levelsTxt.length; i++) {
             if (levelsTxt[i].match(/\d\d x \d\d/)) {
@@ -211,9 +210,7 @@ MyGame.gameModel = function () {
         //-------------------------------------------------------------
         return baba;
     }
-    // function reInitializeBaba(entity){
-    //     let baba = en
-    // }
+
     ///////////////////////////
     // Inititialize rock
     ///////////////////////////
@@ -426,7 +423,6 @@ MyGame.gameModel = function () {
         entities[mEntity.id] = mEntity;
     }
     function addParticleCall(x, y, entities, type) {
-        // console.log("adding particle")
         let mEntity = initializeParticleCall(x, y, type);
         entities[mEntity.id] = mEntity;
     }
@@ -454,7 +450,26 @@ MyGame.gameModel = function () {
         }
         addThingsToBoard(mBoard, entities);
     }
-    // let hasWon = false;
+
+    function gameOver() {
+        let enterTxt = {
+            position: { x: 125, y: 800 },
+            font: '40px Times, sans-serif',
+            fill: 'rgb(255, 255, 255)',
+            stroke: 'rgb(0, 0, 0)',
+            text: 'hit enter to play the next level or escape to exit',
+        };
+        let gameOverTxt = {
+            position: { x: 250, y: 100},
+            font: '128px Times, sans-serif',
+            fill: 'rgb(255, 255, 255)',
+            stroke: 'rgba(0, 0, 0)',
+            text: 'You Win!',
+        };
+        MyGame.systems.render.graphics.drawText(enterTxt);
+        MyGame.systems.render.graphics.drawText(gameOverTxt);
+    }
+
     MyGame.hasWon = false;
     function update(elapsedTime) {
         let particleCalls = [];
@@ -466,6 +481,9 @@ MyGame.gameModel = function () {
         MyGame.systems.render.renderAnimatedSprite.update(elapsedTime, entities);
         makeParticleCalls(particleCalls, entities);
         MyGame.systems.render.particles.update(entities, elapsedTime);
+        if (MyGame.hasWon) {
+            gameOver();
+        }
     }
     initialize();
     return {
