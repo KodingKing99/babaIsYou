@@ -12,7 +12,6 @@ MyGame.systems.keyboardInput = (function () {
     let controls = {};
 
     function registerControl(key, direction){
-        console.log("registering key:", key, direction);
         controls[direction] = key;
         localStorage['MyGame.systems.keyboardInput.controls'] = JSON.stringify(controls);
     }
@@ -99,7 +98,7 @@ MyGame.systems.keyboardInput = (function () {
     }
     initalize();
 
-    window.addEventListener('keydown', keyPress);
+    // window.addEventListener('keydown', keyPress);
     // window.addEventListener('keyup', keyRelease);
 
     let api = {
