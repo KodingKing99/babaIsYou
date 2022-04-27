@@ -97,11 +97,16 @@ MyGame.systems['movement'] = (function () {
         // let foundWin = checkForWins(entity.components['board-position'], board)
         let foundKill = checkForProperty(contents, 'KILL');
         if (foundKill) {
-            toDelete[entity.id] = true;
-            checkUndo(entity, updateList, 'delete');
-            let mEntPos = entity.components['board-position']; 
-            board.cells[mEntPos.x][mEntPos.y].removeContent(entity);
-            particleRequests.push({ effectCall: 'DEATH', position: { x: mEntPos.x, y: mEntPos.y } });
+            if(entity.components.properties){
+                if(entity.components.properties.is('YOU')){
+                    toDelete[entity.id] = true;
+                    checkUndo(entity, updateList, 'delete');
+                    let mEntPos = entity.components['board-position']; 
+                    board.cells[mEntPos.x][mEntPos.y].removeContent(entity);
+                    particleRequests.push({ effectCall: 'DEATH', position: { x: mEntPos.x, y: mEntPos.y } });
+                }
+            }
+           
             // let index = getIndexWithProperty(contents, 'SINK');
             // if (index != -1) {
             //     toDelete[contents[index].id] = true;
