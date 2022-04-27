@@ -1,107 +1,87 @@
 MyGame.screens['customizeControlsScreen'] = (function (game, keyboard) {
+
     function initialize() {
-    //     // do something
         document.getElementById('customizeControlsBackButt').addEventListener(
             'click', () => { game.showScreen('mainMenu'); }
         );
-    //     // if(key)
-    //     // document.getElementById('currentMoveUp').innerHTML += keyboard.currentControls['MoveUp']
+        run();
     }
-    // function changeControl(domElement, control) {
-    //     domElement.innerHTML = "";
-    //     domElement.innerHTML += "Press Key to Change Control";
-    //     window.addEventListener(
-    //         'keydown',
-    //         // Register key, do screen run(), remove the event listener
-    //         function changeKey(e) {
-    //             console.log(`changing control: ${control} ${keyboard.currentControls[control]} to ${e.key}`)
-    //             let currentKey = keyboard.currentControls[control]
-    //             if(currentKey === 'Space'){
-    //                 currentKey = ' ';
-    //             }
-    //             keyboard.register(e.key, keyboard.handlers[currentKey], control);
-    //             console.log(keyboard.currentControls);
-    //             console.log(keyboard.handlers)
-    //             keyboard.unregister(currentKey)
-    //             window.removeEventListener('keydown', changeKey)
-    //             render();
-    //         }
-    //     );
-    // }
-    // function render() {
-    //     if (keyboard.currentControls['MoveUp']) {
-    //         let myKey = document.getElementById('currentMoveUp');
-    //         // clear innerHTML
-    //         myKey.innerHTML = "";
-    //         myKey.innerHTML += keyboard.currentControls['MoveUp']
-    //     }
-    //     if (keyboard.currentControls['MoveRight']) {
-    //         let myKey = document.getElementById('currentMoveRight');
-    //         // clear innerHTML
-    //         myKey.innerHTML = "";
-    //         myKey.innerHTML += keyboard.currentControls['MoveRight']
-    //     }
-    //     if (keyboard.currentControls['MoveLeft']) {
-    //         let myKey = document.getElementById('currentMoveLeft');
-    //         // clear innerHTML
-    //         myKey.innerHTML = "";
-    //         myKey.innerHTML += keyboard.currentControls['MoveLeft']
-    //     }
-    //     if (keyboard.currentControls['MoveDown']) {
-    //         let myKey = document.getElementById('currentMoveDown');
-    //         // clear innerHTML
-    //         myKey.innerHTML = "";
-    //         myKey.innerHTML += keyboard.currentControls['MoveDown']
-    //     }
-    //     if (keyboard.currentControls['Undo']) {
-    //         let myKey = document.getElementById('currentUndo');
-    //         // clear innerHTML
-    //         myKey.innerHTML = "";
-    //         myKey.innerHTML += keyboard.currentControls['Undo']
-    //     }
-    // }
+
+    function changeControl(domElement, control) {
+        console.log(domElement, control);
+        domElement.innerHTML = "";
+        domElement.innerHTML += "Press Key to Change Control";
+        window.addEventListener(
+            'keydown',
+            function changeKey(e) {
+                keyboard.registerControl(e.key, control);
+                window.removeEventListener('keydown', changeKey)
+                render();
+            }
+        );
+    }
+    function render() {
+        keyboard = MyGame.systems.keyboardInput;
+
+        if (keyboard.controls[MyGame.constants.direction.UP]) {
+            let myKey = document.getElementById('currentMoveUp');
+            // clear innerHTML
+            myKey.innerHTML = "";
+            myKey.innerHTML += keyboard.controls[MyGame.constants.direction.UP]
+        }
+        if (keyboard.controls[MyGame.constants.direction.DOWN]) {
+            let myKey = document.getElementById('currentMoveDown');
+            // clear innerHTML
+            myKey.innerHTML = "";
+            myKey.innerHTML += keyboard.controls[MyGame.constants.direction.DOWN]
+        }
+        if (keyboard.controls[MyGame.constants.direction.RIGHT]) {
+            let myKey = document.getElementById('currentMoveRight');
+            myKey.innerHTML = "";
+            myKey.innerHTML += keyboard.controls[MyGame.constants.direction.RIGHT]
+        }
+        if (keyboard.controls[MyGame.constants.direction.LEFT]) {
+            let myKey = document.getElementById('currentMoveLeft');
+            myKey.innerHTML = "";
+            myKey.innerHTML += keyboard.controls[MyGame.constants.direction.LEFT]
+        }
+    }
     function run() {
-        // console.log(keyboard)
-        // console.log(keyboard.currentControls)
-        // render();
-        // if (keyboard.currentControls['MoveUp']) {
-        //     let myKey = document.getElementById('currentMoveUp');
-        //     myKey.addEventListener(
-        //         'click', () => { changeControl(myKey, 'MoveUp') }
-        //     )
-        // }
-        // if (keyboard.currentControls['MoveRight']) {
-        //     let myKey = document.getElementById('currentMoveRight');
-        //     // clear innerHTML
-        //     myKey.addEventListener(
-        //         'click', () => { changeControl(myKey, 'MoveRight') }
-        //     )
-        // }
-        // if (keyboard.currentControls['MoveLeft']) {
-        //     let myKey = document.getElementById('currentMoveLeft');
-        //     // clear innerHTML
-        //     myKey.addEventListener(
-        //         'click', () => { changeControl(myKey, 'MoveLeft') }
-        //     )
-        // }
-        // if (keyboard.currentControls['MoveDown']) {
-        //     let myKey = document.getElementById('currentMoveDown');
-        //     // clear innerHTML
-        //     myKey.addEventListener(
-        //         'click', () => { changeControl(myKey, 'MoveDown') }
-        //     )
-        // }
-        // if (keyboard.currentControls['Undo']) {
-        //     let myKey = document.getElementById('currentUndo');
-        //     // clear innerHTML
-        //     myKey.addEventListener(
-        //         'click', () => { changeControl(myKey, 'Undo') }
-        //     )
-        // }
+        render();
+        if (keyboard.controls[MyGame.constants.direction.UP]) {
+            let myKey = document.getElementById('currentMoveUp');
+            myKey.addEventListener(
+                'click', () => { changeControl(myKey, MyGame.constants.direction.UP) }
+            )
+        }
+        if (keyboard.controls[MyGame.constants.direction.DOWN]) {
+            let myKey = document.getElementById('currentMoveDown');
+            myKey.addEventListener(
+                'click', () => { changeControl(myKey, MyGame.constants.direction.DOWN) }
+            )
+        }
+        if (keyboard.controls[MyGame.constants.direction.RIGHT]) {
+            let myKey = document.getElementById('currentMoveRight');
+            myKey.addEventListener(
+                'click', () => { changeControl(myKey, MyGame.constants.direction.RIGHT) }
+            )
+        }
+        if (keyboard.controls[MyGame.constants.direction.LEFT]) {
+            let myKey = document.getElementById('currentMoveLeft');
+            myKey.addEventListener(
+                'click', () => { changeControl(myKey, MyGame.constants.direction.LEFT) }
+            )
+        }
+        if (keyboard.controls[MyGame.constants.undo.UNDO]) {
+            let myKey = document.getElementById('currentUndo');
+            myKey.addEventListener(
+                'click', () => { changeControl(myKey, MyGame.constants.undo.UNDO) }
+            )
+        }
     }
 
     return {
         initialize: initialize,
         run: run
     };
-}(MyGame.game))
+}(MyGame.game, MyGame.systems.keyboardInput))
