@@ -11,7 +11,7 @@ MyGame.systems.render.graphics = (function() {
 
     let that = {};
     let canvas = document.getElementById('canvas');
-    let context = canvas.getContext('2d')
+    let context = canvas.getContext('2d');
 
     //------------------------------------------------------------------
     //

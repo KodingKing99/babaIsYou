@@ -32,6 +32,9 @@ MyGame.screens['gamePlayScreen'] = (function(game){
                 if (input === 'Enter') {
                     cancelNextRequest = true;
                     MyGame.level++
+                    if (MyGame.level === MyGame.levelInfo.length) {
+                        MyGame.level = 1;
+                    }
                     run();
                 }
             }

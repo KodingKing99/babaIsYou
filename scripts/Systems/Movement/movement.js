@@ -75,7 +75,7 @@ MyGame.systems['movement'] = (function () {
         // let foundWin = checkForWins(entity.components['board-position'], board)
         let foundSink = checkForProperty(contents, 'SINK');
         if (foundSink) {
-            console.log(contents);
+            // console.log(contents);
             toDelete[entity.id] = true;
             checkUndo(entity, updateList, 'delete');
             let index = getIndexWithProperty(contents, 'SINK');

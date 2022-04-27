@@ -256,9 +256,7 @@ MyGame.systems.rules = (function () {
             }
         }
     }
-    // let oldWinList = [];
     let oldYou = "none";
-    let oldWin = "none";
     function checkForEvents(entity, newUpdate, particleCalls) {
         for (let i = 0; i < newUpdate.change.length; i++) {
             if (newUpdate.change[i] === 'YOU') {
@@ -269,28 +267,18 @@ MyGame.systems.rules = (function () {
                     }
                 }
             }
-            if (newUpdate.change[i] === 'WIN') {
-                // if (!oldWinList.includes(entity.components.noun.valueType)) {
-                //     oldWinList.push(entity.components.noun.valueType);
-                //     particleCalls.push({ effectCall: 'NEWWIN', position: newUpdate.positions[0] });
-                // }
-                // if (oldWin === "none") {
-                //     oldWin = entity.components.noun.valueType;
-                // }
-                if (oldWin !== entity.components.noun.valueType) {
-                    oldWin = entity.components.noun.valueType;
-                    particleCalls.push({ effectCall: 'NEWWIN', position: newUpdate.positions[0] });
-                }
-            }
         }
-        oldWinList = [];
-        // for(let i in changeList)
     }
     function updateEntities(entities, updateList, particleCalls) {
+        let winList = {};
+        let winItemNames = new Set();
         for (let id in updateList) {
             // let changedEntity = updateList[id];
             let entity = entities[id];
-
+            if (updateList[id].change[0] == 'WIN') {
+                winList[entity.components.noun.valueType] = updateList[id].positions[0];
+                winItemNames.add(entity.components.noun.valueType);
+            }
             checkForEvents(entity, updateList[id], particleCalls);
             if (!entity.components.properties) {
                 entity.addComponent(MyGame.components.Properties({ keys: updateList[id].change }));
@@ -308,7 +296,26 @@ MyGame.systems.rules = (function () {
             // for(let key in)
             // console.log(entity.components.properties.keys);
         }
+        checkForNewWin(winList, particleCalls, winItemNames);
     }
+
+    let oldItemNames = new Set();
+    function checkForNewWin(currentList, particleCalls, winItemNames) {
+        for (let name of winItemNames) {
+            if (!oldItemNames.has(name)) {
+                let pos = currentList[name];
+                particleCalls.push({ effectCall: "NEWWIN", position: pos });
+                oldItemNames = winItemNames;
+                console.log(oldItemNames);
+            }
+        }
+        for (let name of oldItemNames) {
+            if (!winItemNames.has(name)) {
+                oldItemNames.delete(name);
+            }
+        }
+    }
+
     function checkUndo(entity, undoList, type, nounType=false) {
         if (!undoList[entity.id]) {
             undoList[entity.id] = [{ type: type, entity: { ...entity }, nounType: nounType }]
