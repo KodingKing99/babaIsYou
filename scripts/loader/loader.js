@@ -67,6 +67,11 @@ MyGame.loader = (function() {
             onComplete: null
         },
         {
+            scripts: ['gameModel/DirectionConstants'],
+            message: 'constants loaded',
+            onComplete: null
+        },
+        {
             scripts: ['Systems/Input/keyboardInput'],
             message: 'input system loaded',
             onComplete: null
@@ -86,12 +91,7 @@ MyGame.loader = (function() {
             message: 'rule system loaded',
             onComplete: null
         },
-        
-        {
-            scripts: ['gameModel/DirectionConstants'],
-            message: 'constants loaded',
-            onComplete: null
-        },
+
         {
             scripts: ['gameModel/gameModel'],
             message: 'gameModel has loaded',
@@ -297,7 +297,7 @@ MyGame.loader = (function() {
         if (scripts.length > 0) {
             let entry = scripts[0];
             require(entry.scripts, function() {
-                console.log(entry.message);
+                // console.log(entry.message);
                 if (entry.onComplete) {
                     entry.onComplete();
                 }
@@ -411,14 +411,14 @@ MyGame.loader = (function() {
     //
     //------------------------------------------------------------------
     function mainComplete() {
-        console.log('It is all loaded up');
+        // console.log('It is all loaded up');
         MyGame.game.initialize();
         // MyGame.main.initialize();
     }
 
     //
     // Start with loading the assets, then the scripts.
-    console.log('Starting to dynamically load project assets');
+    // console.log('Starting to dynamically load project assets');
     loadAssets(assetOrder,
         function(source, asset) {    // Store it on success
             // console.log(this);
@@ -428,8 +428,8 @@ MyGame.loader = (function() {
             console.log(error);
         },
         function() {
-            console.log('All game assets loaded');
-            console.log('Starting to dynamically load project scripts');
+            // console.log('All game assets loaded');
+            // console.log('Starting to dynamically load project scripts');
             setBackgroundImage();
             loadScripts(scriptOrder, mainComplete);
         }

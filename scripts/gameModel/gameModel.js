@@ -165,9 +165,9 @@ MyGame.gameModel = function () {
 
                 if(!entity.components.position){
                     if(log){
-                        console.log(component);
-                        console.log(entity)
-                        console.log(key);
+                        // console.log(component);
+                        // console.log(entity)
+                        // console.log(key);
                     }
                     entity.addComponent(MyGame.components.Position({...board.cells[component.x][component.y].center}));
                     if (!board.cells[component.x][component.y].has(entity)) {

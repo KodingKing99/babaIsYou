@@ -8,7 +8,6 @@ MyGame.screens['customizeControlsScreen'] = (function (game, keyboard) {
     }
 
     function changeControl(domElement, control) {
-        console.log(domElement, control);
         domElement.innerHTML = "";
         domElement.innerHTML += "Press Key to Change Control";
         window.addEventListener(
@@ -22,7 +21,6 @@ MyGame.screens['customizeControlsScreen'] = (function (game, keyboard) {
     }
     function render() {
         keyboard = MyGame.systems.keyboardInput;
-
         if (keyboard.controls[MyGame.constants.direction.UP]) {
             let myKey = document.getElementById('currentMoveUp');
             // clear innerHTML

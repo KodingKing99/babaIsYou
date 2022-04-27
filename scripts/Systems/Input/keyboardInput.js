@@ -11,14 +11,13 @@ MyGame.systems.keyboardInput = (function () {
     let keysDown = {};
     let controls = {};
 
-    function registerControl (key, direction){
+    function registerControl(key, direction){
         controls[direction] = key;
         localStorage['MyGame.systems.keyboardInput.controls'] = JSON.stringify(controls);
     }
 
     function keyPress(e) {
         e.preventDefault();
-        // console.log(e.key);
         keysDown[e.key] = e.timeStamp;
     }
 
@@ -82,7 +81,24 @@ MyGame.systems.keyboardInput = (function () {
         doMove(entities);
     }
 
-    window.addEventListener('keydown', keyPress);
+    function initalize(){
+        window.addEventListener('keydown', keyPress);
+        window.addEventListener('keyup', keyRelease);
+        let mControls = localStorage['MyGame.systems.keyboardInput.controls'];
+        if(mControls){
+            mControls = JSON.parse(mControls);
+            controls = mControls;
+        }
+        else{
+            registerControl('w', MyGame.constants.direction.UP);
+            registerControl('s', MyGame.constants.direction.DOWN);
+            registerControl('d', MyGame.constants.direction.RIGHT);
+            registerControl('a', MyGame.constants.direction.LEFT);
+        }
+    }
+    initalize();
+
+    // window.addEventListener('keydown', keyPress);
     // window.addEventListener('keyup', keyRelease);
 
     let api = {

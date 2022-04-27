@@ -214,13 +214,18 @@ MyGame.systems.rules = (function () {
         }
     }
     function addInputComponent(entity) {
+        let up = MyGame.systems.keyboardInput.controls[MyGame.constants.direction.UP];
+        let down = MyGame.systems.keyboardInput.controls[MyGame.constants.direction.DOWN];
+        let left = MyGame.systems.keyboardInput.controls[MyGame.constants.direction.LEFT];
+        let right = MyGame.systems.keyboardInput.controls[MyGame.constants.direction.RIGHT];
+
         entity.addComponent(MyGame.components.KeyboardControlled({
             keys: {
-                'w': MyGame.constants.direction.UP,
-                's': MyGame.constants.direction.DOWN,
-                'a': MyGame.constants.direction.LEFT,
-                'd': MyGame.constants.direction.RIGHT,
-            },
+                [up] : MyGame.constants.direction.UP,
+                [down] : MyGame.constants.direction.DOWN,
+                [left] : MyGame.constants.direction.LEFT,
+                [right] : MyGame.constants.direction.RIGHT,
+            }
         }))
     }
     function addMovableComponent(entity) {
@@ -306,7 +311,7 @@ MyGame.systems.rules = (function () {
                 let pos = currentList[name];
                 particleCalls.push({ effectCall: "NEWWIN", position: pos });
                 oldItemNames = winItemNames;
-                console.log(oldItemNames);
+                // console.log(oldItemNames);
             }
         }
         for (let name of oldItemNames) {
